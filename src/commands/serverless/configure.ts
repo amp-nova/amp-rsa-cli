@@ -26,7 +26,7 @@ export const handler = async (
   try {
     serverless.map((item: string) => {
 
-      // Getting and compiling serverless config tempalte
+      // Getting and compiling serverless config template
       const configTemplate = readFileSync(`./assets/serverless/${item}/serverless.yml.hbs`).toString();
       const configTemplateCompiled = handlebarsCompile(configTemplate);
 

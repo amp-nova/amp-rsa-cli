@@ -1,4 +1,8 @@
 import { Arguments } from 'yargs';
+import { readFileSync, writeFileSync } from 'fs';
+import { compile as handlebarsCompile } from 'handlebars';
+
+const yaml = require('js-yaml');
 
 export const command = 'configure';
 export const desc = "Configure Web Application";
@@ -6,12 +10,39 @@ export const desc = "Configure Web Application";
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
-  console.log("Configuring Algolia");
-  console.log("Configuring Analytics");
-  console.log("Configuring Application");
-  console.log("Configuring Content");
-  console.log("Configuring Commerce");
-  console.log("Configuring DynamicYield");
-  console.log("Configuring Personify");
 
+  const services = [
+    "algolia",
+    "analytics",
+    "app",
+    "cms",
+    "commercetools",
+    "dynamicyield",
+    "personify"
+  ];
+
+  // Reading settings
+  const settings = readFileSync(`./settings.yaml`).toString();
+
+  // Converting from YAML to JSON
+  const settingsJson = yaml.load(settings)
+  console.log('Settings loaded');
+
+  try {
+    services.map((item: string) => {
+
+      // Getting and compiling services config template
+      const configTemplate = readFileSync(`./assets/webapp/config/${item}.json.hbs`).toString();
+      const configTemplateCompiled = handlebarsCompile(configTemplate);
+
+      // Applying settings to template
+      const serviceConfigJSON = configTemplateCompiled(settingsJson);
+
+      // Write services config to file
+      writeFileSync(`./repositories/willow-demo-web-react/config/${item}.json`, serviceConfigJSON);
+      console.log(`Wrote services config to file ./repositories/willow-demo-web-react/config/${item}.json`)
+    });
+  } catch(error) {
+    console.log(error.message);
+  }
 };

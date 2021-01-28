@@ -6,6 +6,7 @@ export const desc = "Deploy AWS serverless stacks";
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
-  console.log("Deploying serverless stacks");
+  console.log("Deploying willow-content-delivery-poc");
+  console.log("Deploying willow-demo-services");
 
 };

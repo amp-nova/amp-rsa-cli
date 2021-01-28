@@ -1,0 +1,2 @@
+name,type,attributeConstraint,isRequired,isSearchable,label.en,inputTip.en,textInputHint,displayGroup
+articleNumberMax,text,None,false,true,Article Number,,SingleLine,Other

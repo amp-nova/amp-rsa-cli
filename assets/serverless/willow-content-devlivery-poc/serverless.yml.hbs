@@ -4,19 +4,19 @@ service:
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: ${opt:stage, '{{provider.stage}}'}
-  region: ${opt:region, '{{provider.region}}'}
+  stage: \${opt:stage, '{{serverless.provider.stage}}'}
+  region: \${opt:region, '{{serverless.provider.region}}'}
   environment:
-    SERVICE: ${self:service}
-    STAGE: ${self:provider.stage}
-    REGION: ${self:provider.region}
-    NO_COLOR: ${env:NO_COLOR, 'true'}
-    PRODUCTION_CONTENT_DELIVERY_HOST: {{provider.environment.productionContentDeliveryHost}}
-    STAGING_CONTENT_DELIVERY_HOST:  {{provider.environment.stagingContentDeliveryHost}}
+    SERVICE: \${self:service}
+    STAGE: \${self:provider.stage}
+    REGION: \${self:provider.region}
+    NO_COLOR: \${env:NO_COLOR, 'true'}
+    PRODUCTION_CONTENT_DELIVERY_HOST: {{cms.contentApi}}
+    STAGING_CONTENT_DELIVERY_HOST: {{cms.stagingApi}}
     TRUSTED_HOST_SUFFIXES: .cdn.content.amplience.net,.staging.bigcontent.io
-    MANAGEMENT_API_KEY:  {{provider.environment.clientId}}
-    MANAGEMENT_API_SECRET: {{provider.environment.clientSecret}}
-    MANAGEMENT_HUB_ID: {{provider.environment.hubId}}
+    MANAGEMENT_API_KEY: {{cms.clientId}}
+    MANAGEMENT_API_SECRET: {{cms.clientSecret}}
+    MANAGEMENT_HUB_ID: {{cms.hubId}}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -28,7 +28,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:BatchWriteItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:*
+      Resource: arn:aws:dynamodb:\${self:provider.region}:*:*
 
 plugins:
   - serverless-plugin-typescript
@@ -41,7 +41,7 @@ custom:
     external: ["swagger-ui-dist"]
   dynamodb:
     stages:
-      - ${self:provider.stage}
+      - \${self:provider.stage}
     start:
       port: 8000
       inMemory: true
@@ -58,4 +58,4 @@ functions:
           method: any
 
 resources:
-  - ${file(resources/dynamodb.yml)}
+  - \${file(resources/dynamodb.yml)}

@@ -17,12 +17,13 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
           yargInstance.showHelp('error');
         }
       };
-      const argv = await yargInstance
-        .scriptName('dc-cli')
+      const argv = yargInstance
+        .scriptName('demo-cli')
+        .usage('Usage: $0 <command> [options]')
         .commandDir('./commands', YargsCommandBuilderOptions)
         .strict()
         .demandCommand(1, 'Please specify at least one command')
-        .exitProcess(false)
+        .exitProcess(false) 
         .showHelpOnFail(false)
         .fail(failFn).argv;
       resolve(argv);

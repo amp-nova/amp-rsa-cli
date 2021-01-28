@@ -1,0 +1,349 @@
+Loading has finished
+Initializing resources
+CSV file with 280 row(s) loaded.
+For the product type 'main' the following attributes don't have a matching header:
+  creationDate: type 'datetime ' - constraint 'None' - optional
+  articleNumberManufacturer: type 'text ' - constraint 'None' - optional
+  matrixId: type 'text ' - constraint 'Unique' - optional
+  designer: type 'enum ' - constraint 'SameForAll' - optional
+  madeInItaly: type 'enum ' - constraint 'SameForAll' - optional
+  completeTheLook: type 'set of text' - constraint 'None' - optional
+  commonSize: type 'enum ' - constraint 'None' - optional
+  size: type 'text ' - constraint 'None' - optional
+  color: type 'lenum ' - constraint 'None' - optional
+  colorFreeDefinition: type 'ltext ' - constraint 'None' - optional
+  details: type 'set of ltext' - constraint 'None' - optional
+  style: type 'enum ' - constraint 'None' - optional
+  gender: type 'enum ' - constraint 'SameForAll' - optional
+  season: type 'text ' - constraint 'SameForAll' - optional
+  isOnStock: type 'boolean ' - constraint 'None' - optional
+  isLook: type 'boolean ' - constraint 'None' - optional
+  lookProducts: type 'set of text' - constraint 'SameForAll' - optional
+  seasonNew: type 'text ' - constraint 'SameForAll' - optional
+  sapExternalId: type 'text ' - constraint 'Unique' - optional
+Mapping 279 product(s) ...
+Mapping done. About to process existing product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 19 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Comparing against 0 existing product(s) ...
+Processing 20 product(s) ...
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+Finished processing 19 product(s)
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+Finished processing 20 product(s)
+[ '[row 2] New product created.',
+  '[row 3] New product created.',
+  '[row 4] New product created.',
+  '[row 5] New product created.',
+  '[row 6] New product created.',
+  '[row 7] New product created.',
+  '[row 8] New product created.',
+  '[row 9] New product created.',
+  '[row 10] New product created.',
+  '[row 11] New product created.',
+  '[row 12] New product created.',
+  '[row 13] New product created.',
+  '[row 14] New product created.',
+  '[row 15] New product created.',
+  '[row 16] New product created.',
+  '[row 17] New product created.',
+  '[row 18] New product created.',
+  '[row 19] New product created.',
+  '[row 20] New product created.',
+  '[row 21] New product created.',
+  '[row 22] New product created.',
+  '[row 23] New product created.',
+  '[row 24] New product created.',
+  '[row 25] New product created.',
+  '[row 26] New product created.',
+  '[row 27] New product created.',
+  '[row 28] New product created.',
+  '[row 29] New product created.',
+  '[row 30] New product created.',
+  '[row 31] New product created.',
+  '[row 32] New product created.',
+  '[row 33] New product created.',
+  '[row 34] New product created.',
+  '[row 35] New product created.',
+  '[row 36] New product created.',
+  '[row 37] New product created.',
+  '[row 38] New product created.',
+  '[row 39] New product created.',
+  '[row 40] New product created.',
+  '[row 41] New product created.',
+  '[row 42] New product created.',
+  '[row 43] New product created.',
+  '[row 44] New product created.',
+  '[row 45] New product created.',
+  '[row 46] New product created.',
+  '[row 47] New product created.',
+  '[row 48] New product created.',
+  '[row 49] New product created.',
+  '[row 50] New product created.',
+  '[row 51] New product created.',
+  '[row 52] New product created.',
+  '[row 53] New product created.',
+  '[row 54] New product created.',
+  '[row 55] New product created.',
+  '[row 56] New product created.',
+  '[row 57] New product created.',
+  '[row 58] New product created.',
+  '[row 59] New product created.',
+  '[row 60] New product created.',
+  '[row 61] New product created.',
+  '[row 62] New product created.',
+  '[row 63] New product created.',
+  '[row 64] New product created.',
+  '[row 65] New product created.',
+  '[row 66] New product created.',
+  '[row 67] New product created.',
+  '[row 68] New product created.',
+  '[row 69] New product created.',
+  '[row 70] New product created.',
+  '[row 71] New product created.',
+  '[row 72] New product created.',
+  '[row 73] New product created.',
+  '[row 74] New product created.',
+  '[row 75] New product created.',
+  '[row 76] New product created.',
+  '[row 77] New product created.',
+  '[row 78] New product created.',
+  '[row 79] New product created.',
+  '[row 80] New product created.',
+  '[row 81] New product created.',
+  '[row 82] New product created.',
+  '[row 83] New product created.',
+  '[row 84] New product created.',
+  '[row 85] New product created.',
+  '[row 86] New product created.',
+  '[row 87] New product created.',
+  '[row 88] New product created.',
+  '[row 89] New product created.',
+  '[row 90] New product created.',
+  '[row 91] New product created.',
+  '[row 92] New product created.',
+  '[row 93] New product created.',
+  '[row 94] New product created.',
+  '[row 95] New product created.',
+  '[row 96] New product created.',
+  '[row 97] New product created.',
+  '[row 98] New product created.',
+  '[row 99] New product created.',
+  '[row 100] New product created.',
+  '[row 101] New product created.',
+  '[row 102] New product created.',
+  '[row 103] New product created.',
+  '[row 104] New product created.',
+  '[row 105] New product created.',
+  '[row 106] New product created.',
+  '[row 107] New product created.',
+  '[row 108] New product created.',
+  '[row 109] New product created.',
+  '[row 110] New product created.',
+  '[row 111] New product created.',
+  '[row 112] New product created.',
+  '[row 113] New product created.',
+  '[row 114] New product created.',
+  '[row 115] New product created.',
+  '[row 116] New product created.',
+  '[row 117] New product created.',
+  '[row 118] New product created.',
+  '[row 119] New product created.',
+  '[row 120] New product created.',
+  '[row 121] New product created.',
+  '[row 122] New product created.',
+  '[row 123] New product created.',
+  '[row 124] New product created.',
+  '[row 125] New product created.',
+  '[row 126] New product created.',
+  '[row 127] New product created.',
+  '[row 128] New product created.',
+  '[row 129] New product created.',
+  '[row 130] New product created.',
+  '[row 131] New product created.',
+  '[row 132] New product created.',
+  '[row 133] New product created.',
+  '[row 134] New product created.',
+  '[row 135] New product created.',
+  '[row 136] New product created.',
+  '[row 137] New product created.',
+  '[row 138] New product created.',
+  '[row 139] New product created.',
+  '[row 140] New product created.',
+  '[row 141] New product created.',
+  '[row 142] New product created.',
+  '[row 143] New product created.',
+  '[row 144] New product created.',
+  '[row 145] New product created.',
+  '[row 146] New product created.',
+  '[row 147] New product created.',
+  '[row 148] New product created.',
+  '[row 149] New product created.',
+  '[row 150] New product created.',
+  '[row 151] New product created.',
+  '[row 152] New product created.',
+  '[row 153] New product created.',
+  '[row 154] New product created.',
+  '[row 155] New product created.',
+  '[row 156] New product created.',
+  '[row 157] New product created.',
+  '[row 158] New product created.',
+  '[row 159] New product created.',
+  '[row 160] New product created.',
+  '[row 161] New product created.',
+  '[row 162] New product created.',
+  '[row 163] New product created.',
+  '[row 164] New product created.',
+  '[row 165] New product created.',
+  '[row 166] New product created.',
+  '[row 167] New product created.',
+  '[row 168] New product created.',
+  '[row 169] New product created.',
+  '[row 170] New product created.',
+  '[row 171] New product created.',
+  '[row 172] New product created.',
+  '[row 173] New product created.',
+  '[row 174] New product created.',
+  '[row 175] New product created.',
+  '[row 176] New product created.',
+  '[row 177] New product created.',
+  '[row 178] New product created.',
+  '[row 179] New product created.',
+  '[row 180] New product created.',
+  '[row 181] New product created.',
+  '[row 182] New product created.',
+  '[row 183] New product created.',
+  '[row 184] New product created.',
+  '[row 185] New product created.',
+  '[row 186] New product created.',
+  '[row 187] New product created.',
+  '[row 188] New product created.',
+  '[row 189] New product created.',
+  '[row 190] New product created.',
+  '[row 191] New product created.',
+  '[row 192] New product created.',
+  '[row 193] New product created.',
+  '[row 194] New product created.',
+  '[row 195] New product created.',
+  '[row 196] New product created.',
+  '[row 197] New product created.',
+  '[row 198] New product created.',
+  '[row 199] New product created.',
+  '[row 200] New product created.',
+  '[row 201] New product created.',
+  '[row 202] New product created.',
+  '[row 203] New product created.',
+  '[row 204] New product created.',
+  '[row 205] New product created.',
+  '[row 206] New product created.',
+  '[row 207] New product created.',
+  '[row 208] New product created.',
+  '[row 209] New product created.',
+  '[row 210] New product created.',
+  '[row 211] New product created.',
+  '[row 212] New product created.',
+  '[row 213] New product created.',
+  '[row 214] New product created.',
+  '[row 215] New product created.',
+  '[row 216] New product created.',
+  '[row 217] New product created.',
+  '[row 218] New product created.',
+  '[row 219] New product created.',
+  '[row 220] New product created.',
+  '[row 221] New product created.',
+  '[row 222] New product created.',
+  '[row 223] New product created.',
+  '[row 224] New product created.',
+  '[row 225] New product created.',
+  '[row 226] New product created.',
+  '[row 227] New product created.',
+  '[row 228] New product created.',
+  '[row 229] New product created.',
+  '[row 230] New product created.',
+  '[row 231] New product created.',
+  '[row 232] New product created.',
+  '[row 233] New product created.',
+  '[row 234] New product created.',
+  '[row 235] New product created.',
+  '[row 236] New product created.',
+  '[row 237] New product created.',
+  '[row 238] New product created.',
+  '[row 239] New product created.',
+  '[row 240] New product created.',
+  '[row 241] New product created.',
+  '[row 242] New product created.',
+  '[row 243] New product created.',
+  '[row 244] New product created.',
+  '[row 245] New product created.',
+  '[row 246] New product created.',
+  '[row 247] New product created.',
+  '[row 248] New product created.',
+  '[row 249] New product created.',
+  '[row 250] New product created.',
+  '[row 251] New product created.',
+  '[row 252] New product created.',
+  '[row 253] New product created.',
+  '[row 254] New product created.',
+  '[row 255] New product created.',
+  '[row 256] New product created.',
+  '[row 257] New product created.',
+  '[row 258] New product created.',
+  '[row 259] New product created.',
+  '[row 260] New product created.',
+  '[row 261] New product created.',
+  '[row 262] New product created.',
+  '[row 263] New product created.',
+  '[row 264] New product created.',
+  '[row 265] New product created.',
+  '[row 266] New product created.',
+  '[row 267] New product created.',
+  '[row 268] New product created.',
+  '[row 269] New product created.',
+  '[row 270] New product created.',
+  '[row 271] New product created.',
+  '[row 272] New product created.',
+  '[row 273] New product created.',
+  '[row 274] New product created.',
+  '[row 275] New product created.',
+  '[row 276] New product created.',
+  '[row 277] New product created.',
+  '[row 278] New product created.',
+  '[row 279] New product created.',
+  '[row 280] New product created.' ]
+
+
+Process terminated successfully

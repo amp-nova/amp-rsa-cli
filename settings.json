@@ -28,9 +28,7 @@
     "contentApi": "rezademo.cdn.content.amplience.net",
     "stagingApi": "1rvmrhoqqdd6v109jl5x2t3b2z.staging.bigcontent.io",
     "hubName": "rezademo",
-    "imageBasePath": "//i8.amplience.net/"
-  },
-  "cmsExtra": {
+    "imageBasePath": "//i8.amplience.net/",
     "clientId": "27b98f7f-1386-4249-b612-0d09301ef0a2",
     "clientSecret": "0cad2823c9407f584fe582ce606dece6f90a41549f4cb23f6b9c21f85d1d3aaa",
     "hubId": "5ff628fdc9e77c0001da3f7c",
@@ -83,7 +81,9 @@
     "apiKey": "d432c29278bc753859b1a717acf0aaad4e61d01dc70f250dca09924abbf5a0ad"
   },
   "serverless": {
-    "stage": "dev",
-    "region": "eu-west-1"
+    "provider": {
+      "stage": "dev",
+      "region": "eu-west-1"
+    }
   }
 }

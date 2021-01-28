@@ -1,4 +1,5 @@
 import { Arguments } from 'yargs';
+import childProcess from 'child_process';
 
 export const command = 'clone';
 export const desc = "Clone all required git repositories";
@@ -6,9 +7,24 @@ export const desc = "Clone all required git repositories";
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
-  console.log("Cloning dc-content-delivery-poc");
-  console.log("Cloning willow-demo-services");
-  console.log("Cloning willow-demo-web-react");
-  // console.log("Cloning willow-demo-cards");
-  // console.log("Cloning willow-demo-extension-personify");
+
+  const packages = [
+    "dc-content-delivery-poc",
+    "willow-demo-services",
+    "willow-demo-web-react",
+    // "willow-demo-cards",
+    // "willow-demo-extension-personify"
+  ];
+
+  packages.map((item: string) => {
+    console.log(`Cloning ${item}`);
+    try {
+    childProcess.execSync(
+        `gh repo clone amplience/${item}`,
+        { cwd: `./repositories` }
+      );
+    } catch(error) {
+      console.log(error.message);
+    }
+  });
 };

@@ -6,7 +6,7 @@
         "{{@key}}": {
             "prod": "{{this.prod}}",
             "staging": "{{this.staging}}"
-        }
+        }{{#unless @last}},{{/unless}}
     {{/each}}
     }
 }

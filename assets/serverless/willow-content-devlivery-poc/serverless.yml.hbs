@@ -1,0 +1,61 @@
+service:
+  name: willow-content-delivery-poc
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, '{{provider.stage}}'}
+  region: ${opt:region, '{{provider.region}}'}
+  environment:
+    SERVICE: ${self:service}
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    NO_COLOR: ${env:NO_COLOR, 'true'}
+    PRODUCTION_CONTENT_DELIVERY_HOST: {{provider.environment.productionContentDeliveryHost}}
+    STAGING_CONTENT_DELIVERY_HOST:  {{provider.environment.stagingContentDeliveryHost}}
+    TRUSTED_HOST_SUFFIXES: .cdn.content.amplience.net,.staging.bigcontent.io
+    MANAGEMENT_API_KEY:  {{provider.environment.clientId}}
+    MANAGEMENT_API_SECRET: {{provider.environment.clientSecret}}
+    MANAGEMENT_HUB_ID: {{provider.environment.hubId}}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:BatchWriteItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:*
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-plugin-optimize
+  - serverless-dynamodb-local
+  - serverless-offline
+
+custom:
+  optimize:
+    external: ["swagger-ui-dist"]
+  dynamodb:
+    stages:
+      - ${self:provider.stage}
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: false
+
+functions:
+  index:
+    handler: src/index.handler
+    events:
+      - http:
+          cors: true
+          path: "{proxy+}"
+          method: any
+
+resources:
+  - ${file(resources/dynamodb.yml)}

@@ -1,0 +1,45 @@
+{
+  "contentTypeUri": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/promo.json",
+  "status": "ACTIVE",
+  "settings": {
+    "label": "Promo",
+    "icons": [
+      {
+        "size": 512,
+        "url": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/icons/icon-promo.png"
+      }
+    ],
+    "visualizations": [
+      {
+        "label": "Site",
+        "templatedUri": "https://www.anyafinn.online/visualization?vse={{vse.domain}}&content={{content.sys.id}}&locale={{locales}}",
+        "default": true
+      },
+      {
+        "label": "LeanKit",
+        "templatedUri": "https://willow-demo-leankit.dev.adis.ws/static/leankit-plugin.html?boardId=680372499&id={{content.sys.id}}&domain={{vse.domain}}",
+        "default": false
+      },
+      {
+        "label": "Dev",
+        "templatedUri": "http://localhost:3002/visualization?vse={{vse.domain}}&content={{content.sys.id}}&locale={{locales}}",
+        "default": false
+      },
+      {
+        "label": "QR for Mobile",
+        "templatedUri": "https://www.anyafinn.online/visualization/qr?vse={{vse.domain}}&content={{content.sys.id}}&locale={{locales}}",
+        "default": false
+      },
+      {
+        "label": "JSON",
+        "templatedUri": "https://presalesadisws.s3.eu-west-1.amazonaws.com/dynamic-content/dc-visualization-content-delivery/index.html?vse={{vse.domain}}&id={{content.sys.id}}&format=inlined&depth=all&v2=true&locale={{locales}}",
+        "default": false
+      }
+    ],
+    "cards": [
+      {
+        "templatedUri": "https://willow-demo-cards.vercel.app/?#vse={{vse.domain}}&content={{content.sys.id}}"
+      }
+    ]
+  }
+}

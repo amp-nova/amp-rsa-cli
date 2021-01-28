@@ -1,0 +1,15 @@
+{
+  "contentTypeUri": "https://anyafinn.online/taxonomy-tag.json",
+  "status": "ACTIVE",
+  "settings": {
+    "label": "Tag",
+    "icons": [
+      {
+        "size": 256,
+        "url": "https://bigcontent.io/cms/icons/experience-management/exp-tag.png"
+      }
+    ],
+    "visualizations": [],
+    "cards": []
+  }
+}

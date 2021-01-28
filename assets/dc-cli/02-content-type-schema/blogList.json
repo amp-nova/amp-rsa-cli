@@ -1,0 +1,5 @@
+{
+  "body": "./schemas/blogList-schema.json",
+  "schemaId": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/blogList.json",
+  "validationLevel": "CONTENT_TYPE"
+}

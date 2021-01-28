@@ -1,0 +1,977 @@
+{
+  "id": "58eccba5-f178-46f9-8313-9144b04ab9e9",
+  "label": "Taxonomies",
+  "contentItem": {
+    "id": "58eccba5-f178-46f9-8313-9144b04ab9e9",
+    "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+    "folderId": "6010aa8352faff00012a0f86",
+    "body": {
+      "_meta": {
+        "name": "Taxonomies",
+        "schema": "https://anyafinn.online/config-taxonomies.json",
+        "hierarchy": {
+          "root": true
+        }
+      },
+      "type": "Taxonomies"
+    },
+    "version": 1,
+    "label": "Taxonomies",
+    "status": "ACTIVE",
+    "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+    "locale": "en-US",
+    "createdDate": "2021-01-12T13:25:49.868Z",
+    "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+    "lastModifiedDate": "2021-01-26T23:49:50.112Z",
+    "lastPublishedVersion": 1,
+    "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+    "hierarchy": {
+      "root": true
+    },
+    "deliveryId": "58eccba5-f178-46f9-8313-9144b04ab9e9"
+  },
+  "children": [
+    {
+      "id": "b9269dbc-199b-46af-b94b-efee7afea4ba",
+      "label": "Page Types",
+      "contentItem": {
+        "id": "b9269dbc-199b-46af-b94b-efee7afea4ba",
+        "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Page Types",
+            "schema": "https://anyafinn.online/taxonomy-page-type-group.json",
+            "hierarchy": {
+              "parentId": "58eccba5-f178-46f9-8313-9144b04ab9e9",
+              "root": false
+            }
+          },
+          "label": "Page Types"
+        },
+        "version": 1,
+        "label": "Page Types",
+        "status": "ACTIVE",
+        "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+        "locale": "en-US",
+        "createdDate": "2021-01-12T13:26:35.076Z",
+        "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+        "lastModifiedDate": "2021-01-13T23:10:28.680Z",
+        "lastPublishedVersion": 1,
+        "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+        "hierarchy": {
+          "parentId": "58eccba5-f178-46f9-8313-9144b04ab9e9",
+          "root": false
+        },
+        "deliveryId": "b9269dbc-199b-46af-b94b-efee7afea4ba"
+      },
+      "children": [
+        {
+          "id": "fb731df6-07c9-4cdf-b3f1-0a8091c24ad3",
+          "label": "Product",
+          "contentItem": {
+            "id": "fb731df6-07c9-4cdf-b3f1-0a8091c24ad3",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Product",
+                "schema": "https://anyafinn.online/taxonomy-page-type.json",
+                "hierarchy": {
+                  "parentId": "b9269dbc-199b-46af-b94b-efee7afea4ba",
+                  "root": false
+                }
+              },
+              "label": "Product"
+            },
+            "version": 1,
+            "label": "Product",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:27:33.378Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.791Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "b9269dbc-199b-46af-b94b-efee7afea4ba",
+              "root": false
+            },
+            "deliveryId": "fb731df6-07c9-4cdf-b3f1-0a8091c24ad3"
+          },
+          "children": []
+        },
+        {
+          "id": "9e581181-6730-46f0-b1ea-4e75e1e2a11c",
+          "label": "Landing",
+          "contentItem": {
+            "id": "9e581181-6730-46f0-b1ea-4e75e1e2a11c",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Landing",
+                "schema": "https://anyafinn.online/taxonomy-page-type.json",
+                "hierarchy": {
+                  "parentId": "b9269dbc-199b-46af-b94b-efee7afea4ba",
+                  "root": false
+                }
+              },
+              "label": "Landing"
+            },
+            "version": 1,
+            "label": "Landing",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:27:21.227Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.626Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "b9269dbc-199b-46af-b94b-efee7afea4ba",
+              "root": false
+            },
+            "deliveryId": "9e581181-6730-46f0-b1ea-4e75e1e2a11c"
+          },
+          "children": []
+        },
+        {
+          "id": "05d393c3-3b1a-46a5-a223-4f10d74deec6",
+          "label": "Category",
+          "contentItem": {
+            "id": "05d393c3-3b1a-46a5-a223-4f10d74deec6",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Category",
+                "schema": "https://anyafinn.online/taxonomy-page-type.json",
+                "hierarchy": {
+                  "parentId": "b9269dbc-199b-46af-b94b-efee7afea4ba",
+                  "root": false
+                }
+              },
+              "label": "Category"
+            },
+            "version": 1,
+            "label": "Category",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:27:05.825Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.052Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "b9269dbc-199b-46af-b94b-efee7afea4ba",
+              "root": false
+            },
+            "deliveryId": "05d393c3-3b1a-46a5-a223-4f10d74deec6"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "e547842f-e385-4529-bc95-03d3c61657a4",
+      "label": "Tags",
+      "contentItem": {
+        "id": "e547842f-e385-4529-bc95-03d3c61657a4",
+        "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Tags",
+            "schema": "https://anyafinn.online/taxonomy-tag-group.json",
+            "hierarchy": {
+              "parentId": "58eccba5-f178-46f9-8313-9144b04ab9e9",
+              "root": false
+            }
+          },
+          "label": "Tags"
+        },
+        "version": 1,
+        "label": "Tags",
+        "status": "ACTIVE",
+        "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+        "locale": "en-US",
+        "createdDate": "2021-01-12T13:28:36.710Z",
+        "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+        "lastModifiedDate": "2021-01-13T23:10:28.772Z",
+        "lastPublishedVersion": 1,
+        "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+        "hierarchy": {
+          "parentId": "58eccba5-f178-46f9-8313-9144b04ab9e9",
+          "root": false
+        },
+        "deliveryId": "e547842f-e385-4529-bc95-03d3c61657a4"
+      },
+      "children": [
+        {
+          "id": "1134198a-abea-405b-a57b-b229188dfb83",
+          "label": "Designer",
+          "contentItem": {
+            "id": "1134198a-abea-405b-a57b-b229188dfb83",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Designer",
+                "schema": "https://anyafinn.online/taxonomy-tag-group.json",
+                "hierarchy": {
+                  "parentId": "e547842f-e385-4529-bc95-03d3c61657a4",
+                  "root": false
+                }
+              },
+              "label": "Designer"
+            },
+            "version": 1,
+            "label": "Designer",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:28:57.471Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.279Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "e547842f-e385-4529-bc95-03d3c61657a4",
+              "root": false
+            },
+            "deliveryId": "1134198a-abea-405b-a57b-b229188dfb83"
+          },
+          "children": [
+            {
+              "id": "79f06f56-22ad-4856-8f1e-a66d46610208",
+              "label": "Stella McCartney",
+              "contentItem": {
+                "id": "79f06f56-22ad-4856-8f1e-a66d46610208",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Stella McCartney",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "1134198a-abea-405b-a57b-b229188dfb83",
+                      "root": false
+                    }
+                  },
+                  "label": "Stella McCartney"
+                },
+                "version": 1,
+                "label": "Stella McCartney",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:29:53.444Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.550Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "1134198a-abea-405b-a57b-b229188dfb83",
+                  "root": false
+                },
+                "deliveryId": "79f06f56-22ad-4856-8f1e-a66d46610208"
+              },
+              "children": []
+            },
+            {
+              "id": "649a52d7-cce1-4743-b87c-60ec9b8e8716",
+              "label": "DKNY",
+              "contentItem": {
+                "id": "649a52d7-cce1-4743-b87c-60ec9b8e8716",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "DKNY",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "1134198a-abea-405b-a57b-b229188dfb83",
+                      "root": false
+                    }
+                  },
+                  "label": "DKNY"
+                },
+                "version": 1,
+                "label": "DKNY",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:29:11.471Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.497Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "1134198a-abea-405b-a57b-b229188dfb83",
+                  "root": false
+                },
+                "deliveryId": "649a52d7-cce1-4743-b87c-60ec9b8e8716"
+              },
+              "children": []
+            },
+            {
+              "id": "2a03fdb2-82e5-4f62-8097-4a8a6e571501",
+              "label": "Simone Rocha",
+              "contentItem": {
+                "id": "2a03fdb2-82e5-4f62-8097-4a8a6e571501",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Simone Rocha",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "1134198a-abea-405b-a57b-b229188dfb83",
+                      "root": false
+                    }
+                  },
+                  "label": "Simone Rocha"
+                },
+                "version": 1,
+                "label": "Simone Rocha",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:29:41.597Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.346Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "1134198a-abea-405b-a57b-b229188dfb83",
+                  "root": false
+                },
+                "deliveryId": "2a03fdb2-82e5-4f62-8097-4a8a6e571501"
+              },
+              "children": []
+            },
+            {
+              "id": "0b922c74-f5f5-46c2-8328-a9503c1f04ae",
+              "label": "Maria Grazia Chiuri",
+              "contentItem": {
+                "id": "0b922c74-f5f5-46c2-8328-a9503c1f04ae",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Maria Grazia Chiuri",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "1134198a-abea-405b-a57b-b229188dfb83",
+                      "root": false
+                    }
+                  },
+                  "label": "Maria Grazia Chiuri"
+                },
+                "version": 1,
+                "label": "Maria Grazia Chiuri",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:29:22.962Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.241Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "1134198a-abea-405b-a57b-b229188dfb83",
+                  "root": false
+                },
+                "deliveryId": "0b922c74-f5f5-46c2-8328-a9503c1f04ae"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062",
+          "label": "Season",
+          "contentItem": {
+            "id": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Season",
+                "schema": "https://anyafinn.online/taxonomy-tag-group.json",
+                "hierarchy": {
+                  "parentId": "e547842f-e385-4529-bc95-03d3c61657a4",
+                  "root": false
+                }
+              },
+              "label": "Season"
+            },
+            "version": 1,
+            "label": "Season",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:30:14.920Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.479Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "e547842f-e385-4529-bc95-03d3c61657a4",
+              "root": false
+            },
+            "deliveryId": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062"
+          },
+          "children": [
+            {
+              "id": "2202b263-d6df-446d-858c-a856493edf57",
+              "label": "Autumn",
+              "contentItem": {
+                "id": "2202b263-d6df-446d-858c-a856493edf57",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Autumn",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062",
+                      "root": false
+                    }
+                  },
+                  "label": "Autumn"
+                },
+                "version": 1,
+                "label": "Autumn",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:30:31.610Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.317Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062",
+                  "root": false
+                },
+                "deliveryId": "2202b263-d6df-446d-858c-a856493edf57"
+              },
+              "children": []
+            },
+            {
+              "id": "e4df6edb-b671-4add-84e0-e37c8600a3e3",
+              "label": "Spring",
+              "contentItem": {
+                "id": "e4df6edb-b671-4add-84e0-e37c8600a3e3",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Spring",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062",
+                      "root": false
+                    }
+                  },
+                  "label": "Spring"
+                },
+                "version": 1,
+                "label": "Spring",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:30:42.126Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.755Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062",
+                  "root": false
+                },
+                "deliveryId": "e4df6edb-b671-4add-84e0-e37c8600a3e3"
+              },
+              "children": []
+            },
+            {
+              "id": "69bac7d3-c89b-4d42-8df8-7e8606229f31",
+              "label": "Winter",
+              "contentItem": {
+                "id": "69bac7d3-c89b-4d42-8df8-7e8606229f31",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Winter",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062",
+                      "root": false
+                    }
+                  },
+                  "label": "Winter"
+                },
+                "version": 1,
+                "label": "Winter",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:31:07.888Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.515Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062",
+                  "root": false
+                },
+                "deliveryId": "69bac7d3-c89b-4d42-8df8-7e8606229f31"
+              },
+              "children": []
+            },
+            {
+              "id": "329a840b-2c20-4830-b2d5-634ccee34dc2",
+              "label": "Summer",
+              "contentItem": {
+                "id": "329a840b-2c20-4830-b2d5-634ccee34dc2",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Summer",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062",
+                      "root": false
+                    }
+                  },
+                  "label": "Summer"
+                },
+                "version": 1,
+                "label": "Summer",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:30:53.457Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.397Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "5d4c8f9a-6bfd-46b0-979b-0d7c91d79062",
+                  "root": false
+                },
+                "deliveryId": "329a840b-2c20-4830-b2d5-634ccee34dc2"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "8cd55cf3-7ac8-403c-b078-763fba022029",
+          "label": "Guides",
+          "contentItem": {
+            "id": "8cd55cf3-7ac8-403c-b078-763fba022029",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Guides",
+                "schema": "https://anyafinn.online/taxonomy-tag-group.json",
+                "hierarchy": {
+                  "parentId": "e547842f-e385-4529-bc95-03d3c61657a4",
+                  "root": false
+                }
+              },
+              "label": "Guides"
+            },
+            "version": 1,
+            "label": "Guides",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:31:37.505Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.591Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "e547842f-e385-4529-bc95-03d3c61657a4",
+              "root": false
+            },
+            "deliveryId": "8cd55cf3-7ac8-403c-b078-763fba022029"
+          },
+          "children": [
+            {
+              "id": "7a2c6dc7-e257-4f70-a9ec-2b97708c4e8c",
+              "label": "Kitchen",
+              "contentItem": {
+                "id": "7a2c6dc7-e257-4f70-a9ec-2b97708c4e8c",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Kitchen",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "8cd55cf3-7ac8-403c-b078-763fba022029",
+                      "root": false
+                    }
+                  },
+                  "label": "Kitchen"
+                },
+                "version": 1,
+                "label": "Kitchen",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:32:29.191Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.568Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "8cd55cf3-7ac8-403c-b078-763fba022029",
+                  "root": false
+                },
+                "deliveryId": "7a2c6dc7-e257-4f70-a9ec-2b97708c4e8c"
+              },
+              "children": []
+            },
+            {
+              "id": "bb5fc36a-0585-4988-8f47-c047ec13279c",
+              "label": "Buying Guide",
+              "contentItem": {
+                "id": "bb5fc36a-0585-4988-8f47-c047ec13279c",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Buying Guide",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "8cd55cf3-7ac8-403c-b078-763fba022029",
+                      "root": false
+                    }
+                  },
+                  "label": "Buying Guide"
+                },
+                "version": 1,
+                "label": "Buying Guide",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:31:58.557Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.698Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "8cd55cf3-7ac8-403c-b078-763fba022029",
+                  "root": false
+                },
+                "deliveryId": "bb5fc36a-0585-4988-8f47-c047ec13279c"
+              },
+              "children": []
+            },
+            {
+              "id": "373ba3b1-ab19-41d3-b19e-6034ce74fba1",
+              "label": "Holiday Guide",
+              "contentItem": {
+                "id": "373ba3b1-ab19-41d3-b19e-6034ce74fba1",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Holiday Guide",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "8cd55cf3-7ac8-403c-b078-763fba022029",
+                      "root": false
+                    }
+                  },
+                  "label": "Holiday Guide"
+                },
+                "version": 1,
+                "label": "Holiday Guide",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:32:14.758Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.418Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "8cd55cf3-7ac8-403c-b078-763fba022029",
+                  "root": false
+                },
+                "deliveryId": "373ba3b1-ab19-41d3-b19e-6034ce74fba1"
+              },
+              "children": []
+            },
+            {
+              "id": "a54f92ed-3e67-4b7e-9e54-c19e776e5cc9",
+              "label": "Size Guide",
+              "contentItem": {
+                "id": "a54f92ed-3e67-4b7e-9e54-c19e776e5cc9",
+                "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Size Guide",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "parentId": "8cd55cf3-7ac8-403c-b078-763fba022029",
+                      "root": false
+                    }
+                  },
+                  "label": "Size Guide"
+                },
+                "version": 1,
+                "label": "Size Guide",
+                "status": "ACTIVE",
+                "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "locale": "en-US",
+                "createdDate": "2021-01-12T13:32:44.833Z",
+                "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+                "lastModifiedDate": "2021-01-13T23:10:28.661Z",
+                "lastPublishedVersion": 1,
+                "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+                "hierarchy": {
+                  "parentId": "8cd55cf3-7ac8-403c-b078-763fba022029",
+                  "root": false
+                },
+                "deliveryId": "a54f92ed-3e67-4b7e-9e54-c19e776e5cc9"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+      "label": "Visitor Segments",
+      "contentItem": {
+        "id": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+        "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Visitor Segments",
+            "schema": "https://anyafinn.online/taxonomy-tag-group.json",
+            "hierarchy": {
+              "parentId": "58eccba5-f178-46f9-8313-9144b04ab9e9",
+              "root": false
+            }
+          },
+          "label": "Visitor Segments"
+        },
+        "version": 1,
+        "label": "Visitor Segments",
+        "status": "ACTIVE",
+        "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+        "locale": "en-US",
+        "createdDate": "2021-01-12T13:33:03.737Z",
+        "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+        "lastModifiedDate": "2021-01-13T23:10:28.443Z",
+        "lastPublishedVersion": 1,
+        "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+        "hierarchy": {
+          "parentId": "58eccba5-f178-46f9-8313-9144b04ab9e9",
+          "root": false
+        },
+        "deliveryId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420"
+      },
+      "children": [
+        {
+          "id": "6b18a81f-5f83-4d7e-a25c-51684af998a2",
+          "label": "Bargain Hunter",
+          "contentItem": {
+            "id": "6b18a81f-5f83-4d7e-a25c-51684af998a2",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Bargain Hunter",
+                "schema": "https://anyafinn.online/taxonomy-tag.json",
+                "hierarchy": {
+                  "parentId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+                  "root": false
+                }
+              },
+              "label": "bargain-hunter"
+            },
+            "version": 1,
+            "label": "Bargain Hunter",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:33:27.789Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.533Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+              "root": false
+            },
+            "deliveryId": "6b18a81f-5f83-4d7e-a25c-51684af998a2"
+          },
+          "children": []
+        },
+        {
+          "id": "d6b20460-3441-4552-bd90-3e8b43d36a29",
+          "label": "Globe-Trotter",
+          "contentItem": {
+            "id": "d6b20460-3441-4552-bd90-3e8b43d36a29",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Globe-Trotter",
+                "schema": "https://anyafinn.online/taxonomy-tag.json",
+                "hierarchy": {
+                  "parentId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+                  "root": false
+                }
+              },
+              "label": "globe-trotter"
+            },
+            "version": 1,
+            "label": "Globe-Trotter",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:34:05.319Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.733Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+              "root": false
+            },
+            "deliveryId": "d6b20460-3441-4552-bd90-3e8b43d36a29"
+          },
+          "children": []
+        },
+        {
+          "id": "bca13f06-373f-4400-bd45-3fdbceaf377b",
+          "label": "Fashionista",
+          "contentItem": {
+            "id": "bca13f06-373f-4400-bd45-3fdbceaf377b",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Fashionista",
+                "schema": "https://anyafinn.online/taxonomy-tag.json",
+                "hierarchy": {
+                  "parentId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+                  "root": false
+                }
+              },
+              "label": "fashionista"
+            },
+            "version": 1,
+            "label": "Fashionista",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:33:45.636Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.715Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+              "root": false
+            },
+            "deliveryId": "bca13f06-373f-4400-bd45-3fdbceaf377b"
+          },
+          "children": []
+        },
+        {
+          "id": "8d0a6628-7185-47e2-87a5-49c8e45c733e",
+          "label": "Guest",
+          "contentItem": {
+            "id": "8d0a6628-7185-47e2-87a5-49c8e45c733e",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Guest",
+                "schema": "https://anyafinn.online/taxonomy-tag.json",
+                "hierarchy": {
+                  "parentId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+                  "root": false
+                }
+              },
+              "label": "guest"
+            },
+            "version": 1,
+            "label": "Guest",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:34:21.435Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.609Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+              "root": false
+            },
+            "deliveryId": "8d0a6628-7185-47e2-87a5-49c8e45c733e"
+          },
+          "children": []
+        },
+        {
+          "id": "a16f2a7a-9d8b-490a-91ed-c9b2a2ee7e64",
+          "label": "Home Trendsetter",
+          "contentItem": {
+            "id": "a16f2a7a-9d8b-490a-91ed-c9b2a2ee7e64",
+            "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Home Trendsetter",
+                "schema": "https://anyafinn.online/taxonomy-tag.json",
+                "hierarchy": {
+                  "parentId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+                  "root": false
+                }
+              },
+              "label": "home-trendsetter"
+            },
+            "version": 1,
+            "label": "Home Trendsetter",
+            "status": "ACTIVE",
+            "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "locale": "en-US",
+            "createdDate": "2021-01-12T13:34:37.260Z",
+            "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+            "lastModifiedDate": "2021-01-13T23:10:28.643Z",
+            "lastPublishedVersion": 1,
+            "lastPublishedDate": "2021-01-13T23:10:26.065Z",
+            "hierarchy": {
+              "parentId": "3a9ebbab-8b82-4733-974b-f8bab0ad7420",
+              "root": false
+            },
+            "deliveryId": "a16f2a7a-9d8b-490a-91ed-c9b2a2ee7e64"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

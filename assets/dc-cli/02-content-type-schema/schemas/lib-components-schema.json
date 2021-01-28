@@ -1,0 +1,48 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://anyafinn.online/lib-components.json",
+    
+	"type": "object",
+
+    "definitions": {
+        "anyComponent": {
+            "enum": [
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/simple-banner.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/simple-localized-banner.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/banner.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/card.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/cardList.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/curated-product-grid.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/customRichText.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/product-grid.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/image.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/promo.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/promoList.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/slider.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/splitBlock.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/text.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/video.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/container.json",
+                "https://anyafinn.online/component-personify-targeted-content.json",
+                "https://anyafinn.online/component-dy-ab-content.json",
+                "https://anyafinn.online/component-dynamic-blog-list.json",
+                "https://anyafinn.online/component-productlistsearch.json"
+            ]
+        },
+        "anySlot": {
+            "enum": [
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/slot-types/personalized-banner-slot.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/slot-types/flexible-slot.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/slot-types/menu-slot.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/slot-types/landingpage-slot.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/slot-types/localized-banner-slot.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/simple-banner.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/splitBlock.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/curated-product-grid.json",
+                "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/product-grid.json",
+                "https://anyafinn.online/component-dynamic-blog-list.json",
+                "https://anyafinn.online/slot-bannerslot.json"
+            ]
+        }
+    }
+}

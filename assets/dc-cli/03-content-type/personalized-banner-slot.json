@@ -1,0 +1,40 @@
+{
+  "contentTypeUri": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/slot-types/personalized-banner-slot.json",
+  "status": "ACTIVE",
+  "settings": {
+    "label": "Targeted Hero Slot",
+    "icons": [
+      {
+        "size": 256,
+        "url": "https://bigcontent.io/cms/icons/ca-types-default.png"
+      }
+    ],
+    "visualizations": [
+      {
+        "label": "Site",
+        "templatedUri": "https://www.anyafinn.online/visualization?vse={{vse.domain}}&content={{content.sys.id}}&locale={{locales}}",
+        "default": true
+      },
+      {
+        "label": "LeanKit",
+        "templatedUri": "https://willow-demo-leankit.dev.adis.ws/static/leankit-plugin.html?boardId=680372499&id={{content.sys.id}}&domain={{vse.domain}}",
+        "default": false
+      },
+      {
+        "label": "QR for Mobile",
+        "templatedUri": "https://www.anyafinn.online/visualization/qr?vse={{vse.domain}}&content={{content.sys.id}}&locale={{locales}}",
+        "default": false
+      },
+      {
+        "label": "JSON",
+        "templatedUri": "https://presalesadisws.s3.eu-west-1.amazonaws.com/dynamic-content/dc-visualization-content-delivery/index.html?vse={{vse.domain}}&id={{content.sys.id}}&format=inlined&depth=all&v2=true&locale={{locales}}",
+        "default": false
+      }
+    ],
+    "cards": [
+      {
+        "templatedUri": "https://www.anyafinn.online/visualization/standalone?vse={{vse.domain}}&content={{content.sys.id}}&locale={{locales}}"
+      }
+    ]
+  }
+}

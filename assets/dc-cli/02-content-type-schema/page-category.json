@@ -1,0 +1,5 @@
+{
+  "body": "./schemas/page-category-schema.json",
+  "schemaId": "https://anyafinn.online/page-category.json",
+  "validationLevel": "CONTENT_TYPE"
+}

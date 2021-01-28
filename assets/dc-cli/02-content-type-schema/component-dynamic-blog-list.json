@@ -1,0 +1,5 @@
+{
+  "body": "./schemas/component-dynamic-blog-list-schema.json",
+  "schemaId": "https://anyafinn.online/component-dynamic-blog-list.json",
+  "validationLevel": "CONTENT_TYPE"
+}

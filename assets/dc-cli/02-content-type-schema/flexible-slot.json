@@ -1,0 +1,5 @@
+{
+  "body": "./schemas/flexible-slot-schema.json",
+  "schemaId": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/slot-types/flexible-slot.json",
+  "validationLevel": "SLOT"
+}

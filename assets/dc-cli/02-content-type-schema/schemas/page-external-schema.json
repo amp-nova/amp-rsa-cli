@@ -1,0 +1,40 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://anyafinn.online/page-external.json",
+
+	"title": "Page Group",
+	"description": "",
+
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+    ],
+    
+    "trait:hierarchy": {
+		"childContentTypes": [
+        ]
+    },
+
+    "trait:sortable": {
+        "sortBy": [
+            { "key": "default", "paths": ["/menu/priority"] }
+        ]
+    },
+	
+	"type": "object",
+	"properties": {
+        "title": {
+            "type": "string",
+            "title": "Title"
+        },
+        "href": {
+            "type": "string",
+            "title": "Link"
+        },
+        "menu": { "$ref": "./lib-menu.json#/definitions/menuItemConfig" }
+    },
+    
+    "definitions": {
+    }
+}

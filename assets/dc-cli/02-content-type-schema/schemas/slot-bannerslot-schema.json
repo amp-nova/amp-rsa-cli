@@ -1,0 +1,43 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://anyafinn.online/slot-bannerslot.json",
+
+	"title": "Title",
+	"description": "Description",
+
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+	],
+	
+	"type": "object",
+	"properties": {
+		"content": {
+            "title": "Content",
+            "allOf": [
+              {
+                "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+              },
+              {
+                "properties": {
+                  "contentType": {
+                    "title": "contentType",
+                    "enum": [
+                      "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/simple-banner.json",
+                      "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/simple-localized-banner.json",
+                      "https://anyafinn.online/component-personify-targeted-content.json",
+                      "https://anyafinn.online/component-dy-ab-content.json",
+                      "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/banner.json",
+                      "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/banner-with-poi.json",
+                      "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/slider.json",
+                      "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/video.json"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+	},
+	"propertyOrder": []
+}

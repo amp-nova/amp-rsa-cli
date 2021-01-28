@@ -1,0 +1,146 @@
+{
+  "id": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937",
+  "label": "Configuration imported",
+  "contentItem": {
+    "id": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937",
+    "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+    "folderId": null,
+    "body": {
+      "_meta": {
+        "name": "Configuration imported",
+        "schema": "https://anyafinn.online/config.json",
+        "hierarchy": {
+          "root": true
+        }
+      },
+      "type": "Configuration"
+    },
+    "version": 1,
+    "label": "Configuration imported",
+    "status": "ACTIVE",
+    "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+    "locale": "en-US",
+    "createdDate": "2021-01-12T14:06:12.904Z",
+    "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+    "lastModifiedDate": "2021-01-13T23:13:23.869Z",
+    "lastPublishedVersion": 1,
+    "lastPublishedDate": "2021-01-13T23:13:21.723Z",
+    "hierarchy": {
+      "root": true
+    },
+    "deliveryId": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937"
+  },
+  "children": [
+    {
+      "id": "8206962d-d4f6-4459-a572-3eced7a5293a",
+      "label": "Translation Workflow",
+      "contentItem": {
+        "id": "8206962d-d4f6-4459-a572-3eced7a5293a",
+        "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Translation Workflow",
+            "schema": "https://anyafinn.online/config-translation.json",
+            "deliveryKey": "config/translation_imported",
+            "hierarchy": {
+              "parentId": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937",
+              "root": false
+            }
+          },
+          "workflowStates": {
+            "inProgress": "60056bcccff47e0001f6bd0e",
+            "complete": "60056c334cedfd0001d08937"
+          },
+          "contentTypes": [
+            {
+              "fieldAllowList": [
+                "$.snippet.title",
+                "$.snippet.description",
+                "$.snippet.keywords",
+                "$.content.text[?(@.type=='markdown')].data"
+              ],
+              "schema": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/blog.json"
+            }
+          ],
+          "type": "Translation",
+          "provider": "AWS Translate"
+        },
+        "version": 5,
+        "label": "Translation Workflow",
+        "status": "ACTIVE",
+        "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+        "locale": "en-US",
+        "createdDate": "2021-01-12T14:07:43.671Z",
+        "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+        "lastModifiedDate": "2021-01-18T17:36:45.229Z",
+        "lastPublishedVersion": 5,
+        "lastPublishedDate": "2021-01-18T17:36:44.961Z",
+        "hierarchy": {
+          "parentId": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937",
+          "root": false
+        },
+        "deliveryId": "8206962d-d4f6-4459-a572-3eced7a5293a"
+      },
+      "children": []
+    },
+    {
+      "id": "98761720-d504-4b92-873d-408d7ddad6d2",
+      "label": "Components",
+      "contentItem": {
+        "id": "98761720-d504-4b92-873d-408d7ddad6d2",
+        "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Components",
+            "schema": "https://anyafinn.online/config-components.json",
+            "deliveryKey": "config/components_imported",
+            "hierarchy": {
+              "parentId": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937",
+              "root": false
+            }
+          },
+          "masthead": {
+            "variant": "holiday"
+          },
+          "categoryPage": {
+            "facets": [
+              {
+                "type": "standard",
+                "field": "variants.attributes.color.label.en",
+                "title": "Color"
+              },
+              {
+                "type": "standard",
+                "field": "variants.attributes.size",
+                "title": "Size"
+              },
+              {
+                "type": "standard",
+                "field": "variants.attributes.style.key",
+                "title": "Style"
+              }
+            ]
+          }
+        },
+        "version": 5,
+        "label": "Components",
+        "status": "ACTIVE",
+        "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+        "locale": "en-US",
+        "createdDate": "2021-01-12T14:08:48.747Z",
+        "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
+        "lastModifiedDate": "2021-01-22T08:13:01.412Z",
+        "lastPublishedVersion": 5,
+        "lastPublishedDate": "2021-01-22T08:13:06.713Z",
+        "hierarchy": {
+          "parentId": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937",
+          "root": false
+        },
+        "deliveryId": "98761720-d504-4b92-873d-408d7ddad6d2"
+      },
+      "children": []
+    }
+  ]
+}

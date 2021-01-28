@@ -1,0 +1,92 @@
+[
+  {
+    "id": "60056cc9c9e77c00016e07a5",
+    "label": "Approved",
+    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "createdDate": "2021-01-18T11:11:05.187Z",
+    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "lastModifiedDate": "2021-01-18T11:11:05.187Z",
+    "color": "rgb(63,152,134)"
+  },
+  {
+    "id": "60056cb9c9e77c0001c9660c",
+    "label": "Rejected",
+    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "createdDate": "2021-01-18T11:10:49.783Z",
+    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "lastModifiedDate": "2021-01-18T11:10:49.783Z",
+    "color": "rgb(198,78,103)"
+  },
+  {
+    "id": "60056caacff47e0001f6bd53",
+    "label": "NEW",
+    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "createdDate": "2021-01-18T11:10:34.280Z",
+    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "lastModifiedDate": "2021-01-18T11:10:34.280Z",
+    "color": "rgb(240,110,170)"
+  },
+  {
+    "id": "60056c64cff47e0001363b49",
+    "label": "Sent for translation",
+    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "createdDate": "2021-01-18T11:09:24.453Z",
+    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "lastModifiedDate": "2021-01-18T11:09:24.453Z",
+    "color": "rgb(192,192,48)"
+  },
+  {
+    "id": "60056c4acff47e0001f6bd39",
+    "label": "Ready for review",
+    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "createdDate": "2021-01-18T11:08:58.114Z",
+    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "lastModifiedDate": "2021-01-18T11:08:58.114Z",
+    "color": "rgb(198,156,84)"
+  },
+  {
+    "id": "60056c334cedfd0001d08937",
+    "label": "Translation complete",
+    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "createdDate": "2021-01-18T11:08:35.735Z",
+    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "lastModifiedDate": "2021-01-18T11:08:35.735Z",
+    "color": "rgb(0,67,115)"
+  },
+  {
+    "id": "60056bdd52faff000179130b",
+    "label": "Ready for Scheduling",
+    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "createdDate": "2021-01-18T11:07:09.644Z",
+    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "lastModifiedDate": "2021-01-18T11:07:09.644Z",
+    "color": "rgb(126,224,216)"
+  },
+  {
+    "id": "60056bcccff47e0001f6bd0e",
+    "label": "Translation in progress",
+    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "createdDate": "2021-01-18T11:06:52.002Z",
+    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "lastModifiedDate": "2021-01-18T11:06:52.002Z",
+    "color": "rgb(205,154,195)"
+  },
+  {
+    "id": "60056babcff47e00010c3423",
+    "label": "In progress",
+    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "createdDate": "2021-01-18T11:06:19.043Z",
+    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "lastModifiedDate": "2021-01-18T11:06:19.043Z",
+    "color": "rgb(182,216,227)"
+  },
+  {
+    "id": "60056b95c9e77c00016e0741",
+    "label": "Ready for Translation",
+    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "createdDate": "2021-01-18T11:05:57.575Z",
+    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
+    "lastModifiedDate": "2021-01-18T11:05:57.575Z",
+    "color": "rgb(113,114,153)"
+  }
+]

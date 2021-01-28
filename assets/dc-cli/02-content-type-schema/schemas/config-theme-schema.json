@@ -1,0 +1,54 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://anyafinn.online/config-theme.json",
+
+	"title": "Theme",
+	"description": "",
+
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+    ],
+	
+	"type": "object",
+	"properties": {
+        "palette": {
+            "title": "Palette",
+            "properties": {
+                "primary": {
+                    "title": "Primary",
+                    "allOf": [
+                        { "$ref": "#/definitions/PaletteColorOptions" }
+                    ]
+                },
+                "secondary": {
+                    "title": "Secondary",
+                    "allOf": [
+                        { "$ref": "#/definitions/PaletteColorOptions" }
+                    ]
+                }
+            }
+        }
+    },
+    
+    "definitions": {
+        "PaletteColorOptions": {
+            "type": "object",
+            "properties": {
+                "main": {
+                    "type": "string",
+                    "title": "Main"
+                },
+                "light": {
+                    "type": "string",
+                    "title": "Light"
+                },
+                "dark": {
+                    "type": "string",
+                    "title": "Dark"
+                }
+            }
+        }
+    }
+}

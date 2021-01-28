@@ -1,0 +1,5 @@
+{
+  "body": "./schemas/slot-localizedbannerslot-schema.json",
+  "schemaId": "https://anyafinn.online/slot-localizedbannerslot.json",
+  "validationLevel": "SLOT"
+}

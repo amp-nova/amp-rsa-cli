@@ -1,0 +1,95 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://anyafinn.online/config-components.json",
+
+	"title": "Components",
+	"description": "",
+
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+    ],
+
+    "trait:hierarchy": {
+		"childContentTypes": [
+        ]
+    },
+	
+	"type": "object",
+	"properties": {
+        "masthead": {
+            "type": "object",
+            "title": "Masthead",
+            "properties": {
+                "variant": {
+                    "type": "string",
+                    "title": "Variant",
+                    "enum": [
+                        "default",
+                        "pride",
+                        "sale",
+                        "holiday"
+                    ]
+                },
+                "logo": {
+                    "title": "Logo",
+                    "allOf": [
+                        { "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/image-link" }
+                    ]
+                },
+                "navigationBackgroundColor": {
+                    "title": "Navigation Color",
+                    "type": "string",
+                    "format": "color"
+                }
+            }
+        },
+        "footer": {
+            "type": "object",
+            "title": "Footer",
+            "properties": {
+                "copyrightNoticeText": {
+                    "type": "string",
+                    "title": "Copyright Notice"
+                },
+                "newsletterPlaceholderText": {
+                    "type": "string",
+                    "title": "Newsletter Placeholder"
+                }
+            }
+        },
+        "categoryPage": {
+            "type": "object",
+            "title": "Category Browse",
+            "properties": {
+                "facets": {
+                    "type": "array",
+                    "title": "Facets",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "title": "Type",
+                                "enum": ["standard"]
+                            },
+                            "field": {
+                                "type": "string",
+                                "title": "Field"
+                            },
+                            "title": {
+                                "type": "string",
+                                "title": "Title"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    
+    "definitions": {
+        
+    }
+}

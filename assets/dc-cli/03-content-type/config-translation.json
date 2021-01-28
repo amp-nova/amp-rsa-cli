@@ -1,0 +1,15 @@
+{
+  "contentTypeUri": "https://anyafinn.online/config-translation.json",
+  "status": "ACTIVE",
+  "settings": {
+    "label": "Translation Configuration",
+    "icons": [
+      {
+        "size": 256,
+        "url": "https://bigcontent.io/cms/icons/experience-management/exp-voiceapp.png"
+      }
+    ],
+    "visualizations": [],
+    "cards": []
+  }
+}

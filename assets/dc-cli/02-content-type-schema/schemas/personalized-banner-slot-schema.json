@@ -1,0 +1,60 @@
+{
+  "$schema": "http://bigcontent.io/cms/schema/v1/schema#",
+  "id": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/slot-types/personalized-banner-slot.json",
+  "title": "Personalized Banner Slot",
+  "description": "A Slot that can accept multiple banner for different segments",
+  "allOf": [
+    {
+      "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+    }
+  ],
+  "type": "object",
+  "properties": {
+    "segments": {
+      "type": "array",
+      "title": "Content",
+
+      "items": {
+        "type": "object",
+        "properties": {
+          "segment": {
+            "type": "string",
+            "title": "Segment",
+            "enum": [
+              "bargain-hunter",
+              "fashionista",
+              "home-trendsetter",
+              "globe-trotter"
+            ]
+          },
+          "content": {
+            "title": "Content",
+            "allOf": [
+              {
+                "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+              },
+              {
+                "properties": {
+                  "contentType": {
+                    "title": "contentType",
+                    "enum": [
+                      "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/simple-banner.json",
+                      "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/banner.json",
+					            "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/banner-with-poi.json",
+                      "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/slider.json",
+                      "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/video.json"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "propertyOrder": [
+          "segment",
+          "content"
+        ]
+      }
+    }
+  }
+}

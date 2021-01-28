@@ -1,0 +1,12 @@
+{
+    "appId": "{{algolia.appId}}",
+    "apiKey": "{{algolia.apiKey}}",
+    "indexes": {
+    {{#each algolia.indexes}}
+        "{{@key}}": {
+            "prod": "{{this.prod}}",
+            "staging": "{{this.staging}}"
+        }
+    {{/each}}
+    }
+}

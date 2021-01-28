@@ -1,0 +1,135 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://anyafinn.online/component-rule-based-content.json",
+
+	"title": "Rule Based Content",
+	"description": "",
+
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+	],
+	
+	"type": "object",
+	"properties": {
+		"active": {
+			"type": "boolean",
+			"title": "Active"
+		},
+		"priority": {
+			"type": "number",
+			"title": "Priority"
+		},
+        "rules": {
+			"title": "Rules",
+			"type": "object",
+			"properties": {
+				"productCategories": {
+					"title": "Product Categories",
+					"type": "object",
+					"properties": {
+						"values": {
+							"type": "array",
+							"ui:extension": {
+								"name": "hierarchy-picker",
+								"params": {
+									"nodeId": "d5df448e-2b66-4f9a-821b-c4784ea17470"
+								}
+							},
+							"items": {
+								"allOf": [{
+										"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-reference"
+									},
+									{
+										"properties": {
+											"contentType": {
+												"enum": [
+													"https://anyafinn.online/page-category.json"
+												]
+											}
+										}
+									}
+								]
+							}
+						}
+					}
+				},
+				"tags": {
+					"title": "Tags",
+					"type": "object",
+					"properties": {
+						"values": {
+							"type": "array",
+							"ui:extension": {
+								"name": "hierarchy-picker",
+								"params": {
+									"nodeId": "7aced20e-3ac2-45cd-914d-15d499185c2e"
+								}
+							},
+							"items": {
+								"allOf": [{
+										"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+									},
+									{
+										"properties": {
+											"contentType": {
+												"enum": [
+													"https://anyafinn.online/taxonomy-tag.json"
+												]
+											}
+										}
+									}
+								]
+							}
+						}
+					}
+				},
+				"pageTypes": {
+					"title": "Page Types",
+					"type": "object",
+					"properties": {
+						"values": {
+							"type": "array",
+							"ui:extension": {
+								"name": "hierarchy-picker",
+								"params": {
+									"nodeId": "7aced20e-3ac2-45cd-914d-15d499185c2e"
+								}
+							},
+							"items": {
+								"allOf": [{
+										"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+									},
+									{
+										"properties": {
+											"contentType": {
+												"enum": [
+													"https://anyafinn.online/taxonomy-page-type.json"
+												]
+											}
+										}
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		"content": {
+			"title": "Component",
+			"allOf": [
+				{ "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link" },
+				{
+					"properties": {
+						"contentType": { "$ref": "./lib-components.json#/definitions/anyComponent" }
+					}
+				}
+			]
+		}
+    },
+    
+    "definitions": {
+    }
+}

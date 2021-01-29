@@ -21,7 +21,7 @@ export const handler = async (
     // Reading global settings
     let settingsYAML = readFileSync(`./settings.yaml`).toString();
 
-    // Backkup settings
+    // Backup settings
     writeFileSync("settings.yaml.backup", settingsYAML);
 
     // Converting from YAML to JSON

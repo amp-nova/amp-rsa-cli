@@ -18,6 +18,9 @@ analytics:
 cms:
   contentApi: rezademo.cdn.content.amplience.net
   stagingApi: 1rvmrhoqqdd6v109jl5x2t3b2z.staging.bigcontent.io
+  trustedHostSuffixes: 
+    - .cdn.content.amplience.net
+    - .staging.bigcontent.io
   hubName: rezademo
   imageBasePath: //i8.amplience.net/
   clientId: 27b98f7f-1386-4249-b612-0d09301ef0a2
@@ -64,3 +67,10 @@ serverless:
   provider:
     stage: dev
     region: eu-west-3
+  services:
+    dcContentDeliveryPoc:
+      service: willow-content-delivery-poc-rezademo
+      endpoint: https://ju3166yc31.execute-api.eu-west-3.amazonaws.com/dev
+    willowDemoServices:
+      service: willow-demo-services-rezademo
+      endpoint: https://z2fbtywxw4.execute-api.eu-west-3.amazonaws.com/dev

@@ -13,7 +13,7 @@ provider:
     NO_COLOR: ${env:NO_COLOR, 'true'}
     PRODUCTION_CONTENT_DELIVERY_HOST: {{cms.contentApi}}
     STAGING_CONTENT_DELIVERY_HOST: {{cms.stagingApi}}
-    TRUSTED_HOST_SUFFIXES: .cdn.content.amplience.net,.staging.bigcontent.io
+    TRUSTED_HOST_SUFFIXES: {{#each cms.trustedHostSuffixes}}{{this}}{{#unless @last}},{{/unless}}{{/each}}
     MANAGEMENT_API_KEY: {{cms.clientId}}
     MANAGEMENT_API_SECRET: {{cms.clientSecret}}
     MANAGEMENT_HUB_ID: {{cms.hubId}}

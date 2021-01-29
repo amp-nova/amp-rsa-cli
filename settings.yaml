@@ -1,6 +1,8 @@
 algolia:
   appId: 4BS5I6EVVD
   apiKey: fdf2178cefd413fc7c572c5b9d88829c
+  tacit_appId: T7I8W0D1V2
+  tacit_apiKey: dac903cc5cce5d8163ec78284af6dcc0
   indexes:
     blog:
       prod: rezademo.blog-production

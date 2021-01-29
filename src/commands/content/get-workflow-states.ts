@@ -1,5 +1,6 @@
 import { Arguments } from 'yargs';
 import { readFileSync, writeFileSync } from 'fs';
+import childProcess from 'child_process';
 
 const yaml = require('js-yaml');
 const lodash = require('lodash');
@@ -23,16 +24,24 @@ export const handler = async (
     const settingsJSON = yaml.load(settingsYAML)
     console.log('Global settings loaded');
 
-    // Get Workflow States IDs from export
-    const workflowStates = readFileSync(`./assets/content/00-workflow-states/workflow-states-${settingsJSON.cms.hubId}-${settingsJSON.cms.hubName}.json`).toString();
+    // Exporting Workflow States
+    console.log(`Exporting Workflow States`);
+    childProcess.execSync(
+      `dc-cli workflow-states export . -f`,
+      { cwd: `./assets/content/workflow-states` }
+    );
+
+    // Get Workflow States from export
+    const workflowStates = readFileSync(`./assets/content/workflow-states/workflow-states-${settingsJSON.cms.hubId}-${settingsJSON.cms.hubName}.json`).toString();
     const workflowStateJson = JSON.parse(workflowStates);
 
+    // Build Workflow States map for settings
     let workflowStatesMap: any = {};
     workflowStateJson.map((item: any) => {
       workflowStatesMap[lodash.camelCase(item.label)] = item.id;
     });
 
-    // Add workflows state map to settings
+    // Add Workflow States map to settings
     settingsJSON.cms.workflowStates = workflowStatesMap;
 
     // Convert JSON to YAML and save to file

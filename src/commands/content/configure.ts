@@ -11,6 +11,13 @@ export const handler = async (
   argv: Arguments
 ): Promise<void> => {
 
+  const templates = [
+    "./assets/content/extensions/extensions.json.hbs",
+    "./assets/content/hierarchies/hierarchy-configuration.json.hbs",
+    "./assets/content/indexes/indexes.json.hbs",
+    "./assets/content/webhooks/webhooks.json.hbs"
+  ];
+
   try {
 
     // Reading global settings

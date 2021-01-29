@@ -1,0 +1,354 @@
+[
+  {
+    "indexDetails": {
+      "name": "{{cms.hubName}}.blog-production",
+      "suffix": "blog-production",
+      "label": "blog-production",
+      "type": "PRODUCTION",
+      "assignedContentTypes": [
+        {
+          "contentTypeUri": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/blog.json"
+        }
+      ]
+    },
+    "settings": {
+      "minWordSizefor1Typo": 4,
+      "minWordSizefor2Typos": 8,
+      "hitsPerPage": 20,
+      "maxValuesPerFacet": 100,
+      "version": 2,
+      "searchableAttributes": [
+        "snippet.title",
+        "snippet.description"
+      ],
+      "numericAttributesToIndex": null,
+      "attributesToRetrieve": null,
+      "unretrievableAttributes": null,
+      "optionalWords": null,
+      "attributesForFaceting": [
+        "snippet.author",
+        "snippet.category",
+        "snippet.tags.id",
+        "locale"
+      ],
+      "attributesToSnippet": null,
+      "attributesToHighlight": null,
+      "paginationLimitedTo": 1000,
+      "attributeForDistinct": null,
+      "exactOnSingleWordQuery": "attribute",
+      "ranking": [
+        "typo",
+        "geo",
+        "words",
+        "filters",
+        "proximity",
+        "attribute",
+        "exact",
+        "custom"
+      ],
+      "customRanking": [
+        "desc(dateAsTimeStamp)"
+      ],
+      "separatorsToIndex": "",
+      "removeWordsIfNoResults": "none",
+      "queryType": "prefixLast",
+      "highlightPreTag": "<em>",
+      "highlightPostTag": "</em>",
+      "snippetEllipsisText": "",
+      "alternativesAsExact": [
+        "ignorePlurals",
+        "singleWordSynonym"
+      ]
+    },
+    "replicasSettings": []
+  },
+  {
+    "indexDetails": {
+      "name": "{{cms.hubName}}.blog-staging",
+      "suffix": "blog-staging",
+      "label": "blog-staging",
+      "type": "STAGING",
+      "assignedContentTypes": [
+        {
+          "contentTypeUri": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/blog.json"
+        }
+      ]
+    },
+    "settings": {
+      "minWordSizefor1Typo": 4,
+      "minWordSizefor2Typos": 8,
+      "hitsPerPage": 20,
+      "maxValuesPerFacet": 100,
+      "version": 2,
+      "searchableAttributes": [
+        "snippet.title",
+        "snippet.description"
+      ],
+      "numericAttributesToIndex": null,
+      "attributesToRetrieve": null,
+      "unretrievableAttributes": null,
+      "optionalWords": null,
+      "attributesForFaceting": [
+        "snippet.author",
+        "snippet.category",
+        "snippet.tags.id",
+        "locale"
+      ],
+      "attributesToSnippet": null,
+      "attributesToHighlight": null,
+      "paginationLimitedTo": 1000,
+      "attributeForDistinct": null,
+      "exactOnSingleWordQuery": "attribute",
+      "ranking": [
+        "typo",
+        "geo",
+        "words",
+        "filters",
+        "proximity",
+        "attribute",
+        "exact",
+        "custom"
+      ],
+      "customRanking": [
+        "desc(dateAsTimeStamp)"
+      ],
+      "separatorsToIndex": "",
+      "removeWordsIfNoResults": "none",
+      "queryType": "prefixLast",
+      "highlightPreTag": "<em>",
+      "highlightPostTag": "</em>",
+      "snippetEllipsisText": "",
+      "alternativesAsExact": [
+        "ignorePlurals",
+        "singleWordSynonym"
+      ]
+    },
+    "replicasSettings": []
+  },
+  {
+    "indexDetails": {
+      "name": "{{cms.hubName}}.rule-based-production",
+      "suffix": "rule-based-production",
+      "label": "rule-based-production",
+      "type": "PRODUCTION",
+      "assignedContentTypes": [
+        {
+          "contentTypeUri": "https://anyafinn.online/component-rule-based-content.json"
+        }
+      ]
+    },
+    "settings": {
+      "minWordSizefor1Typo": 4,
+      "minWordSizefor2Typos": 8,
+      "hitsPerPage": 20,
+      "maxValuesPerFacet": 100,
+      "version": 2,
+      "attributesToIndex": null,
+      "numericAttributesToIndex": null,
+      "attributesToRetrieve": null,
+      "unretrievableAttributes": null,
+      "optionalWords": null,
+      "replicas": [
+        "{{cms.hubName}}.rule-based-production_sort-priority-desc"
+      ],
+      "attributesForFaceting": [
+        "rules.productCategories",
+        "rules.products",
+        "rules.tags",
+        "rules.pageTypes",
+        "active"
+      ],
+      "attributesToSnippet": null,
+      "attributesToHighlight": null,
+      "paginationLimitedTo": 1000,
+      "attributeForDistinct": null,
+      "exactOnSingleWordQuery": "attribute",
+      "ranking": [
+        "typo",
+        "geo",
+        "words",
+        "filters",
+        "proximity",
+        "attribute",
+        "exact",
+        "custom"
+      ],
+      "customRanking": null,
+      "separatorsToIndex": "",
+      "removeWordsIfNoResults": "none",
+      "queryType": "prefixLast",
+      "highlightPreTag": "<em>",
+      "highlightPostTag": "</em>",
+      "snippetEllipsisText": "",
+      "alternativesAsExact": [
+        "ignorePlurals",
+        "singleWordSynonym"
+      ]
+    },
+    "replicasSettings": [
+      {
+        "name": "{{cms.hubName}}.rule-based-production_sort-priority-desc",
+        "settings": {
+          "minWordSizefor1Typo": 4,
+          "minWordSizefor2Typos": 8,
+          "hitsPerPage": 20,
+          "maxValuesPerFacet": 100,
+          "version": 2,
+          "attributesToIndex": null,
+          "numericAttributesToIndex": null,
+          "attributesToRetrieve": null,
+          "unretrievableAttributes": null,
+          "optionalWords": null,
+          "primary": "{{cms.hubName}}.rule-based-production",
+          "attributesForFaceting": [
+            "rules.productCategories",
+            "rules.products",
+            "rules.tags",
+            "rules.pageTypes",
+            "active"
+          ],
+          "attributesToSnippet": null,
+          "attributesToHighlight": null,
+          "paginationLimitedTo": 1000,
+          "attributeForDistinct": null,
+          "exactOnSingleWordQuery": "attribute",
+          "ranking": [
+            "desc(priority)",
+            "typo",
+            "geo",
+            "words",
+            "filters",
+            "proximity",
+            "attribute",
+            "exact",
+            "custom"
+          ],
+          "customRanking": null,
+          "separatorsToIndex": "",
+          "removeWordsIfNoResults": "none",
+          "queryType": "prefixLast",
+          "highlightPreTag": "<em>",
+          "highlightPostTag": "</em>",
+          "snippetEllipsisText": "",
+          "alternativesAsExact": [
+            "ignorePlurals",
+            "singleWordSynonym"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "indexDetails": {
+      "name": "{{cms.hubName}}.rule-based-staging",
+      "suffix": "rule-based-staging",
+      "label": "rule-based-staging",
+      "type": "STAGING",
+      "assignedContentTypes": [
+        {
+          "contentTypeUri": "https://anyafinn.online/component-rule-based-content.json"
+        }
+      ]
+    },
+    "settings": {
+      "minWordSizefor1Typo": 4,
+      "minWordSizefor2Typos": 8,
+      "hitsPerPage": 20,
+      "maxValuesPerFacet": 100,
+      "version": 2,
+      "attributesToIndex": null,
+      "numericAttributesToIndex": null,
+      "attributesToRetrieve": null,
+      "unretrievableAttributes": null,
+      "optionalWords": null,
+      "replicas": [
+        "{{cms.hubName}}.rule-based-staging_sort-priority-desc"
+      ],
+      "attributesForFaceting": [
+        "rules.productCategories",
+        "rules.products",
+        "rules.tags",
+        "rules.pageTypes",
+        "active"
+      ],
+      "attributesToSnippet": null,
+      "attributesToHighlight": null,
+      "paginationLimitedTo": 1000,
+      "attributeForDistinct": null,
+      "exactOnSingleWordQuery": "attribute",
+      "ranking": [
+        "typo",
+        "geo",
+        "words",
+        "filters",
+        "proximity",
+        "attribute",
+        "exact",
+        "custom"
+      ],
+      "customRanking": null,
+      "separatorsToIndex": "",
+      "removeWordsIfNoResults": "none",
+      "queryType": "prefixLast",
+      "highlightPreTag": "<em>",
+      "highlightPostTag": "</em>",
+      "snippetEllipsisText": "",
+      "alternativesAsExact": [
+        "ignorePlurals",
+        "singleWordSynonym"
+      ]
+    },
+    "replicasSettings": [
+      {
+        "name": "{{cms.hubName}}.rule-based-staging_sort-priority-desc",
+        "settings": {
+          "minWordSizefor1Typo": 4,
+          "minWordSizefor2Typos": 8,
+          "hitsPerPage": 20,
+          "maxValuesPerFacet": 100,
+          "version": 2,
+          "attributesToIndex": null,
+          "numericAttributesToIndex": null,
+          "attributesToRetrieve": null,
+          "unretrievableAttributes": null,
+          "optionalWords": null,
+          "primary": "{{cms.hubName}}.rule-based-staging",
+          "attributesForFaceting": [
+            "rules.productCategories",
+            "rules.products",
+            "rules.tags",
+            "rules.pageTypes",
+            "active"
+          ],
+          "attributesToSnippet": null,
+          "attributesToHighlight": null,
+          "paginationLimitedTo": 1000,
+          "attributeForDistinct": null,
+          "exactOnSingleWordQuery": "attribute",
+          "ranking": [
+            "desc(priority)",
+            "typo",
+            "geo",
+            "words",
+            "filters",
+            "proximity",
+            "attribute",
+            "exact",
+            "custom"
+          ],
+          "customRanking": null,
+          "separatorsToIndex": "",
+          "removeWordsIfNoResults": "none",
+          "queryType": "prefixLast",
+          "highlightPreTag": "<em>",
+          "highlightPostTag": "</em>",
+          "snippetEllipsisText": "",
+          "alternativesAsExact": [
+            "ignorePlurals",
+            "singleWordSynonym"
+          ]
+        }
+      }
+    ]
+  }
+]

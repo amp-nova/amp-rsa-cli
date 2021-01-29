@@ -1,0 +1,336 @@
+{
+  "label": "Pages",
+  "contentItem": {
+    "folderId": null,
+    "body": {
+      "_meta": {
+        "name": "Pages",
+        "schema": "https://anyafinn.online/page-homepage.json",
+        "deliveryKey": "homepage-anyafinn",
+        "hierarchy": {
+          "root": true
+        }
+      },
+      "title": "Pages"
+    },
+    "label": "Pages",
+    "status": "ACTIVE",
+    "locale": "en-US",
+    "hierarchy": {
+      "root": true
+    }
+  },
+  "children": [
+    {
+      "label": "Holiday",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Holiday",
+            "schema": "https://anyafinn.online/page-landing.json",
+            "deliveryKey": "page/holiday/sale",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "menu": {
+            "hidden": false,
+            "priority": 40
+          },
+          "title": "Holiday"
+        },
+        "label": "Holiday",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": []
+    },
+    {
+      "label": "Accessories",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Accessories",
+            "schema": "https://anyafinn.online/page-category.json",
+            "deliveryKey": "category/accessories",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "menu": {
+            "hidden": false,
+            "priority": 9
+          },
+          "title": "Accessories",
+          "name": "accessories"
+        },
+        "label": "Accessories",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": []
+    },
+    {
+      "label": "Blog",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Blog",
+            "schema": "https://anyafinn.online/page-external.json",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "menu": {
+            "hidden": false,
+            "priority": 20
+          },
+          "title": "Blog",
+          "href": "https://anyafinn.online/blog"
+        },
+        "label": "Blog",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": []
+    },
+    {
+      "label": "Men",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Men",
+            "schema": "https://anyafinn.online/page-category.json",
+            "deliveryKey": "category/men",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "menu": {
+            "hidden": false,
+            "priority": 2
+          },
+          "title": "Men",
+          "name": "men"
+        },
+        "label": "Men",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": []
+    },
+    {
+      "label": "Lookbook",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Lookbook",
+            "schema": "https://anyafinn.online/page-landing.json",
+            "deliveryKey": "page/lookbook",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "menu": {
+            "hidden": true,
+            "priority": 3
+          },
+          "title": "Lookbook"
+        },
+        "label": "Lookbook",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": []
+    },
+    {
+      "label": "New",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "New",
+            "schema": "https://anyafinn.online/page-category.json",
+            "deliveryKey": "category/new",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "menu": {
+            "hidden": false,
+            "priority": 11
+          },
+          "title": "New",
+          "name": "new"
+        },
+        "label": "New",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": []
+    },
+    {
+      "label": "Sale",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Sale",
+            "schema": "https://anyafinn.online/page-category.json",
+            "deliveryKey": "category/sale",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "menu": {
+            "hidden": false,
+            "priority": 13
+          },
+          "title": "Sale",
+          "name": "sale"
+        },
+        "label": "Sale",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": []
+    },
+    {
+      "label": "Women",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Women",
+            "schema": "https://anyafinn.online/page-category.json",
+            "deliveryKey": "category/women",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "menu": {
+            "hidden": false,
+            "priority": 1
+          },
+          "title": "Women",
+          "name": "women"
+        },
+        "label": "Women",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": [
+        {
+          "label": "Featured",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Featured",
+                "schema": "https://anyafinn.online/page-group.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "title": "Featured",
+              "priority": 1
+            },
+            "label": "Featured",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": [
+            {
+              "label": "Sustainable Designers",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Sustainable Designers",
+                    "schema": "https://anyafinn.online/page-external.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "menu": {
+                    "hidden": false,
+                    "priority": 1
+                  },
+                  "title": "Sustainable Designers",
+                  "href": "https://anyafinn.online/blog/4b5af5d8-5226-47ff-ac25-b4f5a6df49cd/Top%2013%20Sustainable%20Fashion%20Designers%20Making%20a%20Change%20in%202020"
+                },
+                "label": "Sustainable Designers",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Gifting",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Gifting",
+            "schema": "https://anyafinn.online/page-landing.json",
+            "deliveryKey": "page/gifting",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "menu": {
+            "hidden": false,
+            "priority": 40
+          },
+          "title": "Gifting"
+        },
+        "label": "Gifting",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": []
+    }
+  ]
+}

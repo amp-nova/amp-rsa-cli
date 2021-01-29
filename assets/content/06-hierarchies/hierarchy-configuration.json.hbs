@@ -1,0 +1,109 @@
+{
+  "label": "Configuration",
+  "contentItem": {
+    "folderId": null,
+    "body": {
+      "_meta": {
+        "name": "Configuration",
+        "schema": "https://anyafinn.online/config.json",
+        "hierarchy": {
+          "root": true
+        }
+      },
+      "type": "Configuration"
+    },
+    "label": "Configuration",
+    "status": "ACTIVE",
+    "locale": "en-US",
+    "hierarchy": {
+      "root": true
+    }
+  },
+  "children": [
+    {
+      "label": "Translation Workflow",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Translation Workflow",
+            "schema": "https://anyafinn.online/config-translation.json",
+            "deliveryKey": "config/translation",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "workflowStates": {
+            "inProgress": "{{cms.workfowStates.translationInProgress}}",
+            "complete": "{{cms.workflowStates.translationComplete}}"
+          },
+          "contentTypes": [
+            {
+              "fieldAllowList": [
+                "$.snippet.title",
+                "$.snippet.description",
+                "$.snippet.keywords",
+                "$.content.text[?(@.type=='markdown')].data"
+              ],
+              "schema": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/blog.json"
+            }
+          ],
+          "type": "Translation",
+          "provider": "AWS Translate"
+        },
+        "label": "Translation Workflow",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": []
+    },
+    {
+      "label": "Components",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Components",
+            "schema": "https://anyafinn.online/config-components.json",
+            "deliveryKey": "config/components",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "masthead": {
+            "variant": "holiday"
+          },
+          "categoryPage": {
+            "facets": [
+              {
+                "type": "standard",
+                "field": "variants.attributes.color.label.en",
+                "title": "Color"
+              },
+              {
+                "type": "standard",
+                "field": "variants.attributes.size",
+                "title": "Size"
+              },
+              {
+                "type": "standard",
+                "field": "variants.attributes.style.key",
+                "title": "Style"
+              }
+            ]
+          }
+        },
+        "label": "Components",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": []
+    }
+  ]
+}

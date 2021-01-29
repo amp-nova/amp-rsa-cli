@@ -1,7 +1,5 @@
 [
   {
-    "id": "60059d1acff47e0001fc9dde",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "color-picker",
     "label": "Color Picker",
     "description": "Pick from a palette",
@@ -11,15 +9,9 @@
     "parameters": "{}",
     "snippets": [],
     "settings": null,
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-18T14:37:14.597Z",
-    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "lastModifiedDate": "2021-01-18T14:37:14.597Z"
+    "status": "ACTIVE"
   },
   {
-    "id": "600a999f52faff0001070410",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "custom-rich-text",
     "label": "Custom Rich Text",
     "description": "Custom Rich Text Editor",
@@ -34,15 +26,9 @@
       }
     ],
     "settings": "{\"API\":{\"READ\":false,\"EDIT\":false},\"SANDBOX\":{\"SAME_ORIGIN\":false,\"MODALS\":false,\"NAVIGATION\":false,\"POPUPS\":false,\"POPUP_ESCAPE_SANDBOX\":false,\"DOWNLOADS\":false,\"FORMS\":false}}",
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-22T09:23:43.134Z",
-    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "lastModifiedDate": "2021-01-22T09:23:43.134Z"
+    "status": "ACTIVE"
   },
   {
-    "id": "60059c5cc9e77c0001dd8fc3",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "hierarchy-picker",
     "label": "Hierarchy Picker",
     "description": "",
@@ -52,15 +38,9 @@
     "parameters": "{}",
     "snippets": [],
     "settings": "{\"API\":{\"READ\":true,\"EDIT\":true},\"SANDBOX\":{\"SAME_ORIGIN\":true,\"MODALS\":true,\"NAVIGATION\":true,\"POPUPS\":true,\"POPUP_ESCAPE_SANDBOX\":true,\"DOWNLOADS\":true,\"FORMS\":true}}",
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-18T14:34:04.490Z",
-    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "lastModifiedDate": "2021-01-18T14:34:04.490Z"
+    "status": "ACTIVE"
   },
   {
-    "id": "60059cc54cedfd00013f77a4",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "image-poi",
     "label": "Image POI",
     "description": "Editing Interface for managing an Image",
@@ -70,33 +50,21 @@
     "parameters": "{\n  \"useVSE\": true\n}",
     "snippets": [],
     "settings": "{\"API\":{\"READ\":false,\"EDIT\":false},\"SANDBOX\":{\"SAME_ORIGIN\":false,\"MODALS\":false,\"NAVIGATION\":false,\"POPUPS\":false,\"POPUP_ESCAPE_SANDBOX\":false,\"DOWNLOADS\":false,\"FORMS\":false}}",
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-18T14:35:49.060Z",
-    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "lastModifiedDate": "2021-01-18T14:35:49.060Z"
+    "status": "ACTIVE"
   },
   {
-    "id": "60058e73cff47e0001f6c838",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "kanbanboard",
     "label": "Production Board",
     "description": "Test",
     "url": "https://dc-extension-kanban-board.s3-eu-west-1.amazonaws.com/main/index.html",
     "height": 200,
     "category": "DASHBOARD",
-    "parameters": "{\n  \"repositoryId\": \"5ff629064cedfd00013c2600\",\n  \"_comment\": \"Content repository\",\n  \"statuses\": [\n    {\n      \"id\": \"60056caacff47e0001f6bd53\",\n      \"_comment\": \"NEW status\"\n    },\n    {\n      \"id\": \"60056babcff47e00010c3423\",\n      \"_comment\": \"In progress status\"\n    },\n    {\n      \"id\": \"60056c4acff47e0001f6bd39\",\n      \"_comment\": \"Ready for review status\"\n    },\n    {\n      \"id\": \"60056cb9c9e77c0001c9660c\",\n      \"_comment\": \"Rejected status\"\n    },\n    {\n      \"id\": \"60056cc9c9e77c00016e07a5\",\n      \"_comment\": \"Approved status\"\n    }\n  ]\n}",
+    "parameters": "{\n  \"repositoryId\": \"{{cms.repositories.content}}\",\n  \"_comment\": \"Content repository\",\n  \"statuses\": [\n    {\n      \"id\": \"{{cms.workflowStates.new}}\",\n      \"_comment\": \"NEW status\"\n    },\n    {\n      \"id\": \"{{cms.workflowStates.inProgress}}\",\n      \"_comment\": \"In progress status\"\n    },\n    {\n      \"id\": \"{{cms.workflowStates.readyForReview}}\",\n      \"_comment\": \"Ready for review status\"\n    },\n    {\n      \"id\": \"{{cms.workflowStates.rejected}}\",\n      \"_comment\": \"Rejected status\"\n    },\n    {\n      \"id\": \"{{cms.workflowStates.approved}}\",\n      \"_comment\": \"Approved status\"\n    }\n  ]\n}",
     "snippets": [],
     "settings": "{\"API\":{\"READ\":true,\"EDIT\":true},\"SANDBOX\":{\"SAME_ORIGIN\":true,\"MODALS\":true,\"NAVIGATION\":true,\"POPUPS\":true,\"POPUP_ESCAPE_SANDBOX\":true,\"DOWNLOADS\":true,\"FORMS\":true}}",
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-18T13:34:43.277Z",
-    "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
-    "lastModifiedDate": "2021-01-18T13:44:02.314Z"
+    "status": "ACTIVE"
   },
   {
-    "id": "60059a864cedfd0001d09829",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "personify-coverage",
     "label": "Personify Coverage",
     "description": "",
@@ -106,15 +74,9 @@
     "parameters": "{}",
     "snippets": [],
     "settings": "{\"API\":{\"READ\":true,\"EDIT\":true},\"SANDBOX\":{\"SAME_ORIGIN\":true,\"MODALS\":true,\"NAVIGATION\":true,\"POPUPS\":true,\"POPUP_ESCAPE_SANDBOX\":true,\"DOWNLOADS\":true,\"FORMS\":true}}",
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-18T14:26:14.781Z",
-    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "lastModifiedDate": "2021-01-18T14:26:14.781Z"
+    "status": "ACTIVE"
   },
   {
-    "id": "60059ad14cedfd00013f76f4",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "personify-mission-picker",
     "label": "Personify Mission Picker",
     "description": "",
@@ -124,15 +86,9 @@
     "parameters": "{}",
     "snippets": [],
     "settings": "{\"API\":{\"READ\":false,\"EDIT\":false},\"SANDBOX\":{\"SAME_ORIGIN\":false,\"MODALS\":false,\"NAVIGATION\":false,\"POPUPS\":false,\"POPUP_ESCAPE_SANDBOX\":false,\"DOWNLOADS\":false,\"FORMS\":false}}",
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-18T14:27:29.993Z",
-    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "lastModifiedDate": "2021-01-18T14:27:29.993Z"
+    "status": "ACTIVE"
   },
   {
-    "id": "60059af34cedfd0001d0984c",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "personify-tag-picker",
     "label": "Personify Tag Picker",
     "description": "",
@@ -142,22 +98,16 @@
     "parameters": "{}",
     "snippets": [],
     "settings": "{\"API\":{\"READ\":false,\"EDIT\":false},\"SANDBOX\":{\"SAME_ORIGIN\":false,\"MODALS\":false,\"NAVIGATION\":false,\"POPUPS\":false,\"POPUP_ESCAPE_SANDBOX\":false,\"DOWNLOADS\":false,\"FORMS\":false}}",
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-18T14:28:03.579Z",
-    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "lastModifiedDate": "2021-01-18T14:28:03.579Z"
+    "status": "ACTIVE"
   },
   {
-    "id": "60059dcf4cedfd0001b05f24",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "product-selector-commerce-tools",
     "label": "Product Selector (CommerceTools)",
     "description": "Allows business users to manually select products",
     "url": "https://presalesadisws.s3.eu-west-1.amazonaws.com/ui-extensions/ct-product-loader-extension/index.html",
     "height": 208,
     "category": "CONTENT_FIELD",
-    "parameters": "{\n  \"backend\": \"commercetools\",\n  \"apiUrl\": \"https://api.europe-west1.gcp.commercetools.com\",\n  \"host\": \"https://auth.europe-west1.gcp.commercetools.com\",\n  \"projectKey\": \"amp-wawa\",\n  \"clientId\": \"BDxVUvQDRRC22jLP3Uu6rv82\",\n  \"clientSecret\": \"t738XzlObw9N-xf1YB-zM88Jt1Cqzui1\",\n  \"scope\": \"view_published_products\",\n  \"locale\": \"en\"\n}",
+    "parameters": "{\n  \"backend\": \"commercetools\",\n  \"apiUrl\": \"{{commerce.apiUrl}}\",\n  \"host\": \"{{commerce.authUrl}}\",\n  \"projectKey\": \"{{commerce.projectKey}}\",\n  \"clientId\": \"{{commerce.clientId}}\",\n  \"clientSecret\": \"{{commerce.clientSecret}}-xf1YB-zM88Jt1Cqzui1\",\n  \"scope\": \"view_published_products\",\n  \"locale\": \"en\"\n}",
     "snippets": [
       {
         "label": "Product Selector",
@@ -165,15 +115,9 @@
       }
     ],
     "settings": "{\"API\":{\"READ\":false,\"EDIT\":false},\"SANDBOX\":{\"SAME_ORIGIN\":false,\"MODALS\":false,\"NAVIGATION\":false,\"POPUPS\":false,\"POPUP_ESCAPE_SANDBOX\":false,\"DOWNLOADS\":false,\"FORMS\":false}}",
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-18T14:40:15.126Z",
-    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "lastModifiedDate": "2021-01-18T14:40:15.126Z"
+    "status": "ACTIVE"
   },
   {
-    "id": "6005bbf052faff000130309e",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "search-index-picker-algolia",
     "label": "Search Index Picker (Algolia)",
     "description": "Allows a user to pick facets and filters for a ui extension",
@@ -188,46 +132,18 @@
       }
     ],
     "settings": "{\"API\":{\"READ\":false,\"EDIT\":false},\"SANDBOX\":{\"SAME_ORIGIN\":false,\"MODALS\":false,\"NAVIGATION\":false,\"POPUPS\":false,\"POPUP_ESCAPE_SANDBOX\":false,\"DOWNLOADS\":false,\"FORMS\":false}}",
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-18T16:48:48.121Z",
-    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "lastModifiedDate": "2021-01-18T16:48:48.121Z"
+    "status": "ACTIVE"
   },
   {
-    "id": "600dbef8c9e77c000195b114",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
-    "name": "test-integration-3-9224",
-    "label": "Test Integration 3",
-    "description": "Pick from a palette",
-    "url": "https://amplience.github.io/dc-extension-brand-colours/index.html",
-    "height": 200,
-    "category": "CONTENT_FIELD",
-    "parameters": "{}",
-    "snippets": [],
-    "settings": null,
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-24T18:39:52.986Z",
-    "lastModifiedBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "lastModifiedDate": "2021-01-24T18:39:52.986Z"
-  },
-  {
-    "id": "60059151c9e77c00016e1379",
-    "hubId": "5ff628fdc9e77c0001da3f7c",
     "name": "translation-board",
     "label": "Translation Board",
     "description": "test",
     "url": "https://dc-extension-kanban-board.s3-eu-west-1.amazonaws.com/main/index.html",
     "height": 200,
     "category": "DASHBOARD",
-    "parameters": "{\n  \"repositoryId\": \"5ff629064cedfd00013c2600\",\n  \"_comment\": \"Content repository\",\n  \"statuses\": [\n    {\n      \"id\": \"60056b95c9e77c00016e0741\",\n      \"_comment\": \"Ready for Translation status\"\n    },\n    {\n      \"id\": \"60056c64cff47e0001363b49\",\n      \"_comment\": \"Sent for translation status\"\n    },\n    {\n      \"id\": \"60056bcccff47e0001f6bd0e\",\n      \"_comment\": \"Translation in progress status\"\n    },\n    {\n      \"id\": \"60056c334cedfd0001d08937\",\n      \"_comment\": \"Translation complete status\"\n    }\n  ]\n}",
+    "parameters": "{\n  \"repositoryId\": \"{{cms.repositories.content}}\",\n  \"_comment\": \"Content repository\",\n  \"statuses\": [\n    {\n      \"id\": \"{{cms.workflowStates.readyForTranslation}}\",\n      \"_comment\": \"Ready for Translation status\"\n    },\n    {\n      \"id\": \"{{cms.workflowStates.sentForTranslation}}\",\n      \"_comment\": \"Sent for translation status\"\n    },\n    {\n      \"id\": \"{{cms.workflowStates.translationInProgress}}\",\n      \"_comment\": \"Translation in progress status\"\n    },\n    {\n      \"id\": \"{{cms.workflowStates.translationComplete}}\",\n      \"_comment\": \"Translation complete status\"\n    }\n  ]\n}",
     "snippets": [],
     "settings": "{\"API\":{\"READ\":true,\"EDIT\":true},\"SANDBOX\":{\"SAME_ORIGIN\":true,\"MODALS\":true,\"NAVIGATION\":true,\"POPUPS\":true,\"POPUP_ESCAPE_SANDBOX\":true,\"DOWNLOADS\":true,\"FORMS\":true}}",
-    "status": "ACTIVE",
-    "createdBy": "27b98f7f-1386-4249-b612-0d09301ef0a2",
-    "createdDate": "2021-01-18T13:46:57.841Z",
-    "lastModifiedBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
-    "lastModifiedDate": "2021-01-18T13:48:44.580Z"
+    "status": "ACTIVE"
   }
 ]

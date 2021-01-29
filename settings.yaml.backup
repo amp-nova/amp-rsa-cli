@@ -63,4 +63,11 @@ personify:
 serverless:
   provider:
     stage: dev
-    region: eu-west-1
+    region: eu-west-3
+  services:
+    willowContentDeliveryPocRezademo:
+      service: willow-content-delivery-poc-rezademo
+      endpoint: https://21dfnsxo47.execute-api.eu-west-3.amazonaws.com/dev
+    willowDemoServicesRezademo:
+      service: willow-demo-services-rezademo
+      endpoint: https://cv4jsi1hp9.execute-api.eu-west-3.amazonaws.com/dev

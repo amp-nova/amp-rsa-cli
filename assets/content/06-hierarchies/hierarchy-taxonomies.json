@@ -1,0 +1,628 @@
+{
+  "label": "Taxonomies",
+  "contentItem": {
+    "folderId": "6010aa8352faff00012a0f86",
+    "body": {
+      "_meta": {
+        "name": "Taxonomies",
+        "schema": "https://anyafinn.online/config-taxonomies.json",
+        "hierarchy": {
+          "root": true
+        }
+      },
+      "type": "Taxonomies"
+    },
+    "label": "Taxonomies",
+    "status": "ACTIVE",
+    "locale": "en-US",
+    "hierarchy": {
+      "root": true
+    }
+  },
+  "children": [
+    {
+      "label": "Page Types",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Page Types",
+            "schema": "https://anyafinn.online/taxonomy-page-type-group.json",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "label": "Page Types"
+        },
+        "label": "Page Types",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": [
+        {
+          "label": "Product",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Product",
+                "schema": "https://anyafinn.online/taxonomy-page-type.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "Product"
+            },
+            "label": "Product",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": []
+        },
+        {
+          "label": "Landing",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Landing",
+                "schema": "https://anyafinn.online/taxonomy-page-type.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "Landing"
+            },
+            "label": "Landing",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": []
+        },
+        {
+          "label": "Category",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Category",
+                "schema": "https://anyafinn.online/taxonomy-page-type.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "Category"
+            },
+            "label": "Category",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "label": "Tags",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Tags",
+            "schema": "https://anyafinn.online/taxonomy-tag-group.json",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "label": "Tags"
+        },
+        "label": "Tags",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": [
+        {
+          "label": "Designer",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Designer",
+                "schema": "https://anyafinn.online/taxonomy-tag-group.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "Designer"
+            },
+            "label": "Designer",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": [
+            {
+              "label": "Stella McCartney",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Stella McCartney",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Stella McCartney"
+                },
+                "label": "Stella McCartney",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            },
+            {
+              "label": "DKNY",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "DKNY",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "DKNY"
+                },
+                "label": "DKNY",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            },
+            {
+              "label": "Simone Rocha",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Simone Rocha",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Simone Rocha"
+                },
+                "label": "Simone Rocha",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            },
+            {
+              "label": "Maria Grazia Chiuri",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Maria Grazia Chiuri",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Maria Grazia Chiuri"
+                },
+                "label": "Maria Grazia Chiuri",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "Season",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Season",
+                "schema": "https://anyafinn.online/taxonomy-tag-group.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "Season"
+            },
+            "label": "Season",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": [
+            {
+              "label": "Autumn",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Autumn",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Autumn"
+                },
+                "label": "Autumn",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            },
+            {
+              "label": "Spring",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Spring",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Spring"
+                },
+                "label": "Spring",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            },
+            {
+              "label": "Winter",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Winter",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Winter"
+                },
+                "label": "Winter",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            },
+            {
+              "label": "Summer",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Summer",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Summer"
+                },
+                "label": "Summer",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "label": "Guides",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Guides",
+                "schema": "https://anyafinn.online/taxonomy-tag-group.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "Guides"
+            },
+            "label": "Guides",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": [
+            {
+              "label": "Kitchen",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Kitchen",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Kitchen"
+                },
+                "label": "Kitchen",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            },
+            {
+              "label": "Buying Guide",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Buying Guide",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Buying Guide"
+                },
+                "label": "Buying Guide",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            },
+            {
+              "label": "Holiday Guide",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Holiday Guide",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Holiday Guide"
+                },
+                "label": "Holiday Guide",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            },
+            {
+              "label": "Size Guide",
+              "contentItem": {
+                "folderId": null,
+                "body": {
+                  "_meta": {
+                    "name": "Size Guide",
+                    "schema": "https://anyafinn.online/taxonomy-tag.json",
+                    "hierarchy": {
+                      "root": false
+                    }
+                  },
+                  "label": "Size Guide"
+                },
+                "label": "Size Guide",
+                "status": "ACTIVE",
+                "locale": "en-US",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Visitor Segments",
+      "contentItem": {
+        "folderId": null,
+        "body": {
+          "_meta": {
+            "name": "Visitor Segments",
+            "schema": "https://anyafinn.online/taxonomy-tag-group.json",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "label": "Visitor Segments"
+        },
+        "label": "Visitor Segments",
+        "status": "ACTIVE",
+        "locale": "en-US",
+        "hierarchy": {
+          "root": false
+        }
+      },
+      "children": [
+        {
+          "label": "Bargain Hunter",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Bargain Hunter",
+                "schema": "https://anyafinn.online/taxonomy-tag.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "bargain-hunter"
+            },
+            "label": "Bargain Hunter",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": []
+        },
+        {
+          "label": "Globe-Trotter",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Globe-Trotter",
+                "schema": "https://anyafinn.online/taxonomy-tag.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "globe-trotter"
+            },
+            "label": "Globe-Trotter",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": []
+        },
+        {
+          "label": "Fashionista",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Fashionista",
+                "schema": "https://anyafinn.online/taxonomy-tag.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "fashionista"
+            },
+            "label": "Fashionista",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": []
+        },
+        {
+          "label": "Guest",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Guest",
+                "schema": "https://anyafinn.online/taxonomy-tag.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "guest"
+            },
+            "label": "Guest",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": []
+        },
+        {
+          "label": "Home Trendsetter",
+          "contentItem": {
+            "folderId": null,
+            "body": {
+              "_meta": {
+                "name": "Home Trendsetter",
+                "schema": "https://anyafinn.online/taxonomy-tag.json",
+                "hierarchy": {
+                  "root": false
+                }
+              },
+              "label": "home-trendsetter"
+            },
+            "label": "Home Trendsetter",
+            "status": "ACTIVE",
+            "locale": "en-US",
+            "hierarchy": {
+              "root": false
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

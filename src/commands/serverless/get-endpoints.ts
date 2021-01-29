@@ -1,8 +1,8 @@
 import { Arguments } from 'yargs';
-import childProcess from 'child_process';
 import { readFileSync, writeFileSync } from 'fs';
 
 const yaml = require('js-yaml');
+const lodash = require('lodash');
 
 export const command = 'get-endpoints';
 export const desc = "Get AWS serverless services endpoints and save to settings";
@@ -29,7 +29,7 @@ export const handler = async (
     console.log('Global settings loaded');
 
     // Prepare list of services in settings
-    settingsJSON.serverless.services = [];
+    settingsJSON.serverless.services = {};
 
     // Cycle through the different services
     serverless.map((item: string) => {
@@ -49,11 +49,13 @@ export const handler = async (
       console.log(`Service: ${service}`);
       console.log(`Endpoint: ${endpoint}`);
 
+      const serviceCamelCase = lodash.camelCase(item);
+
       // Add service information in global settings
-      settingsJSON.serverless.services.push({
+      settingsJSON.serverless.services[serviceCamelCase]= {
         service,
         endpoint 
-      });
+      };
     });
 
     // Convert JSON to YAML and save to file

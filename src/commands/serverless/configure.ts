@@ -5,7 +5,7 @@ import { compile as handlebarsCompile } from 'handlebars';
 const yaml = require('js-yaml');
 
 export const command = 'configure';
-export const desc = "Configure AWS serverless stacks";
+export const desc = "Configure AWS serverless services";
 
 export const handler = async (
   argv: Arguments
@@ -16,14 +16,16 @@ export const handler = async (
     "willow-demo-services"
   ];
 
-  // Reading settings
-  const settings = readFileSync(`./settings.yaml`).toString();
-
-  // Converting from YAML to JSON
-  const settingsJson = yaml.load(settings)
-  console.log('Settings loaded');
-
   try {
+
+    // Reading global settings
+    const settings = readFileSync(`./settings.yaml`).toString();
+
+    // Converting from YAML to JSON
+    const settingsJson = yaml.load(settings)
+    console.log('Global settings loaded');
+
+    // Configure all services
     serverless.map((item: string) => {
 
       // Getting and compiling serverless config template

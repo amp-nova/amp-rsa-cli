@@ -16,15 +16,15 @@ export const handler = async (
     // "willow-demo-extension-personify"
   ];
 
-  packages.map((item: string) => {
-    console.log(`Cloning ${item}`);
-    try {
-    childProcess.execSync(
-        `gh repo clone amplience/${item}`,
-        { cwd: `./repositories` }
+  try {
+    packages.map((item: string) => {
+      console.log(`Cloning ${item}`);
+      childProcess.execSync(
+          `gh repo clone amplience/${item}`,
+          { cwd: `./repositories` }
       );
-    } catch(error) {
-      console.log(error.message);
-    }
-  });
+    });
+  } catch(error) {
+    console.log(error.message);
+  }
 };

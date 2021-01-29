@@ -16,17 +16,15 @@ export const handler = async (
     // "willow-demo-extension-personify"
   ];
 
-  packages.map((item: string) => {
-    console.log(`Updating ${item}`);
-
-    try {
+  try {
+    packages.map((item: string) => {
+      console.log(`Updating ${item}`);
       childProcess.execSync(
           `git pull origin master`,
           { cwd: `./repositories/${item}` }
-        );
-      } catch(error) {
-        console.log(`Error ${error.message}`);
-      }
-        
-  });
+      );
+    });
+  } catch(error) {
+    console.log(`Error ${error.message}`);
+  }
 };

@@ -64,8 +64,3 @@ serverless:
   provider:
     stage: dev
     region: eu-west-1
-  services:
-    - service: willow-content-delivery-poc
-      endpoint: https://ab75gdb009.execute-api.eu-west-1.amazonaws.com/dev
-    - service: willow-demo-services
-      endpoint: https://92iuzrt3uh.execute-api.eu-west-1.amazonaws.com/dev

@@ -1,8 +1,8 @@
 import { Arguments } from 'yargs';
 import childProcess from 'child_process';
 
-export const command = 'install';
-export const desc = "Install AWS serverless services";
+export const command = 'remove';
+export const desc = "Remove AWS serverless services";
 
 export const handler = async (
   argv: Arguments
@@ -15,9 +15,9 @@ export const handler = async (
 
   try {
     serverless.map((item: string) => {
-      console.log(`Installing serverless service from ./repositories/${item}`);
+      console.log(`Removing serverless service from ./repositories/${item}`);
       childProcess.execSync(
-        `npm install`,
+        `sls remove`,
         { cwd: `./repositories/${item}` }
       );
     });

@@ -49,7 +49,7 @@
                             {
                                 "cards":
                                 {
-                                    "*": "https://www.anyafinn.online/visualization/standalone?vse=\{{vse.domain}}&content=\{{content.sys.id}}"
+                                    "*": "https://www.anyafinn.online/visualization/standalone?vse={{vse.domain}}&content={{content.sys.id}}"
                                 }
                             }
             },

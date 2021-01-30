@@ -20,7 +20,9 @@ export const handler = async (
     const settingsJSON = yaml.load(settingsYAML)
     console.log('Global settings loaded');
 
-    // Scan all handlebars files in ./assets/content and generate json files
+    // Copy ./assets/content folder in repositories
+
+    // Scan all handlebars files in ./repositories/assets/content and generate json files
 
   } catch(error) {
     console.log(error.message);

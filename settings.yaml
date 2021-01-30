@@ -29,12 +29,16 @@ cms:
   clientId: 27b98f7f-1386-4249-b612-0d09301ef0a2
   clientSecret: 0cad2823c9407f584fe582ce606dece6f90a41549f4cb23f6b9c21f85d1d3aaa
   hubId: 5ff628fdc9e77c0001da3f7c
+  content:
+    sampleBlogId: null
   repositories:
     content: 5ff629064cedfd00013c2600
     slots: 5ff6290bcff47e00014b2bad
+    contentfr: 5ff629b052faff00012cd4e4
+    contentde: 5ff629d8cff47e0001f94cd2
+    contentes: 5ff629fdc9e77c00016ac81b
+    contentit: 5ff62a23cff47e000132f811
     sitestructure: 5ffd6eb64cedfd00013d8dec
-  content:
-    sampleBlogId: null
   workflowStates:
     approved: 60056cc9c9e77c00016e07a5
     rejected: 60056cb9c9e77c0001c9660c

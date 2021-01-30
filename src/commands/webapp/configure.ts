@@ -22,10 +22,10 @@ export const handler = async (
   ];
 
   // Reading settings
-  const settings = readFileSync(`./settings.yaml`).toString();
+  const settingsYAML = readFileSync(`./settings.yaml`).toString();
 
   // Converting from YAML to JSON
-  const settingsJson = yaml.load(settings)
+  const settingsJSON = yaml.load(settingsYAML)
   console.log('Settings loaded');
 
   try {
@@ -36,11 +36,11 @@ export const handler = async (
       const configTemplateCompiled = handlebarsCompile(configTemplate);
 
       // Applying settings to template
-      const serviceConfigJSON = configTemplateCompiled(settingsJson);
+      const serviceConfigJSON = configTemplateCompiled(settingsJSON);
 
       // Write services config to file
-      writeFileSync(`./repositories/willow-demo-web-react/config/${item}.json`, serviceConfigJSON);
-      console.log(`Wrote services config to file ./repositories/willow-demo-web-react/config/${item}.json`)
+      writeFileSync(`./repositories/willow-demo-web-react-${settingsJSON.cms.hubName}/config/${item}.json`, serviceConfigJSON);
+      console.log(`Wrote services config to file ./repositories/willow-demo-web-react-${settingsJSON.cms.hubName}/config/${item}.json`)
     });
   } catch(error) {
     console.log(error.message);

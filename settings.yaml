@@ -14,6 +14,7 @@ algolia:
       prod: prod_willow_products
 app:
   publishStage: production
+  url: https://willow-demo-web-react-rezademo.vercel.app
 analytics:
   ga:
     trackingId: UA-138924869-5
@@ -32,6 +33,17 @@ cms:
     content: 5ff629064cedfd00013c2600
     slots: 5ff6290bcff47e00014b2bad
     sitestructure: 5ffd6eb64cedfd00013d8dec
+  workflowStates:
+    approved: 60056cc9c9e77c00016e07a5
+    rejected: 60056cb9c9e77c0001c9660c
+    new: 60056caacff47e0001f6bd53
+    sentForTranslation: 60056c64cff47e0001363b49
+    readyForReview: 60056c4acff47e0001f6bd39
+    translationComplete: 60056c334cedfd0001d08937
+    readyForScheduling: 60056bdd52faff000179130b
+    translationInProgress: 60056bcccff47e0001f6bd0e
+    inProgress: 60056babcff47e00010c3423
+    readyForTranslation: 60056b95c9e77c00016e0741
 commercetools:
   authUrl: https://auth.europe-west1.gcp.commercetools.com
   apiUrl: https://api.europe-west1.gcp.commercetools.com
@@ -69,3 +81,10 @@ serverless:
   provider:
     stage: dev
     region: eu-west-3
+  services:
+    dcContentDeliveryPoc:
+      service: willow-content-delivery-poc-rezademo
+      endpoint: https://ju3166yc31.execute-api.eu-west-3.amazonaws.com/dev
+    willowDemoServices:
+      service: willow-demo-services-rezademo
+      endpoint: https://z2fbtywxw4.execute-api.eu-west-3.amazonaws.com/dev

@@ -1,0 +1,45 @@
+{
+  "contentTypeUri": "https://anyafinn.online/component-dy-ab-content.json",
+  "status": "ACTIVE",
+  "settings": {
+    "label": "A/B Test",
+    "icons": [
+      {
+        "size": 256,
+        "url": "https://i8.amplience.net/i/willow/CT-icon-style4-abtest?fmt=jpg&bg=white&w=300"
+      }
+    ],
+    "visualizations": [
+      {
+        "label": "Website",
+        "templatedUri": "{{app.url}}/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
+        "default": true
+      },
+      {
+        "label": "QR for Mobile",
+        "templatedUri": "{{app.url}}/visualization/qr?vse=\{{vse.domain}}&content=\{{content.sys.id}}&locale=\{{locales}}",
+        "default": false
+      },
+      {
+        "label": "JSON",
+        "templatedUri": "https://presalesadisws.s3.eu-west-1.amazonaws.com/dynamic-content/dc-visualization-content-delivery/index.html?vse=\{{vse.domain}}&id=\{{content.sys.id}}&format=inlined&depth=all&v2=true&locale=\{{locales}}",
+        "default": false
+      },
+      {
+        "label": "Preview Variant 1",
+        "templatedUri": "{{app.url}}/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}&dyApiPreview=e2b05bb985ef47e74ca74e8ba6901ca3",
+        "default": false
+      },
+      {
+        "label": "Preview Variant 2",
+        "templatedUri": "{{app.url}}/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}&dyApiPreview=94160cf9316bf264251b88203b018152",
+        "default": false
+      }
+    ],
+    "cards": [
+      {
+        "templatedUri": "https://willow-demo-cards.vercel.app/?#vse=\{{vse.domain}}&content=\{{content.sys.id}}"
+      }
+    ]
+  }
+}

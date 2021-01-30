@@ -1,0 +1,31 @@
+{
+  "contentTypeUri": "https://anyafinn.online/page-homepage.json",
+  "status": "ACTIVE",
+  "settings": {
+    "label": "Homepage",
+    "icons": [
+      {
+        "size": 256,
+        "url": "https://bigcontent.io/cms/icons/experience-management/exp-page.png"
+      }
+    ],
+    "visualizations": [
+      {
+        "label": "Website",
+        "templatedUri": "{{app.url}}/?vse=\{{vse.domain}}",
+        "default": true
+      },
+      {
+        "label": "QR for Mobile",
+        "templatedUri": "{{app.url}}/visualization/qr?vse=\{{vse.domain}}&content=\{{content.sys.id}}&locale=\{{locales}}",
+        "default": false
+      },
+      {
+        "label": "JSON",
+        "templatedUri": "https://presalesadisws.s3.eu-west-1.amazonaws.com/dynamic-content/dc-visualization-content-delivery/index.html?vse=\{{vse.domain}}&id=\{{content.sys.id}}&format=inlined&depth=all&v2=true&locale=\{{locales}}",
+        "default": false
+      }
+    ],
+    "cards": []
+  }
+}

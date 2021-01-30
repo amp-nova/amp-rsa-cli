@@ -5,18 +5,11 @@ const yaml = require('js-yaml');
 const lodash = require('lodash');
 
 export const command = 'configure';
-export const desc = "Configure content assets (Configuration, etc.)";
+export const desc = "Configure all content assets";
 
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
-
-  const templates = [
-    "./assets/content/extensions/extensions.json.hbs",
-    "./assets/content/hierarchies/hierarchy-configuration.json.hbs",
-    "./assets/content/indexes/indexes.json.hbs",
-    "./assets/content/webhooks/webhooks.json.hbs"
-  ];
 
   try {
 
@@ -26,6 +19,8 @@ export const handler = async (
     // Converting from YAML to JSON
     const settingsJSON = yaml.load(settingsYAML)
     console.log('Global settings loaded');
+
+    // Scan all handlebars files in ./assets/content and generate json files
 
   } catch(error) {
     console.log(error.message);

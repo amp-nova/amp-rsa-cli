@@ -1,23 +1,23 @@
 {
   "id": "f5490d0c-8bbe-4276-8fd2-496ffea6ee7f",
-  "label": "Pages - Anya Finn imported",
+  "label": "Pages",
   "contentItem": {
     "id": "f5490d0c-8bbe-4276-8fd2-496ffea6ee7f",
     "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
     "folderId": null,
     "body": {
       "_meta": {
-        "name": "Pages imported",
+        "name": "Pages",
         "schema": "https://anyafinn.online/page-homepage.json",
-        "deliveryKey": "homepage-anyafinn_imported",
+        "deliveryKey": "homepage",
         "hierarchy": {
           "root": true
         }
       },
-      "title": "Pages - Anya Finn imported"
+      "title": "Pages"
     },
     "version": 8,
-    "label": "Pages - Anya Finn imported",
+    "label": "Pages",
     "status": "ACTIVE",
     "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
     "locale": "en-US",
@@ -43,7 +43,7 @@
           "_meta": {
             "name": "Holiday",
             "schema": "https://anyafinn.online/page-landing.json",
-            "deliveryKey": "page/holiday/sale_imported",
+            "deliveryKey": "page/holiday/sale",
             "hierarchy": {
               "parentId": "f5490d0c-8bbe-4276-8fd2-496ffea6ee7f",
               "root": false
@@ -84,7 +84,7 @@
           "_meta": {
             "name": "Accessories",
             "schema": "https://anyafinn.online/page-category.json",
-            "deliveryKey": "category/accessories_imported",
+            "deliveryKey": "category/accessories",
             "hierarchy": {
               "parentId": "f5490d0c-8bbe-4276-8fd2-496ffea6ee7f",
               "root": false
@@ -167,7 +167,7 @@
           "_meta": {
             "name": "Men",
             "schema": "https://anyafinn.online/page-category.json",
-            "deliveryKey": "category/men_imported",
+            "deliveryKey": "category/men",
             "hierarchy": {
               "parentId": "f5490d0c-8bbe-4276-8fd2-496ffea6ee7f",
               "root": false
@@ -209,7 +209,7 @@
           "_meta": {
             "name": "Lookbook",
             "schema": "https://anyafinn.online/page-landing.json",
-            "deliveryKey": "page/lookbook_imported",
+            "deliveryKey": "page/lookbook",
             "hierarchy": {
               "parentId": "f5490d0c-8bbe-4276-8fd2-496ffea6ee7f",
               "root": false
@@ -250,7 +250,7 @@
           "_meta": {
             "name": "New",
             "schema": "https://anyafinn.online/page-category.json",
-            "deliveryKey": "category/new_imported",
+            "deliveryKey": "category/new",
             "hierarchy": {
               "parentId": "f5490d0c-8bbe-4276-8fd2-496ffea6ee7f",
               "root": false
@@ -292,7 +292,7 @@
           "_meta": {
             "name": "Sale",
             "schema": "https://anyafinn.online/page-category.json",
-            "deliveryKey": "category/sale_imported",
+            "deliveryKey": "category/sale",
             "hierarchy": {
               "parentId": "f5490d0c-8bbe-4276-8fd2-496ffea6ee7f",
               "root": false
@@ -334,7 +334,7 @@
           "_meta": {
             "name": "Women",
             "schema": "https://anyafinn.online/page-category.json",
-            "deliveryKey": "category/women_imported",
+            "deliveryKey": "category/women",
             "hierarchy": {
               "parentId": "f5490d0c-8bbe-4276-8fd2-496ffea6ee7f",
               "root": false
@@ -456,7 +456,7 @@
           "_meta": {
             "name": "Gifting",
             "schema": "https://anyafinn.online/page-landing.json",
-            "deliveryKey": "page/gifting_imported",
+            "deliveryKey": "page/gifting",
             "hierarchy": {
               "parentId": "f5490d0c-8bbe-4276-8fd2-496ffea6ee7f",
               "root": false

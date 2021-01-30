@@ -1,13 +1,13 @@
 {
   "id": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937",
-  "label": "Configuration imported",
+  "label": "Configuration",
   "contentItem": {
     "id": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937",
     "contentRepositoryId": "5ffd6eb64cedfd00013d8dec",
     "folderId": null,
     "body": {
       "_meta": {
-        "name": "Configuration imported",
+        "name": "Configuration",
         "schema": "https://anyafinn.online/config.json",
         "hierarchy": {
           "root": true
@@ -16,7 +16,7 @@
       "type": "Configuration"
     },
     "version": 1,
-    "label": "Configuration imported",
+    "label": "Configuration",
     "status": "ACTIVE",
     "createdBy": "d25504bc-f83f-4826-bf57-89fe3850ffef",
     "locale": "en-US",
@@ -42,7 +42,7 @@
           "_meta": {
             "name": "Translation Workflow",
             "schema": "https://anyafinn.online/config-translation.json",
-            "deliveryKey": "config/translation_imported",
+            "deliveryKey": "config/translation",
             "hierarchy": {
               "parentId": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937",
               "root": false
@@ -95,7 +95,7 @@
           "_meta": {
             "name": "Components",
             "schema": "https://anyafinn.online/config-components.json",
-            "deliveryKey": "config/components_imported",
+            "deliveryKey": "config/components",
             "hierarchy": {
               "parentId": "0e5f4229-d3ad-43c7-ac23-4e6ab2626937",
               "root": false

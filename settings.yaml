@@ -53,18 +53,18 @@ cms:
 commercetools:
   authUrl: https://auth.europe-west1.gcp.commercetools.com
   apiUrl: https://api.europe-west1.gcp.commercetools.com
-  projectKey: amp-wawa
-  clientId: BDxVUvQDRRC22jLP3Uu6rv82
-  clientSecret: t738XzlObw9N-xf1YB-zM88Jt1Cqzui1
+  projectKey: anyafinn
+  clientId: SFL2J4ysCuEHILRwYaV9_X9R
+  clientSecret: 3h9KNemP1P63-mlWpGRMTQ90bhKbTr_5
   defaultScopes:
-    - view_products:amp-wawa
-    - manage_my_profile:amp-wawa
-    - view_categories:amp-wawa
-    - view_published_products:amp-wawa
-    - manage_my_orders:amp-wawa
-    - create_anonymous_token:amp-wawa
-    - manage_my_payments:amp-wawa
-    - manage_my_shopping_lists:amp-wawa
+    - view_products:anyafinn
+    - manage_my_profile:anyafinn
+    - view_categories:anyafinn
+    - view_published_products:anyafinn
+    - manage_my_orders:anyafinn
+    - create_anonymous_token:anyafinn
+    - manage_my_payments:anyafinn
+    - manage_my_shopping_lists:anyafinn
   defaultFacets:
     - type: standard
       field: variants.attributes.color.label.en

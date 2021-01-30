@@ -1,4 +1,4 @@
-{
+{ 
   "$schema": "http://bigcontent.io/cms/schema/v1/schema#",
   "id": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/externalBlock.json",
   "title": "External Block",

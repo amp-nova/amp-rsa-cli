@@ -1,0 +1,73 @@
+algolia:
+  appId: 4BS5I6EVVD
+  apiKey: fdf2178cefd413fc7c572c5b9d88829c
+  tacit_appId: T7I8W0D1V2
+  tacit_apiKey: dac903cc5cce5d8163ec78284af6dcc0
+  indexes:
+    blog:
+      prod: rezademo.blog-production
+      staging: rezademo.blog-staging
+    ruleBased:
+      prod: rezademo.rule-based-production
+      staging: rezademo.rule-based-staging
+    productListSearch:
+      prod: prod_willow_products
+app:
+  publishStage: production
+analytics:
+  ga:
+    trackingId: UA-138924869-5
+cms:
+  contentApi: rezademo.cdn.content.amplience.net
+  stagingApi: 1rvmrhoqqdd6v109jl5x2t3b2z.staging.bigcontent.io
+  trustedHostSuffixes:
+    - .cdn.content.amplience.net
+    - .staging.bigcontent.io
+  hubName: rezademo
+  imageBasePath: //i8.amplience.net/
+  clientId: 27b98f7f-1386-4249-b612-0d09301ef0a2
+  clientSecret: 0cad2823c9407f584fe582ce606dece6f90a41549f4cb23f6b9c21f85d1d3aaa
+  hubId: 5ff628fdc9e77c0001da3f7c
+  repositories:
+    content: 5ff629064cedfd00013c2600
+    slots: 5ff6290bcff47e00014b2bad
+    sitestructure: 5ffd6eb64cedfd00013d8dec
+  content:
+    sampleBlogId: null
+commercetools:
+  authUrl: https://auth.europe-west1.gcp.commercetools.com
+  apiUrl: https://api.europe-west1.gcp.commercetools.com
+  projectKey: amp-wawa
+  clientId: BDxVUvQDRRC22jLP3Uu6rv82
+  clientSecret: t738XzlObw9N-xf1YB-zM88Jt1Cqzui1
+  defaultScopes:
+    - view_products:amp-wawa
+    - manage_my_profile:amp-wawa
+    - view_categories:amp-wawa
+    - view_published_products:amp-wawa
+    - manage_my_orders:amp-wawa
+    - create_anonymous_token:amp-wawa
+    - manage_my_payments:amp-wawa
+    - manage_my_shopping_lists:amp-wawa
+  defaultFacets:
+    - type: standard
+      field: variants.attributes.color.label.en
+      title: Color
+    - type: standard
+      field: variants.attributes.designer.key
+      title: Designer
+    - type: standard
+      field: variants.attributes.size
+      title: Size
+    - type: standard
+      field: variants.attributes.style.key
+      title: Style
+dynamicyield:
+  apiKey: d432c29278bc753859b1a717acf0aaad4e61d01dc70f250dca09924abbf5a0ad
+personify:
+  personifyApi: 899nqj3ebi.execute-api.eu-west-1.amazonaws.com/amplience-uk-realtime-prod
+  active: true
+serverless:
+  provider:
+    stage: dev
+    region: eu-west-3

@@ -28,17 +28,22 @@ export const handler = async (
     console.log(`Exporting Workflow States`);
     childProcess.execSync(
       `dc-cli workflow-states export . -f`,
-      { cwd: `./assets/content/workflow-states` }
+      { cwd: `./repositories` }
     );
 
     // Get Workflow States from export
-    const workflowStates = readFileSync(`./assets/content/workflow-states/workflow-states-${settingsJSON.cms.hubId}-${settingsJSON.cms.hubName}.json`).toString();
+    const workflowStates = readFileSync(`./repositories/workflow-states-${settingsJSON.cms.hubId}-${settingsJSON.cms.hubName}.json`).toString();
     const workflowStateJson = JSON.parse(workflowStates);
 
     // Build Workflow States map for settings
     let workflowStatesMap: any = {};
     workflowStateJson.map((item: any) => {
-      workflowStatesMap[lodash.camelCase(item.label)] = item.id;
+      const workflowStatesName = lodash.camelCase(item.label);
+
+      // Filter out "Unused" Workflow States
+      if (!workflowStatesName.startsWith('unused')) {
+        workflowStatesMap[workflowStatesName] = item.id;
+      }
     });
 
     // Add Workflow States map to settings

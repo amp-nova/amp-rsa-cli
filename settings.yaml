@@ -34,7 +34,7 @@ cms:
     slots: 5ff6290bcff47e00014b2bad
     sitestructure: 5ffd6eb64cedfd00013d8dec
   content:
-    sampleBlogId: 
+    sampleBlogId: null
   workflowStates:
     approved: 60056cc9c9e77c00016e07a5
     rejected: 60056cb9c9e77c0001c9660c

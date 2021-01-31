@@ -24,6 +24,7 @@ export const handler = async (
 
     // Copy ./assets/content folder in repositories
     console.log('Copying content assets to repositories folder');
+    childProcess.execSync(`rm -r ./repositories/content`); 
     childProcess.execSync(`cp -r ./assets/content ./repositories`); 
 
     // Scan all handlebars files in ./repositories/assets/content

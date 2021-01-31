@@ -1,5 +1,5 @@
 import { Arguments } from 'yargs';
-import { readFileSync, readdirSync, writeFileSync, statSync } from 'fs';
+import { readFileSync, readdirSync, writeFileSync, statSync, unlinkSync } from 'fs';
 import childProcess from 'child_process';
 import { compile as handlebarsCompile } from 'handlebars';
 
@@ -77,6 +77,9 @@ export const handler = async (
       const file = item.replace('.hbs', '');
       writeFileSync(file, contentJSON);
       console.log(`Created json from template: ${file}`)
+
+      // Remove template
+      unlinkSync(item);
     });
 
   } catch(error) {

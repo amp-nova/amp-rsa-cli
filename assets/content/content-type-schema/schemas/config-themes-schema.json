@@ -1,8 +1,8 @@
 { 
 	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$id": "https://anyafinn.online/config.json",
+	"$id": "https://anyafinn.online/config-themes.json",
 
-	"title": "Configuration",
+	"title": "Themes",
 	"description": "",
 
 	"allOf": [
@@ -13,9 +13,7 @@
 
     "trait:hierarchy": {
 		"childContentTypes": [
-            "https://anyafinn.online/config-translation.json",
-            "https://anyafinn.online/config-components.json",
-            "https://anyafinn.online/config-themes.json"
+            "https://anyafinn.online/config-theme.json"
         ]
     },
 	
@@ -23,7 +21,7 @@
 	"properties": {
         "type": {
             "type": "string",
-            "const": "Configuration"
+            "const": "Themes"
         }
     },
     

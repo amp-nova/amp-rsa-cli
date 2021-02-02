@@ -10,9 +10,24 @@
 			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
 		}
     ],
-	
-	"type": "object",
-	"properties": {
+
+    "trait:hierarchy": {
+		"childContentTypes": [
+        ]
+    },
+    
+    "type": "object",
+    "properties": {
+        "_meta": {
+            "title": "",
+            "properties": {
+                "deliveryKey": {
+                    "title": "Slug",
+                    "type": "string",
+                    "pattern": "theme\/.*"
+                }
+            }
+        },
         "palette": {
             "title": "Palette",
             "properties": {
@@ -51,4 +66,5 @@
             }
         }
     }
+
 }

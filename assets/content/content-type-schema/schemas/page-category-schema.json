@@ -44,7 +44,22 @@
             "type": "string",
             "title": "Category Name"
         },
-        "menu": { "$ref": "./lib-menu.json#/definitions/menuItemConfig" }
+        "menu": { "$ref": "./lib-menu.json#/definitions/menuItemConfig" },
+        "components": {
+            "title": "Components",
+            "type": "array",
+            "items": {
+                "title": "Component",
+                "allOf": [
+                    { "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link" },
+                    {
+                        "properties": {
+                            "contentType": { "$ref": "./lib-components.json#/definitions/anyComponent" }
+                        }
+                    }
+                ]
+            }
+        }
     },
     
     "definitions": {

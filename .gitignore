@@ -1,5 +1,6 @@
 .DS_Store
 assets/.DS_Store
+repositories.*
 repositories
 node_modules
 settings.yaml.backup

@@ -18,46 +18,41 @@
     
     "type": "object",
     "properties": {
-        "palette": {
-            "title": "Palette",
-            "properties": {
-                "primary": {
-                    "title": "Primary",
-                    "allOf": [
-                        { "$ref": "#/definitions/PaletteColorOptions" }
-                    ]
-                },
-                "secondary": {
-                    "title": "Secondary",
-                    "allOf": [
-                        { "$ref": "#/definitions/PaletteColorOptions" }
-                    ]
-                },
-                "error": {
-                    "title": "Error",
-                    "allOf": [
-                        { "$ref": "#/definitions/PaletteColorOptions" }
-                    ]
-                },
-                "warning": {
-                    "title": "Warning",
-                    "allOf": [
-                        { "$ref": "#/definitions/PaletteColorOptions" }
-                    ]
-                },
-                "info": {
-                    "title": "Info",
-                    "allOf": [
-                        { "$ref": "#/definitions/PaletteColorOptions" }
-                    ]
-                },
-                "success": {
-                    "title": "Success",
-                    "allOf": [
-                        { "$ref": "#/definitions/PaletteColorOptions" }
-                    ]
-                }
-            }
+        "primary": {
+            "title": "Primary",
+            "allOf": [
+                { "$ref": "#/definitions/PaletteColorOptions" }
+            ]
+        },
+        "secondary": {
+            "title": "Secondary",
+            "allOf": [
+                { "$ref": "#/definitions/PaletteColorOptions" }
+            ]
+        },
+        "error": {
+            "title": "Error",
+            "allOf": [
+                { "$ref": "#/definitions/PaletteColorOptions" }
+            ]
+        },
+        "warning": {
+            "title": "Warning",
+            "allOf": [
+                { "$ref": "#/definitions/PaletteColorOptions" }
+            ]
+        },
+        "info": {
+            "title": "Info",
+            "allOf": [
+                { "$ref": "#/definitions/PaletteColorOptions" }
+            ]
+        },
+        "success": {
+            "title": "Success",
+            "allOf": [
+                { "$ref": "#/definitions/PaletteColorOptions" }
+            ]
         }
     },
     

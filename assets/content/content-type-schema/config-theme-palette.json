@@ -1,0 +1,5 @@
+{
+  "body": "./schemas/config-theme-palette-schema.json",
+  "schemaId": "https://anyafinn.online/config-theme-palette.json",
+  "validationLevel": "CONTENT_TYPE"
+}

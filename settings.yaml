@@ -5,32 +5,51 @@ algolia:
   tacit_apiKey: dac903cc5cce5d8163ec78284af6dcc0
   indexes:
     blog:
-      prod: rezademo.blog-production
-      staging: rezademo.blog-staging
+      prod: adidas.blog-production
+      staging: adidas.blog-staging
     ruleBased:
-      prod: rezademo.rule-based-production
-      staging: rezademo.rule-based-staging
+      prod: adidas.rule-based-production
+      staging: adidas.rule-based-staging
     productListSearch:
       prod: prod_willow_products
 app:
   publishStage: production
-  url: https://willow-demo-web-react-rezademo.vercel.app
+  url: https://willow-demo-web-react-adidas.vercel.app
 analytics:
   ga:
     trackingId: UA-138924869-5
 cms:
-  contentApi: rezademo.cdn.content.amplience.net
-  stagingApi: 1rvmrhoqqdd6v109jl5x2t3b2z.staging.bigcontent.io
+  contentApi: adidas.cdn.content.amplience.net
+  stagingApi: nxm7bv8xt4bf1nrk41p2m0wke.staging.bigcontent.io
   trustedHostSuffixes:
     - .cdn.content.amplience.net
     - .staging.bigcontent.io
-  hubName: rezademo
+  hubName: adidas
   imageBasePath: //i8.amplience.net/
-  clientId: 27b98f7f-1386-4249-b612-0d09301ef0a2
-  clientSecret: 0cad2823c9407f584fe582ce606dece6f90a41549f4cb23f6b9c21f85d1d3aaa
-  hubId: 5ff628fdc9e77c0001da3f7c
+  clientId: 0082e87b-5551-4dbe-8b83-ae0c3730e25d
+  clientSecret: 3772c4c646ef4f3318dc7f2c8c1a65e5b089624df73fe2151456b8084ff5dbb1
+  hubId: 6019c7dac9e77c000178214a
   content:
     sampleBlogId: null
+  workflowStates:
+    readyForTranslation: 601bcfa7c9e77c000129e68c
+    readyForScheduling: 601bcfa7c9e77c000129e68b
+    translationComplete: 601bcfa74cedfd0001f0afe6
+    new: 601bcfa74cedfd000150156a
+    inProgress: 601bcfa7c9e77c00013b0d68
+    readyForReview: 601bcfa7c9e77c00012ce8b8
+    translationInProgress: 601bcfa7c9e77c000197e7d7
+    sentForTranslation: 601bcfa7c9e77c00013b0d67
+    rejected: 601bcfa7c9e77c0001787264
+    approved: 601bcfa7c9e77c00017d3c24
+  repositories:
+    content: 6019c7fa52faff000198df0b
+    contentfr: 6019c801c9e77c00017bd469
+    contentde: 6019c809c9e77c00013abcfa
+    contentes: 6019c810c9e77c00013abcfc
+    contentit: 6019c8184cedfd0001f05dde
+    sitestructure: 6019c81fc9e77c0001dc1158
+    slots: 6019c826c9e77c00013abd00
 commercetools:
   authUrl: https://auth.europe-west1.gcp.commercetools.com
   apiUrl: https://api.europe-west1.gcp.commercetools.com
@@ -68,3 +87,10 @@ serverless:
   provider:
     stage: dev
     region: eu-west-3
+  services:
+    dcContentDeliveryPoc:
+      service: willow-content-delivery-poc-adidas
+      endpoint: https://wg4u6dvia2.execute-api.eu-west-3.amazonaws.com/dev
+    willowDemoServices:
+      service: willow-demo-services-adidas
+      endpoint: https://prb5ri3iek.execute-api.eu-west-3.amazonaws.com/dev

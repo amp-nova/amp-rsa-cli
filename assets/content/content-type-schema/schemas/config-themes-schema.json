@@ -22,7 +22,7 @@
             {
                 "key": "default",
                 "paths": [
-                    "/_meta/deliveryId"
+                    "/type"
                 ]
             }
         ]

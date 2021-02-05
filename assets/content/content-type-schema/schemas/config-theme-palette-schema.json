@@ -29,6 +29,11 @@
     
     "type": "object",
     "properties": {
+        "type": {
+            "title": "Type",
+            "type": "string",
+            "const": "Palette"
+        },
         "primary": {
             "title": "Primary",
             "allOf": [
@@ -64,11 +69,6 @@
             "allOf": [
                 { "$ref": "#/definitions/PaletteColorOptions" }
             ]
-        },
-        "type": {
-            "title": "Type",
-            "type": "string",
-            "const": "Palette"
         }
     },
     

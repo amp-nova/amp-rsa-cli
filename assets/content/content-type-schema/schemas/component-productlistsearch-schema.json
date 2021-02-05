@@ -39,29 +39,10 @@
 						},
 						{
 							"name": "Category",
-							"attribute": "product.categories.slug.en",
+							"attribute": "product.categories.name.en",
 							"component": "terms",
 							"searchBox": true
-						},
-						{
-							"name": "Designer",
-							"attribute": "attributes.designer",
-							"component": "terms",
-							"searchBox": true
-						},
-						{
-							"name": "Color",
-							"attribute": "attributes.colorFreeDefinition",
-							"component": "terms",
-							"searchBox": true
-						},
-						{
-							"name": "Size",
-							"attribute": "variations.attributes.size",
-							"component": "terms",
-							"searchBox": "true"
 						}
-
 					],
 					"locale": "en",
 					"currency": "USD"

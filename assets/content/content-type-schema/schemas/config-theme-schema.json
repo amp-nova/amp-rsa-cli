@@ -18,6 +18,17 @@
         ]
     },
     
+    "trait:sortable": {
+        "sortBy": [
+            {
+                "key": "default",
+                "paths": [
+                    "/label"
+                ]
+            }
+        ]
+    },
+
     "type": "object",
     "properties": {
         "_meta": {
@@ -29,8 +40,14 @@
                     "pattern": "theme\/.*"
                 }
             }
+        },
+        "label": {
+            "type": "string",
+            "title": "Label"
         }
     },
+
+    "required": ["label"],
     
     "definitions": {
 

@@ -14,7 +14,7 @@ algolia:
       prod: prod_willow_products
 app:
   publishStage: production
-  url: https://willow-demo-web-react-adidas.vercel.app
+  url: https://willow-demo-web-react-adidas-nine.vercel.app
 analytics:
   ga:
     trackingId: UA-138924869-5

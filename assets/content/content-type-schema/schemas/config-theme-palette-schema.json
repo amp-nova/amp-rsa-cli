@@ -15,6 +15,17 @@
 		"childContentTypes": [
         ]
     },
+
+    "trait:sortable": {
+        "sortBy": [
+            {
+                "key": "default",
+                "paths": [
+                    "/type"
+                ]
+            }
+        ]
+    },
     
     "type": "object",
     "properties": {
@@ -53,6 +64,11 @@
             "allOf": [
                 { "$ref": "#/definitions/PaletteColorOptions" }
             ]
+        },
+        "type": {
+            "title": "Type",
+            "type": "string",
+            "const": "Palette"
         }
     },
     

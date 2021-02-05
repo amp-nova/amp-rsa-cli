@@ -15,9 +15,25 @@
 		"childContentTypes": [
         ]
     },
+
+    "trait:sortable": {
+        "sortBy": [
+            {
+                "key": "default",
+                "paths": [
+                    "/type"
+                ]
+            }
+        ]
+    },
     
     "type": "object",
     "properties": {
+        "type": {
+            "title": "Type",
+            "type": "string",
+            "const": "Typography"
+        },
         "htmlFontSize": {
             "type": "number",
             "title": "HTML Font Size" 

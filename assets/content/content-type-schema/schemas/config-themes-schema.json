@@ -16,6 +16,17 @@
             "https://anyafinn.online/config-theme.json"
         ]
     },
+
+    "trait:sortable": {
+        "sortBy": [
+            {
+                "key": "default",
+                "paths": [
+                    "/_meta/deliveryId"
+                ]
+            }
+        ]
+    },
 	
 	"type": "object",
 	"properties": {

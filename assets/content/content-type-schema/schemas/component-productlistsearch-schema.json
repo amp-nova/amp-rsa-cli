@@ -27,7 +27,7 @@
 				"url": "https://presalesadisws.s3.eu-west-1.amazonaws.com/ui-extensions/algolia-product-list-search/index.html",
 				"height": 200,
 				"params": {
-					"indexName": "prod_willow_products",
+					"indexName": "prod_adidas_products",
 					"appId": "T7I8W0D1V2",
 					"apiKey": "dac903cc5cce5d8163ec78284af6dcc0",
 					"facets": [

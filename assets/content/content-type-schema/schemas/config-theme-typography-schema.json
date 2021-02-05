@@ -158,6 +158,11 @@
                     "type": "string",
                     "title": "Font Size"
                 },
+                "color": {
+                    "title": "Color",
+                    "format": "color",
+                    "type": "string"
+                },
                 "lineHeight": {
                     "type": "number",
                     "title": "Line Height"

@@ -16,6 +16,11 @@
         "default": true
       },
       {
+          "label": "Development",
+          "templatedUri":"http://localhost:3000/cms/visualization?content={{content.sys.id}}&vse={{vse.domain}}&locale={{locales}}",
+          "default": false
+      },
+      {
         "label": "QR for mobile",
         "templatedUri": "{{app.url}}/visualization/qr?vse=\{{vse.domain}}&content=\{{content.sys.id}}&locale=\{{locales}}",
         "default": false

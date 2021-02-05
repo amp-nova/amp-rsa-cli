@@ -1,0 +1,5 @@
+{
+  "body": "./schemas/component-simple-banner-external-schema.json",
+  "schemaId": "https://anyafinn.online/component-simple-banner-external.json",
+  "validationLevel": "CONTENT_TYPE"
+}

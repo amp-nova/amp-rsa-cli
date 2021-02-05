@@ -14,6 +14,11 @@
         "label": "Website",
         "templatedUri": "{{app.url}}/cms/visualization/page?content=\{{content.sys.id}}&vse=\{{vse.domain}}",
         "default": true
+      },
+      {
+          "label": "Development",
+          "templatedUri":"http://localhost:3000/cms/visualization?content={{content.sys.id}}&vse={{vse.domain}}&locale={{locales}}",
+          "default": false
       }
     ],
     "cards": [

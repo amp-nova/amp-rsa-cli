@@ -1,0 +1,40 @@
+{
+  "contentTypeUri": "https://anyafinn.online/component-simple-banner-external.json",
+  "status": "ACTIVE",
+  "settings": {
+    "label": "Simple Banner External",
+    "icons": [
+      {
+        "size": 256,
+        "url": "https://i8.amplience.net/i/willow/AnyaFinn-CTicon-Banner-Simple?fmt=jpg&bg=white&w=300"
+      }
+    ],
+    "visualizations": [
+      {
+        "label": "Website",
+        "templatedUri": "{{app.url}}/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
+        "default": true
+      },
+      {
+        "label": "Development",
+        "templatedUri": "http://localhost:3000/cms/visualization?content={{content.sys.id}}&vse={{vse.domain}}&locale={{locales}}",
+        "default": false
+      }
+      {
+        "label": "QR for Mobile",
+        "templatedUri": "{{app.url}}/visualization/qr?vse=\{{vse.domain}}&content=\{{content.sys.id}}&locale=\{{locales}}",
+        "default": false
+      },
+      {
+        "label": "JSON",
+        "templatedUri": "https://presalesadisws.s3.eu-west-1.amazonaws.com/dynamic-content/dc-visualization-content-delivery/index.html?vse={{vse.domain}}&id={{content.sys.id}}&format=inlined&depth=all&v2=true&locale={{locales}}",
+        "default": false
+      }
+    ],
+    "cards": [
+      {
+        "templatedUri": "https://willow-demo-cards.vercel.app/?#vse={{vse.domain}}&content={{content.sys.id}}"
+      }
+    ]
+  }
+}

@@ -9,7 +9,18 @@
         "url": "https://i8.amplience.net/i/willow/CT-icon-style4-brandcolours?fmt=jpg&bg=white&w=300"
       }
     ],
-    "visualizations": [],
+    "visualizations": [
+      {
+        "label": "Website",
+        "templatedUri": "{{app.url}}/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
+        "default": true
+      },
+      {
+        "label": "Development",
+        "templatedUri": "http://localhost:3000/cms/visualization?content={{content.sys.id}}&vse={{vse.domain}}&locale={{locales}}",
+        "default": false
+      }    
+    ],
     "cards": []
   },
   "repositories": [ "sitestructure" ]

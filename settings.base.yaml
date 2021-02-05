@@ -37,18 +37,14 @@ cms:
 commercetools:
   authUrl: https://auth.europe-west1.gcp.commercetools.com
   apiUrl: https://api.europe-west1.gcp.commercetools.com
-  projectKey: amp-wawa
-  clientId: BDxVUvQDRRC22jLP3Uu6rv82
-  clientSecret: t738XzlObw9N-xf1YB-zM88Jt1Cqzui1
+  projectKey: amp-adidas
+  clientId: KaLB3fyZslJrcjnu9ozPlB42
+  clientSecret: oVzjF_vAbN_I2-i3xWKv9op67ccjktuK
   defaultScopes:
-    - view_products:amp-wawa
-    - manage_my_profile:amp-wawa
-    - view_categories:amp-wawa
-    - view_published_products:amp-wawa
-    - manage_my_orders:amp-wawa
-    - create_anonymous_token:amp-wawa
-    - manage_my_payments:amp-wawa
-    - manage_my_shopping_lists:amp-wawa
+    - view_products:amp-adidas
+    - view_categories:amp-adidas
+    - view_published_products:amp-adidas
+    - create_anonymous_token:amp-adidas
   defaultFacets:
     - type: standard
       field: variants.attributes.color.label.en

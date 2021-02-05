@@ -53,18 +53,14 @@ cms:
 commercetools:
   authUrl: https://auth.europe-west1.gcp.commercetools.com
   apiUrl: https://api.europe-west1.gcp.commercetools.com
-  projectKey: anyafinn
-  clientId: SFL2J4ysCuEHILRwYaV9_X9R
-  clientSecret: 3h9KNemP1P63-mlWpGRMTQ90bhKbTr_5
+  projectKey: amp-adidas
+  clientId: KaLB3fyZslJrcjnu9ozPlB42
+  clientSecret: oVzjF_vAbN_I2-i3xWKv9op67ccjktuK
   defaultScopes:
-    - view_products:anyafinn
-    - manage_my_profile:anyafinn
-    - view_categories:anyafinn
-    - view_published_products:anyafinn
-    - manage_my_orders:anyafinn
-    - create_anonymous_token:anyafinn
-    - manage_my_payments:anyafinn
-    - manage_my_shopping_lists:anyafinn
+    - view_products:amp-adidas
+    - view_categories:amp-adidas
+    - view_published_products:amp-adidas
+    - create_anonymous_token:amp-adidas
   defaultFacets:
     - type: standard
       field: variants.attributes.color.label.en

@@ -19,6 +19,7 @@
       "enum": [
         "ab-test-pets",
         "ab-test-cars",
+        "ab-test-countdown",
         "ab-test-bargains",
         "ab-test-food",
         "ab-test-colors"
@@ -38,7 +39,9 @@
               "dogs",
               "cats",
               "birds",
-              "fish"
+              "fish",
+              "countdown",
+              "statement"
             ]
           },
           "components": {

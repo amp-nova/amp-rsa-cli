@@ -11,7 +11,7 @@ algolia:
       prod: adidas.rule-based-production
       staging: adidas.rule-based-staging
     productListSearch:
-      prod: prod_willow_products
+      prod: prod_adidas2_products
 app:
   publishStage: production
   url: https://willow-demo-web-react-adidas-nine.vercel.app
@@ -53,14 +53,14 @@ cms:
 commercetools:
   authUrl: https://auth.europe-west1.gcp.commercetools.com
   apiUrl: https://api.europe-west1.gcp.commercetools.com
-  projectKey: amp-adidas
-  clientId: KaLB3fyZslJrcjnu9ozPlB42
-  clientSecret: oVzjF_vAbN_I2-i3xWKv9op67ccjktuK
+  projectKey: amp-adidas2
+  clientId: kFOSYIEYqqy8QF4DkEtYnuda
+  clientSecret: vv6K1_TVPHZfgwN2aweAg7qceu6LnWZw
   defaultScopes:
-    - view_products:amp-adidas
-    - view_categories:amp-adidas
-    - view_published_products:amp-adidas
-    - create_anonymous_token:amp-adidas
+    - view_products:amp-adidas2
+    - view_categories:amp-adidas2
+    - view_published_products:amp-adidas2
+    - create_anonymous_token:amp-adidas2
   defaultFacets:
     - type: standard
       field: variants.attributes.color.label.en

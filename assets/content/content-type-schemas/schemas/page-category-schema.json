@@ -44,6 +44,11 @@
             "type": "string",
             "title": "Category Name"
         },
+        "hideProductList": {
+            "title": "Hide Product List",
+            "description": "Hide Product List for a Category Landing Page for instance.",
+            "type": "boolean"
+        },
         "menu": { "$ref": "./lib-menu.json#/definitions/menuItemConfig" },
         "components": {
             "title": "Components",

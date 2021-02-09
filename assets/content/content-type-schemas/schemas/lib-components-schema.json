@@ -27,7 +27,8 @@
                 "https://anyafinn.online/component-dy-ab-content.json",
                 "https://anyafinn.online/component-dynamic-blog-list.json",
                 "https://anyafinn.online/component-productlistsearch.json",
-                "https://anyafinn.online/component-simple-banner-external.json"
+                "https://anyafinn.online/component-simple-banner-external.json",
+                "https://anyafinn.online/theme-wrapper.json"
             ]
         },
         "anySlot": {

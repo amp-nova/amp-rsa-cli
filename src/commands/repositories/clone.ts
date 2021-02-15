@@ -22,13 +22,13 @@ export const handler = async (
 
     const packages = [
       { source: "amplience/dc-content-delivery-poc", target: "dc-content-delivery-poc" },
-      { source: "amplience/willow-demo-services", target: "willow-demo-services" },
-      { source: "rezakalfane/amp-rsa", target: `amp-rsa-${settingsJSON.cms.hubName}` }
+      { source: "amplience/willow-demo-services", target: "willow-demo-services" }
+      // { source: "rezakalfane/amp-rsa", target: `amp-rsa-${settingsJSON.cms.hubName}` }
       // "willow-demo-cards",
       // "willow-demo-extension-personify"
     ];
     
-    childProcess.execSync(`mkdir repositories`); 
+    try { childProcess.execSync(`mkdir repositories`); } catch(error) {}
 
     packages.map((item: any) => {
       console.log(`Cloning ${item.source} to ${item.target}`);

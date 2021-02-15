@@ -24,17 +24,16 @@ export const handler = async (
     const webappFinal = `${webapp}-${settingsJSON.cms.hubName}`;
 
     // Deploying Web Application to Vercel
-    console.log(`Deploying Web Application from ./repositories/${webappFinal} to Vercel`);
+    console.log(`Deploying Web Application to Vercel`);
     childProcess.execSync(
-      `vercel --prod --confirm &> deployment.out`,
+      `vercel .. --prod --confirm --name ${webappFinal} &> ./repositories/deployment.out`,
       { 
-        cwd: `./repositories/${webappFinal}`,
         stdio: [process.stdin, process.stdout, process.stdin]
       }
     );
 
     // Read deployment information
-    const deploymentOutput = readFileSync(`./repositories/${webappFinal}/deployment.out`).toString();
+    const deploymentOutput = readFileSync(`./repositories/deployment.out`).toString();
     
     // Backup settings
     writeFileSync("settings.yaml.backup", settingsYAML);

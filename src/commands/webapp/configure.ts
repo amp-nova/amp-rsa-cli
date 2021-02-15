@@ -1,50 +1,88 @@
 import { Arguments } from 'yargs';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, readdirSync, writeFileSync, statSync, unlinkSync } from 'fs';
+import childProcess from 'child_process';
 import { compile as handlebarsCompile } from 'handlebars';
 
 const yaml = require('js-yaml');
+const lodash = require('lodash');
 
 export const command = 'configure';
-export const desc = "Configure Web Application";
+export const desc = "Configure webapp config files";
 
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
-  const webapp = "amp-rsa";
-
-  const services = [
-    "algolia",
-    "analytics",
-    "app",
-    "cms",
-    "commercetools",
-    "dynamicyield",
-    "personify"
-  ];
-
-  // Reading settings
-  const settingsYAML = readFileSync(`./settings.yaml`).toString();
-
-  // Converting from YAML to JSON
-  const settingsJSON = yaml.load(settingsYAML)
-  console.log('Global Settings loaded');
-
-  const webappFinal = `${webapp}-${settingsJSON.cms.hubName}`;
 
   try {
-    services.map((item: string) => {
 
-      // Getting and compiling services config template
-      const configTemplate = readFileSync(`./assets/webapp/config/${item}.json.hbs`).toString();
-      const configTemplateCompiled = handlebarsCompile(configTemplate);
+    // Reading global settings
+    const settingsYAML = readFileSync(`./settings.yaml`).toString();
 
-      // Applying settings to template
-      const serviceConfigJSON = configTemplateCompiled(settingsJSON);
+    // Converting from YAML to JSON
+    const settingsJSON = yaml.load(settingsYAML)
+    console.log('Global settings loaded');
 
-      // Write services config to file
-      writeFileSync(`./repositories/${webappFinal}/config/${item}.json`, serviceConfigJSON);
-      console.log(`Wrote services config to file ./repositories/${webappFinal}/config/${item}.json`)
+    // Copy ./assets/content folder in repositories
+    console.log('Copying webapp config files to repositories folder');
+    try { childProcess.execSync(`rm -r ./repositories/webapp`); } catch (error) {}
+    childProcess.execSync(`cp -r ./assets/webapp ./repositories`); 
+
+    // Scan all handlebars files in ./repositories/assets/webapp
+    const iterateDirectory = () => {
+      const files: string[] = [];
+      const dirs: string[] = [];
+  
+      return function directoryIterator(directory: string) {
+        try {
+            let dirContent = readdirSync(directory);
+            dirContent.forEach( path => {
+                const fullPath: string = `${directory}/${path}`;
+
+                // Add to files list if it's an handlebars template
+                if (statSync(fullPath).isFile()) {
+                  if (fullPath.endsWith('.hbs')) {
+                    files.push(fullPath);
+                  }
+                } else {
+
+                  // Add sub-directory to directory list
+                  dirs.push(fullPath);
+                }
+            });
+            const directoryPop = dirs.pop();
+
+            // Scan next sub-directory
+            if (directoryPop) { directoryIterator(directoryPop); }
+
+            return files;
+        } catch(ex) {
+            console.log(ex);
+            return files;
+        }
+      };
+    };
+
+    // Finding all templates in folder
+    const folder = './repositories/webapp';
+    console.log(`Finding all templates from ${folder} folder`);
+    const assetsIterator = iterateDirectory();
+    const files = assetsIterator(folder);
+
+    // Render each template to file
+    files.map((item: string) => {
+      const templateString = readFileSync(item).toString();
+      const template = handlebarsCompile(templateString);
+      const contentJSON = template(settingsJSON);
+
+      // Write json to file
+      const file = item.replace('.hbs', '');
+      writeFileSync(file, contentJSON);
+      console.log(`Created json from template: ${file}`)
+
+      // Remove template
+      unlinkSync(item);
     });
+
   } catch(error) {
     console.log(error.message);
   }

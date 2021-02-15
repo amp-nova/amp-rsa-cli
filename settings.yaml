@@ -19,6 +19,7 @@ analytics:
   ga:
     trackingId: UA-138924869-5
 cms:
+  contentBaseUri: https://amp-rsa.amplience.com
   contentApi: adidas.cdn.content.amplience.net
   stagingApi: nxm7bv8xt4bf1nrk41p2m0wke.staging.bigcontent.io
   trustedHostSuffixes:

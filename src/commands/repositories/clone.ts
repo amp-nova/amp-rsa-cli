@@ -23,7 +23,7 @@ export const handler = async (
     const packages = [
       { source: "amplience/dc-content-delivery-poc", target: "dc-content-delivery-poc" },
       { source: "amplience/willow-demo-services", target: "willow-demo-services" },
-      { source: "rezakalfane/willow-demo-web-react", target: `willow-demo-web-react-${settingsJSON.cms.hubName}` }
+      { source: "rezakalfane/amp-rsa", target: `amp-rsa-${settingsJSON.cms.hubName}` }
       // "willow-demo-cards",
       // "willow-demo-extension-personify"
     ];

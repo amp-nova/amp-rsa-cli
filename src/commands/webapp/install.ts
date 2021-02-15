@@ -11,7 +11,7 @@ export const handler = async (
   argv: Arguments
 ): Promise<void> => {
 
-  const webapp = "willow-demo-web-react";
+  const webapp = "amp-rsa";
 
   try {
 

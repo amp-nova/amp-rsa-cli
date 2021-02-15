@@ -23,7 +23,7 @@ export const handler = async (
     const packages = [
       "dc-content-delivery-poc",
       "willow-demo-services",
-      `willow-demo-web-react-${settingsJSON.cms.hubName}`,
+      `amp-rsa-${settingsJSON.cms.hubName}`,
       // "willow-demo-cards",
       // "willow-demo-extension-personify"
     ];

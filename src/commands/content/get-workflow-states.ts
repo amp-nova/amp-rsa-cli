@@ -24,16 +24,15 @@ export const handler = async (
     const settingsJSON = yaml.load(settingsYAML)
     console.log('Global settings loaded');
 
-    // Exporting Workflow States
-    console.log(`Exporting Workflow States`);
-    childProcess.execSync(
-      `dc-cli workflow-states export . -f`,
+    // Listing Workflow States
+    console.log(`Listing Workflow States`);
+    const workflowStatesList = childProcess.execSync(
+      `dc-cli workflow-states list --json`,
       { cwd: `./repositories` }
-    );
+    ).toString();
 
-    // Get Workflow States from export
-    const workflowStates = readFileSync(`./repositories/workflow-states-${settingsJSON.cms.hubId}-${settingsJSON.cms.hubName}.json`).toString();
-    const workflowStateJson = JSON.parse(workflowStates);
+    // Get Workflow States from output
+    const workflowStateJson = JSON.parse(workflowStatesList);
 
     // Build Workflow States map for settings
     let workflowStatesMap: any = {};

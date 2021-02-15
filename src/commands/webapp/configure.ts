@@ -10,6 +10,7 @@ export const desc = "Configure Web Application";
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
+  const webapp = "amp-rsa";
 
   const services = [
     "algolia",
@@ -26,7 +27,9 @@ export const handler = async (
 
   // Converting from YAML to JSON
   const settingsJSON = yaml.load(settingsYAML)
-  console.log('Settings loaded');
+  console.log('Global Settings loaded');
+
+  const webappFinal = `${webapp}-${settingsJSON.cms.hubName}`;
 
   try {
     services.map((item: string) => {
@@ -39,8 +42,8 @@ export const handler = async (
       const serviceConfigJSON = configTemplateCompiled(settingsJSON);
 
       // Write services config to file
-      writeFileSync(`./repositories/willow-demo-web-react-${settingsJSON.cms.hubName}/config/${item}.json`, serviceConfigJSON);
-      console.log(`Wrote services config to file ./repositories/willow-demo-web-react-${settingsJSON.cms.hubName}/config/${item}.json`)
+      writeFileSync(`./repositories/${webappFinal}/config/${item}.json`, serviceConfigJSON);
+      console.log(`Wrote services config to file ./repositories/${webappFinal}/config/${item}.json`)
     });
   } catch(error) {
     console.log(error.message);

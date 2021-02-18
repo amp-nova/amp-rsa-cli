@@ -1,4 +1,0 @@
-# Amplience Reference Storefront Architecture
-
-
-

@@ -1,5 +1,5 @@
 {
-  "name": "willow-demo-automation",
+  "name": "@rezakalfane/demo-cli",
   "version": "0.0.1",
   "description": "Willo Demo Automation",
   "main": "./build/index.js",

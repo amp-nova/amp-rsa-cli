@@ -1,5 +1,5 @@
 {
-  "contentTypeUri": "https://anyafinn.online/component-rule-based-content.json",
+  "contentTypeUri": "{{cms.contentBaseUri}}/component-rule-based-content.json",
   "status": "ACTIVE",
   "settings": {
     "label": "Rule Based Content",
@@ -16,9 +16,9 @@
         "default": true
       },
       {
-          "label": "Development",
-          "templatedUri":"http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
-          "default": false
+        "label": "Development",
+        "templatedUri": "http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
+        "default": false
       }
     ],
     "cards": [
@@ -26,6 +26,5 @@
         "templatedUri": "https://willow-demo-cards.vercel.app/?#vse=\{{vse.domain}}&content=\{{content.sys.id}}"
       }
     ]
-  },
-  "repositories": [ "content", "contentfr", "contentde", "contentes", "contentit" ]
+  }
 }

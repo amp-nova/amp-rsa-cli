@@ -1,5 +1,5 @@
 {
-  "contentTypeUri": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/container.json",
+  "contentTypeUri": "{{cms.contentBaseUri}}/container.json",
   "status": "ACTIVE",
   "settings": {
     "label": "Container",
@@ -16,18 +16,8 @@
         "default": true
       },
       {
-          "label": "Development",
-          "templatedUri":"http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
-          "default": false
-      },
-      {
-        "label": "LeanKit",
-        "templatedUri": "https://willow-demo-leankit.dev.adis.ws/static/leankit-plugin.html?boardId=680372499&id=\{{content.sys.id}}&domain=\{{vse.domain}}",
-        "default": false
-      },
-      {
-        "label": "Spartacus Demo",
-        "templatedUri": "https://d1yghe412xpaxi.cloudfront.net/visualization?vse=\{{vse.domain}}&content=\{{content.sys.id}}&locale=\{{locales}}",
+        "label": "Development",
+        "templatedUri": "http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
         "default": false
       },
       {
@@ -46,6 +36,5 @@
         "templatedUri": "https://willow-demo-cards.vercel.app/?#vse=\{{vse.domain}}&content=\{{content.sys.id}}"
       }
     ]
-  },
-  "repositories": [ "content", "contentfr", "contentde", "contentes", "contentit" ]
+  }
 }

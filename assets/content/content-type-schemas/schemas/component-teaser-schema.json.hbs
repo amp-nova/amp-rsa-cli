@@ -1,0 +1,69 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "{{cms.contentBaseUri}}/component-teaser.json",
+	"title": "Teaser",
+	"description": "Teaser Component",
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+	],
+	"type": "object",
+	"properties": {
+		"category": {
+			"title": "Category",
+			"description": "Category",
+			"type": "string",
+			"enum": [
+				"Originals",
+				"Featured",
+				"Football",
+				"Running",
+				"Basketball",
+				"Training",
+				"Golf",
+				"Outdoor",
+				"Y-3"
+			]
+		},
+		"images": {
+			"title": "Images",
+			"type": "array",
+			"minItems": 0,
+			"maxItems": 10,
+			"items": {
+				"allOf": [
+					{
+						"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/image-link"
+					}
+				]
+			}
+		},
+		"title": {
+			"title": "Title",
+			"description": "Teaser Title",
+			"allOf": [
+				{
+					"$ref": "http://bigcontent.io/cms/schema/v1/localization#/definitions/localized-string"
+				}
+			]
+		},
+		"summary": {
+			"title": "Summary",
+			"description": "Teaser Summary",
+			"allOf": [
+				{
+					"$ref": "http://bigcontent.io/cms/schema/v1/localization#/definitions/localized-string"
+				}
+			]
+		},
+		"link": {
+			"type": "object",
+			"allOf": [
+				{
+					"$ref": "{{cms.contentBaseUri}}/link.json"
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "{{cms.contentBaseUri}}/landing-page.json",
+  "title": "Landing Page",
+  "description": "A re-usable container for all content types",
+  "allOf": [
+    {
+      "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+    }
+  ],
+  "type": "object",
+  "properties": {
+    "_meta": {
+      "type": "object",
+      "properties": {
+        "deliveryKey": {
+          "type": "string",
+          "title": "URL slug",
+          "description": "Enter the URL slug for this page (content/*)",
+          "pattern": "content\/.*"
+        }
+      }
+    },
+    "seo": {
+      "title": "SEO",
+      "description": "",
+      "type": "object",
+      "properties": {
+        "title": {
+          "title": "Title",
+          "description": "Meta title field",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 100
+        },
+        "description": {
+          "title": "Description",
+          "description": "Meta description field",
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200
+        }
+      },
+      "propertyOrder": []
+    },
+    "contentTypes": {
+      "type": "array",
+      "title": "Layout",
+      "description": "Select and order content to display in the container",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+          },
+          {
+            "properties": {
+              "contentType": {
+                "$ref": "{{cms.contentBaseUri}}/lib-components.json#/definitions/anyComponent"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

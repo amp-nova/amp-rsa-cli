@@ -1,0 +1,35 @@
+{ 
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "{{cms.contentBaseUri}}/landingpage-slot.json",
+	"title": "Landing Page Slot",
+	"description": "Slot that can contain a landing page",
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+	],
+	"type": "object",
+	"properties": {
+		"content": {
+			"title": "Content",
+			"allOf": [
+				{
+					"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+				},
+				{
+					"properties": {
+						"contentType": {
+							"title": "contentType",
+							"enum": [
+								"{{cms.contentBaseUri}}/landing-page.json"
+							]
+						}
+					}
+				}
+			]
+		}
+	},
+	"propertyOrder": [
+		"content"
+	]
+}

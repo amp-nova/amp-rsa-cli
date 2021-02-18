@@ -1,0 +1,59 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "{{cms.contentBaseUri}}/slot-localizedbannerslot.json",
+	"title": "Localized Banner Slot",
+	"description": "Description",
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+	],
+	"type": "object",
+	"properties": {
+		"content": {
+			"title": "Content",
+			"description": "Content",
+			"allOf": [
+				{
+					"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/localized-value"
+				}
+			],
+			"properties": {
+				"values": {
+					"items": {
+						"properties": {
+							"value": {
+								"allOf": [
+									{
+										"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+									},
+									{
+										"properties": {
+											"contentType": {
+												"title": "contentType",
+												"enum": [
+													"{{cms.contentBaseUri}}/simple-banner.json",
+													"{{cms.contentBaseUri}}/simple-localized-banner.json",
+													"{{cms.contentBaseUri}}/component-personify-targeted-content.json",
+													"{{cms.contentBaseUri}}/component-dy-ab-content.json",
+													"{{cms.contentBaseUri}}/component-simple-banner-external.json",
+													"{{cms.contentBaseUri}}/component-teaser.json",
+													"{{cms.contentBaseUri}}/component-product-carousel.json",
+													"{{cms.contentBaseUri}}/banner.json",
+													"{{cms.contentBaseUri}}/banner-with-poi.json",
+													"{{cms.contentBaseUri}}/slider.json",
+													"{{cms.contentBaseUri}}/video.json"
+												]
+											}
+										}
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"propertyOrder": []
+}

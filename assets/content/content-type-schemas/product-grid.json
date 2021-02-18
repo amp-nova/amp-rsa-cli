@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/product-grid-schema.json",
-  "schemaId": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/product-grid.json",
-  "validationLevel": "CONTENT_TYPE"
-}

@@ -1,0 +1,151 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "{{cms.contentBaseUri}}/email-banner.json",
+	"title": "Email Banner",
+	"description": "One Column Article",
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+	],
+	"type": "object",
+	"properties": {
+		"wrapper": {
+			"title": "Wrapper Settings",
+			"type": "object",
+			"properties": {
+				"bgColor": {
+					"title": "Background Color",
+					"type": "string",
+					"ui:extension": {
+						"name": "color-picker",
+						"params": {
+							"title": "Wrapper Color",
+							"contentID": "ecb31d0c-7344-4fea-9a17-e064b63aea8b",
+							"groups": [
+								"Email"
+							]
+						}
+					}
+				}
+			}
+		},
+		"imageSettings": {
+			"title": "Image Settings",
+			"type": "object",
+			"properties": {
+				"image": {
+					"title": "Image",
+					"description": "",
+					"type": "object",
+					"anyOf": [
+						{
+							"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/image-link"
+						}
+					]
+				},
+				"imageWidth": {
+					"title": "Image pixel width",
+					"type": "number",
+					"minLength": 0,
+					"maxLenght": 540
+				},
+				"isAnimatedGif": {
+					"title": "Is Image Animated GIF?",
+					"type": "boolean"
+				},
+				"imageWrapperPadding": {
+					"title": "Image Wrapper Padding",
+					"description": "Padding is set with shorthand in this order: top, right, bottom, left (example: 20px 10px 20px 10px)",
+					"type": "string"
+				},
+				"imageAltText": {
+					"title": "Image alt text",
+					"type": "string",
+					"minLength": 0,
+					"maxLength": 150
+				},
+				"linkUrl": {
+					"type": "string",
+					"title": "Image Link"
+				},
+				"linkAlias": {
+					"type": "string",
+					"title": "Image Link Alias"
+				}
+			}
+		},
+		"headingSettings": {
+			"allOf": [
+				{
+					"$ref": "{{cms.contentBaseUri}}/email-text.json#/definitions/headingSettings"
+				}
+			]
+		},
+		"paragraphSettings": {
+			"allOf": [
+				{
+					"$ref": "{{cms.contentBaseUri}}/email-text.json#/definitions/paragraphSettings"
+				}
+			]
+		},
+		"ctaSettings": {
+			"title": "CTA Settings",
+			"type": "object",
+			"properties": {
+				"buttonStyle": {
+					"title": "Button Style",
+					"description": "Choose which style of button you prefer",
+					"type": "string",
+					"enum": [
+						"Hide",
+						"Solid",
+						"Outlined"
+					]
+				},
+				"buttonColor": {
+					"title": "Button/Border Color",
+					"type": "string",
+					"ui:extension": {
+						"name": "color-picker",
+						"params": {
+							"title": "Button Border Color",
+							"contentID": "ecb31d0c-7344-4fea-9a17-e064b63aea8b",
+							"groups": [
+								"Email"
+							]
+						}
+					}
+				},
+				"linkUrl": {
+					"title": "Link URL",
+					"type": "string"
+				},
+				"linkAlias": {
+					"title": "Link Alias",
+					"type": "string"
+				},
+				"buttonText": {
+					"title": "Button Text",
+					"type": "string",
+					"minimum": 4,
+					"maximum": 12
+				},
+				"textColor": {
+					"title": "Button Text Color",
+					"type": "string",
+					"ui:extension": {
+						"name": "color-picker",
+						"params": {
+							"title": "Button Text Color",
+							"contentID": "ecb31d0c-7344-4fea-9a17-e064b63aea8b",
+							"groups": [
+								"Email"
+							]
+						}
+					}
+				}
+			}
+		}
+	}
+}

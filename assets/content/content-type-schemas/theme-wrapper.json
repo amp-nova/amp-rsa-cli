@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/theme-wrapper.json",
-  "schemaId": "https://anyafinn.online/theme-wrapper.json",
-  "validationLevel": "CONTENT_TYPE"
-}

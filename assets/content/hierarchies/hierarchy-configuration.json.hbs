@@ -4,7 +4,8 @@
     "body": {
       "_meta": {
         "name": "Configuration",
-        "schema": "https://anyafinn.online/config.json",
+        "schema": "{{cms.contentBaseUri}}/config.json",
+        "deliveryKey": "hierarchy/config",
         "hierarchy": {
           "root": true
         }
@@ -26,7 +27,7 @@
         "body": {
           "_meta": {
             "name": "Translation Workflow",
-            "schema": "https://anyafinn.online/config-translation.json",
+            "schema": "{{cms.contentBaseUri}}/config-translation.json",
             "deliveryKey": "config/translation",
             "hierarchy": {
               "root": false
@@ -44,7 +45,7 @@
                 "$.snippet.keywords",
                 "$.content.text[?(@.type=='markdown')].data"
               ],
-              "schema": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/blog.json"
+              "schema": "{{cms.contentBaseUri}}/blog.json"
             }
           ],
           "type": "Translation",
@@ -66,7 +67,7 @@
         "body": {
           "_meta": {
             "name": "Components",
-            "schema": "https://anyafinn.online/config-components.json",
+            "schema": "{{cms.contentBaseUri}}/config-components.json",
             "deliveryKey": "config/components",
             "hierarchy": {
               "root": false
@@ -111,7 +112,8 @@
         "body": {
           "_meta": {
             "name": "Themes",
-            "schema": "https://anyafinn.online/config-themes.json",
+            "schema": "{{cms.contentBaseUri}}/config-themes.json",
+            "deliveryKey": "themes",
             "hierarchy": {
               "root": false
             }
@@ -133,7 +135,7 @@
             "body": {
               "_meta": {
                 "name": "Summer Theme",
-                "schema": "https://anyafinn.online/config-theme.json",
+                "schema": "{{cms.contentBaseUri}}/config-theme.json",
                 "deliveryKey": "theme/summer",
                 "hierarchy": {
                   "root": false
@@ -156,7 +158,7 @@
             "body": {
               "_meta": {
                 "name": "Default Theme",
-                "schema": "https://anyafinn.online/config-theme.json",
+                "schema": "{{cms.contentBaseUri}}/config-theme.json",
                 "deliveryKey": "theme/default",
                 "hierarchy": {
                   "root": false
@@ -178,7 +180,7 @@
                 "body": {
                   "_meta": {
                     "name": "Palette",
-                    "schema": "https://anyafinn.online/config-theme-palette.json",
+                    "schema": "{{cms.contentBaseUri}}/config-theme-palette.json",
                     "hierarchy": {
                       "root": false
                     }
@@ -230,7 +232,7 @@
                 "body": {
                   "_meta": {
                     "name": "Typography",
-                    "schema": "https://anyafinn.online/config-theme-typography.json",
+                    "schema": "{{cms.contentBaseUri}}/config-theme-typography.json",
                     "hierarchy": {
                       "root": false
                     }
@@ -354,7 +356,7 @@
             "body": {
               "_meta": {
                 "name": "Winter Theme",
-                "schema": "https://anyafinn.online/config-theme.json",
+                "schema": "{{cms.contentBaseUri}}/config-theme.json",
                 "deliveryKey": "theme/winter",
                 "hierarchy": {
                   "root": false

@@ -1,0 +1,47 @@
+{ 
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "{{cms.contentBaseUri}}/product-grid.json",
+
+	"title": "Dynamic Product Grid",
+	"description": "Description",
+
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+	],
+	
+	"type": "object",
+	"properties": {
+		"query": {
+			"title": "Query",
+			"description": "Query for products",
+			"type": "string"
+		},
+		"category": {
+			"title": "Product Category",
+			"description": "",
+			"type": "string",
+			"enum": [
+				"kids",
+				"men",
+				"women",
+				"sale",
+				"women-new_arrivals",
+				"men-new_arrivals"
+
+			]
+		},
+
+		"limit": {
+			"title": "Limit",
+			"description": "Maximum number of results to display",
+			"type": "number",
+			"minimum": 1,
+			"maximum": 100
+		}
+		
+		
+	},
+	"propertyOrder": []
+}

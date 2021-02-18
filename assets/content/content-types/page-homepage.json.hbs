@@ -1,5 +1,5 @@
 {
-  "contentTypeUri": "https://anyafinn.online/page-homepage.json",
+  "contentTypeUri": "{{cms.contentBaseUri}}/page-homepage.json",
   "status": "ACTIVE",
   "settings": {
     "label": "Homepage",
@@ -16,9 +16,9 @@
         "default": true
       },
       {
-          "label": "Development",
-          "templatedUri":"http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
-          "default": false
+        "label": "Development",
+        "templatedUri": "http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
+        "default": false
       },
       {
         "label": "QR for Mobile",
@@ -32,6 +32,5 @@
       }
     ],
     "cards": []
-  },
-  "repositories": [ "sitestructure" ]
+  }
 }

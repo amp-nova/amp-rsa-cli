@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "{{cms.contentBaseUri}}/customRichText.json",
+  "title": "Custom Rich Text",
+  "description": "Custom Rich Text Control",
+  "allOf": [
+    {
+      "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+    }
+  ],
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "array",
+      "ui:extension": {
+        "name": "custom-rich-text",
+        "params": {
+          "language": "json",
+          "styles": ".was-price { color: red; }",
+          "tools": {
+            "blacklist": [],
+            "dc-content-link": {
+              "contentTypes": [
+                "{{cms.contentBaseUri}}/simple-banner.json",
+                "{{cms.contentBaseUri}}/banner.json",
+                "{{cms.contentBaseUri}}/banner-with-poi.json",
+                "{{cms.contentBaseUri}}/blog.json",
+                "{{cms.contentBaseUri}}/blogList.json",
+                "{{cms.contentBaseUri}}/card.json",
+                "{{cms.contentBaseUri}}/cardList.json",
+                "{{cms.contentBaseUri}}/curated-product-grid.json",
+                "{{cms.contentBaseUri}}/customRichText.json",
+                "{{cms.contentBaseUri}}/product-grid.json",
+                "{{cms.contentBaseUri}}/externalBlock.json",
+                "{{cms.contentBaseUri}}/image.json",
+                "{{cms.contentBaseUri}}/product.json",
+                "{{cms.contentBaseUri}}/promo.json",
+                "{{cms.contentBaseUri}}/promoList.json",
+                "{{cms.contentBaseUri}}/shoppableVideo.json",
+                "{{cms.contentBaseUri}}/slider.json",
+                "{{cms.contentBaseUri}}/splitBlock.json",
+                "{{cms.contentBaseUri}}/text.json",
+                "{{cms.contentBaseUri}}/video.json",
+                "{{cms.contentBaseUri}}/component-personify-targeted-content.json",
+                "{{cms.contentBaseUri}}/component-dy-ab-content.json",
+                "{{cms.contentBaseUri}}/component-dynamic-blog-list.json"
+              ],
+               "contentTypeSettings":
+                            {
+                                "cards":
+                                {
+                                    "*": "{{app.url}}/visualization/standalone?vse=\{{vse.domain}}&content=\{{content.sys.id}}"
+                                }
+                            }
+            },
+            "inline_styles": {
+              "classNames": [
+                {
+                  "className": "was-price",
+                  "label": "Was Price"
+                }
+              ]
+            }
+          },
+          "toolbar": {
+            "layout": [
+              {
+                "type": "group",
+                "children": [
+                  {
+                    "type": "button",
+                    "toolName": "undo"
+                  },
+                  {
+                    "type": "button",
+                    "toolName": "redo"
+                  }
+                ]
+              },
+              {
+                "type": "dropdown",
+                "label": "Styles",
+                "toolNames": [
+                  "inline_styles_className_was-price"
+                ]
+              },
+              {
+                "type": "group",
+                "children": [
+                  {
+                    "type": "button",
+                    "toolName": "strong"
+                  },
+                  {
+                    "type": "button",
+                    "toolName": "em"
+                  },
+                  {
+                    "type": "button",
+                    "toolName": "link"
+                  }
+                ]
+              },
+              {
+                "type": "group",
+                "children": [
+                  {
+                    "type": "button",
+                    "toolName": "bullet_list"
+                  },
+                  {
+                    "type": "button",
+                    "toolName": "ordered_list"
+                  }
+                ]
+              },
+              {
+                "type": "group",
+                "children": [
+                  {
+                    "type": "button",
+                    "toolName": "dc-image-link"
+                  },
+                  {
+                    "type": "button",
+                    "toolName": "image"
+                  },
+                  {
+                    "type": "button",
+                    "toolName": "dc-content-link"
+                  },
+                  {
+                    "type": "button",
+                    "toolName": "blockquote"
+                  },
+                  {
+                    "type": "button",
+                    "toolName": "code_block"
+                  },
+                  {
+                    "type": "button",
+                    "toolName": "horizontal_rule"
+                  }
+                ]
+              },
+              {
+                "type": "group",
+                "children": [
+                  {
+                    "type": "button",
+                    "toolName": "clear_formatting"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "propertyOrder": [
+    "text"
+  ]
+}

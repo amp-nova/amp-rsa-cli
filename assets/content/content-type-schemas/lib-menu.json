@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/lib-menu-schema.json",
-  "schemaId": "https://anyafinn.online/lib-menu.json",
-  "validationLevel": "PARTIAL"
-}

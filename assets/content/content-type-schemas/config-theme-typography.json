@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/config-theme-typography-schema.json",
-  "schemaId": "https://anyafinn.online/config-theme-typography.json",
-  "validationLevel": "CONTENT_TYPE"
-}

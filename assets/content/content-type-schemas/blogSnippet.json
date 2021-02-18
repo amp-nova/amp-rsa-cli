@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/blogSnippet-schema.json",
-  "schemaId": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/blogSnippet.json",
-  "validationLevel": "CONTENT_TYPE"
-}

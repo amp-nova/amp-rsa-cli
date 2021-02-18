@@ -1,5 +1,5 @@
 {
-  "contentTypeUri": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/product-grid.json",
+  "contentTypeUri": "{{cms.contentBaseUri}}/product-grid.json",
   "status": "ACTIVE",
   "settings": {
     "label": "Dynamic Product Grid",
@@ -16,9 +16,9 @@
         "default": true
       },
       {
-          "label": "Development",
-          "templatedUri":"http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
-          "default": false
+        "label": "Development",
+        "templatedUri": "http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
+        "default": false
       },
       {
         "label": "QR for Mobile",
@@ -36,6 +36,5 @@
         "templatedUri": "https://willow-demo-cards.vercel.app/?#vse=\{{vse.domain}}&content=\{{content.sys.id}}"
       }
     ]
-  },
-  "repositories": [ "content", "contentfr", "contentde", "contentes", "contentit" ]
+  }
 }

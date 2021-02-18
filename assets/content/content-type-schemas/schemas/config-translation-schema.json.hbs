@@ -1,0 +1,76 @@
+{ 
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "{{cms.contentBaseUri}}/config-translation.json",
+
+	"title": "Taxonomies",
+	"description": "",
+
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+    ],
+
+    "trait:hierarchy": {
+		"childContentTypes": [
+        ]
+    },
+	
+	"type": "object",
+	"properties": {
+        "type": {
+            "type": "string",
+            "const": "Translation"
+        },
+        "provider": {
+            "title": "Provider",
+            "type": "string",
+            "enum": [
+                "AWS Translate",
+                "translations.com"
+            ]
+        },
+        "workflowStates": {
+            "title": "Workflow States",
+            "type": "object",
+            "properties": {
+                "inProgress": {
+                    "title": "Translation In Progress",
+                    "type": "string"
+                },
+                "complete": {
+                    "title": "Translation Complete",
+                    "type": "string"
+                }
+            }
+        },
+        "contentTypes": {
+            "type": "array",
+            "title": "Content Types",
+            "items": {
+                "type": "object",
+                "title": "Content Type",
+                "properties": {
+                    "schema": {
+                        "type": "string",
+                        "title": "Schema",
+                        "description": "URI of the content type schema"
+                    },
+                    "fieldAllowList": {
+                        "title": "Translation Allow List",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "title": "Field",
+                            "description": "JSON Path to field(s) which should be translated"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    
+    "definitions": {
+        
+    }
+}

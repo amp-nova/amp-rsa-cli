@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/simple-localized-banner-schema.json",
-  "schemaId": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/simple-localized-banner.json",
-  "validationLevel": "CONTENT_TYPE"
-}

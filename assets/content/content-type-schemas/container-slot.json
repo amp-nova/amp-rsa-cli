@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/container-slot-schema.json",
-  "schemaId": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/slot-types/container-slot.json",
-  "validationLevel": "CONTENT_TYPE"
-}

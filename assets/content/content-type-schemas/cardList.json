@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/cardList-schema.json",
-  "schemaId": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/cardList.json",
-  "validationLevel": "CONTENT_TYPE"
-}

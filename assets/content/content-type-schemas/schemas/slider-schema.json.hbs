@@ -1,0 +1,55 @@
+{ 
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "{{cms.contentBaseUri}}/slider.json",
+
+	"title": "Slider",
+	"description": "A carousel of slides",
+
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+	],
+	
+	"type": "object",
+	"properties": {
+   "slides": {
+      "type": "array",
+      "title": "Slides",
+      "description": "Select from banners, images and videos to use in this slider",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+          },
+          {
+            "properties": {
+              "contentType": {
+                "title": "",
+                "enum": [
+                  "{{cms.contentBaseUri}}/banner.json",
+				  "{{cms.contentBaseUri}}/banner-with-poi.json",
+                  "{{cms.contentBaseUri}}/image.json",
+                  "{{cms.contentBaseUri}}/video.json"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 8
+    },
+    "loop": {
+      "type": "boolean",
+      "title": "Loop slider",
+      "description": "Infinite slide looping"
+    },
+    "navigationDots": {
+      "type": "boolean",
+      "title": "Navigation Dots",
+      "description": "Display Navigation dots?"
+    }	
+   },
+	"propertyOrder": []
+}

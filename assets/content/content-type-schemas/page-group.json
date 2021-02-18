@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/page-group-schema.json",
-  "schemaId": "https://anyafinn.online/page-group.json",
-  "validationLevel": "CONTENT_TYPE"
-}

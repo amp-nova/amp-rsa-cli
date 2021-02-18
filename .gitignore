@@ -5,4 +5,4 @@ repositories
 node_modules
 settings.yaml.backup
 dist
-packages
+/packages

@@ -1,0 +1,38 @@
+{ 
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "{{cms.contentBaseUri}}/promoList.json",
+	"title": "Promo List",
+	"description": "A list of promotions to display",
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+	],
+	"type": "object",
+	"properties": {
+		"promos": {
+			"type": "array",
+			"title": "Promotions",
+			"description": "A list of promotions to display",
+			"items": {
+				"allOf": [
+					{
+						"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+					},
+					{
+						"properties": {
+							"contentType": {
+								"title": "Promo",
+								"enum": [
+									"{{cms.contentBaseUri}}/promo.json"
+								]
+							}
+						}
+					}
+				]
+			},
+			"minItems": 1,
+			"maxItems": 4
+		}
+	}
+}

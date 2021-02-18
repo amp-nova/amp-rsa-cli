@@ -1,0 +1,32 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "{{cms.contentBaseUri}}/config-taxonomies.json",
+
+	"title": "Taxonomies",
+	"description": "",
+
+	"allOf": [
+		{
+			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+		}
+    ],
+
+    "trait:hierarchy": {
+		"childContentTypes": [
+            "{{cms.contentBaseUri}}/taxonomy-tag-group.json",
+            "{{cms.contentBaseUri}}/taxonomy-page-type-group.json"
+        ]
+    },
+	
+	"type": "object",
+	"properties": {
+        "type": {
+            "type": "string",
+            "const": "Taxonomies"
+        }
+    },
+    
+    "definitions": {
+        
+    }
+}

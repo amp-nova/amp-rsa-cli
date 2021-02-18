@@ -1,0 +1,72 @@
+{ 
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "{{cms.contentBaseUri}}/component-dy-ab-content.json",
+
+  "title": "A/B Test",
+  "description": "",
+
+  "allOf": [
+    {
+      "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+    }
+  ],
+
+  "type": "object",
+  "properties": {
+    "dynamicYieldCampaignName": {
+      "type": "string",
+      "title": "Campaign Name",
+      "enum": [
+        "ab-test-pets",
+        "ab-test-cars",
+        "ab-test-countdown",
+        "ab-test-bargains",
+        "ab-test-food",
+        "ab-test-colors"
+      ]
+    },
+    "variants": {
+      "type": "array",
+      "title": "Variants",
+      "items": {
+        "type": "object",
+        "title": "Variant",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Variant Name",
+            "enum":[
+              "dogs",
+              "cats",
+              "birds",
+              "fish",
+              "countdown",
+              "statement"
+            ]
+          },
+          "components": {
+            "title": "Components",
+            "type": "array",
+            "items": {
+              "title": "Component",
+              "allOf": [
+                {
+                  "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+                },
+                {
+                  "properties": {
+                    "contentType": {
+                      "$ref": "./lib-components.json#/definitions/anyComponent"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "definitions": {}
+}

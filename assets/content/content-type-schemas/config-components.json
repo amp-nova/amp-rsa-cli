@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/config-components-schema.json",
-  "schemaId": "https://anyafinn.online/config-components.json",
-  "validationLevel": "CONTENT_TYPE"
-}

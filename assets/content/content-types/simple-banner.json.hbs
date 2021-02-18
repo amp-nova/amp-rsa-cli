@@ -1,5 +1,5 @@
 {
-  "contentTypeUri": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/simple-banner.json",
+  "contentTypeUri": "{{cms.contentBaseUri}}/simple-banner.json",
   "status": "ACTIVE",
   "settings": {
     "label": "Simple Banner",
@@ -16,9 +16,9 @@
         "default": false
       },
       {
-          "label": "Development",
-          "templatedUri":"http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
-          "default": false
+        "label": "Development",
+        "templatedUri": "http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
+        "default": false
       },
       {
         "label": "Email",
@@ -32,7 +32,7 @@
       },
       {
         "label": "Android App",
-        "templatedUri": "https://appetize.io/embed/1d9tem0p3qzzdfm1turtnzw1mw?device=nexus5&scale=100&autoplay=false&orientation=portrait&deviceColor=black&params=%7B%22cms%22%3A%22http%3A%2F%2F\{{vse.domain}}%22%2C%22contentId%22%3A%22\{{content.sys.id}}%22%2C%20%22locale%22%3A%20%22\{{locales}}%22%7D",
+        "templatedUri": "https://appetize.io/embed/{{cms.stagingName}}?device=nexus5&scale=100&autoplay=false&orientation=portrait&deviceColor=black&params=%7B%22cms%22%3A%22http%3A%2F%2F\{{vse.domain}}%22%2C%22contentId%22%3A%22\{{content.sys.id}}%22%2C%20%22locale%22%3A%20%22\{{locales}}%22%7D",
         "default": false
       },
       {
@@ -56,6 +56,5 @@
         "templatedUri": "https://willow-demo-cards.vercel.app/?#vse=\{{vse.domain}}&content=\{{content.sys.id}}"
       }
     ]
-  },
-  "repositories": [ "content", "contentfr", "contentde", "contentes", "contentit" ]
+  }
 }

@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/promoList-schema.json",
-  "schemaId": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/promoList.json",
-  "validationLevel": "CONTENT_TYPE"
-}

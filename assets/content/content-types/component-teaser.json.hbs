@@ -1,0 +1,40 @@
+{
+  "contentTypeUri": "{{cms.contentBaseUri}}/component-teaser.json",
+  "status": "ACTIVE",
+  "settings": {
+    "label": "Adidas - Teaser",
+    "icons": [
+      {
+        "size": 256,
+        "url": "https://cdn.media.amplience.net/i/adidas/adidas-ct-teaser?hue=0&sat=-100&bri=0&w=400"
+      }
+    ],
+    "visualizations": [
+      {
+        "label": "Site",
+        "templatedUri": "{{app.url}}/visualization?vse=\{{vse.domain}}&content=\{{content.sys.id}}&locale=\{{locales}}",
+        "default": true
+      },
+      {
+        "label": "Development",
+        "templatedUri": "http://localhost:3000/cms/visualization?content=\{{content.sys.id}}&vse=\{{vse.domain}}&locale=\{{locales}}",
+        "default": false
+      },
+      {
+        "label": "QR",
+        "templatedUri": "{{app.url}}/visualization/qr?vse=\{{vse.domain}}&content=\{{content.sys.id}}&locale=\{{locales}}",
+        "default": false
+      },
+      {
+        "label": "JSON",
+        "templatedUri": "https://presalesadisws.s3.eu-west-1.amazonaws.com/dynamic-content/dc-visualization-content-delivery/index.html?vse=\{{vse.domain}}&id=\{{content.sys.id}}&format=inlined&depth=all&v2=true&locale=\{{locales}}",
+        "default": false
+      }
+    ],
+    "cards": [
+      {
+        "templatedUri": "{{app.url}}/visualization/standalone?vse=\{{vse.domain}}&content=\{{content.sys.id}}&locale=\{{locales}}"
+      }
+    ]
+  }
+}

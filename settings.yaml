@@ -51,6 +51,10 @@ cms:
     contentit: 6019c8184cedfd0001f05dde
     sitestructure: 6019c81fc9e77c0001dc1158
     slots: 6019c826c9e77c00013abd00
+  hierarchies:
+    pages: 9f6be85d-daa1-4e60-8a8f-8c0d672f8e4f
+    taxonomies: 9a2ed00f-b9a4-425e-9b14-70bb3f5b24cc
+    configuration: 93de7c26-ba08-4c48-bd1a-4523dd3b688b
 commercetools:
   authUrl: https://auth.europe-west1.gcp.commercetools.com
   apiUrl: https://api.europe-west1.gcp.commercetools.com

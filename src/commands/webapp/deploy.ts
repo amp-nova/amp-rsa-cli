@@ -22,12 +22,14 @@ export const handler = async (
     console.log('Global settings loaded');
 
     const webappFinal = `${webapp}-${settingsJSON.cms.hubName}`;
+    const scope = settingsJSON.app.scope;
 
     // Deploying Web Application to Vercel
     console.log(`Deploying Web Application to Vercel`);
     childProcess.execSync(
-      `vercel .. --prod --confirm --name ${webappFinal} &> ./repositories/deployment.out`,
+      `vercel --prod --confirm --name ${webappFinal} --scope ${scope} &> ./repositories/deployment.out`,
       { 
+        cwd: `..`,
         stdio: [process.stdin, process.stdout, process.stdin]
       }
     );

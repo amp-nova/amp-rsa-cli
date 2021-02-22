@@ -11,8 +11,6 @@ export const handler = async (
   argv: Arguments
 ): Promise<void> => {
 
-  const webapp = "amp-rsa";
-
   try {
 
     // Reading global settings
@@ -22,12 +20,10 @@ export const handler = async (
     const settingsJSON = yaml.load(settingsYAML)
     console.log('Global settings loaded');
 
-    const webappFinal = `${webapp}-${settingsJSON.cms.hubName}`;
-  
-    console.log(`Installing Web Application from ./repositories/${webappFinal}`);
+    console.log(`Installing Web Application from ..`);
     childProcess.execSync(
       `npm install`,
-      { cwd: `./repositories/${webappFinal}` }
+      { cwd: `..` }
     );
   } catch(error) {
     console.log(error.message);

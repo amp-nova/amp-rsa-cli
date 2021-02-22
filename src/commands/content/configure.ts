@@ -83,6 +83,8 @@ export const handler = async (
       unlinkSync(item);
     });
 
+    childProcess.execSync(`cp -r ./repositories/content/content-type-schemas ../config`); 
+    childProcess.execSync(`cp -r ./repositories/content/content-types ../config`); 
   } catch(error) {
     console.log(error.message);
   }

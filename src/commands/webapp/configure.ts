@@ -83,6 +83,10 @@ export const handler = async (
       unlinkSync(item);
     });
 
+    // Copy config files to webapp
+    console.log('Copying JSON config files to webapp')
+    childProcess.execSync(`cp ./repositories/webapp/config/*.json ../config`); 
+
   } catch(error) {
     console.log(error.message);
   }

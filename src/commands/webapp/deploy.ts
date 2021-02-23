@@ -27,7 +27,7 @@ export const handler = async (
     // Deploying Web Application to Vercel
     console.log(`Deploying Web Application to Vercel`);
     childProcess.execSync(
-      `vercel --prod --confirm --name ${webappFinal} --scope ${scope} &> ./repositories/deployment.out`,
+      `vercel --prod --confirm --name ${webappFinal} --scope ${scope} &> ./automation/repositories/deployment.out`,
       { 
         cwd: `..`,
         stdio: [process.stdin, process.stdout, process.stdin]

@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/config-taxonomies-schema.json",
-  "schemaId": "https://anyafinn.online/config-taxonomies.json",
-  "validationLevel": "CONTENT_TYPE"
-}

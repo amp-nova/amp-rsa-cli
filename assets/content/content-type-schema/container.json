@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/container-schema.json",
-  "schemaId": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/content-types/container.json",
-  "validationLevel": "CONTENT_TYPE"
-}

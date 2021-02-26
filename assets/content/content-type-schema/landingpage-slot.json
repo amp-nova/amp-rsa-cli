@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/landingpage-slot-schema.json",
-  "schemaId": "https://raw.githubusercontent.com/neilmistryamplience/dc-example-website/willow/slot-types/landingpage-slot.json",
-  "validationLevel": "SLOT"
-}

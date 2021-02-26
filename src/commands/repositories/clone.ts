@@ -21,19 +21,19 @@ export const handler = async (
     console.log('Global settings loaded');
 
     const packages = [
-      { source: "dc-content-delivery-poc", target: "dc-content-delivery-poc" },
-      { source: "willow-demo-services", target: "willow-demo-services" },
-      { source: "willow-demo-web-react", target: `willow-demo-web-react-${settingsJSON.cms.hubName}` }
+      { source: "amplience/dc-content-delivery-poc", target: "dc-content-delivery-poc" },
+      { source: "amplience/willow-demo-services", target: "willow-demo-services" }
+      // { source: "rezakalfane/amp-rsa", target: `amp-rsa-${settingsJSON.cms.hubName}` }
       // "willow-demo-cards",
       // "willow-demo-extension-personify"
     ];
     
-    childProcess.execSync(`mkdir repositories`); 
+    try { childProcess.execSync(`mkdir repositories`); } catch(error) {}
 
     packages.map((item: any) => {
       console.log(`Cloning ${item.source} to ${item.target}`);
       childProcess.execSync(
-          `gh repo clone amplience/${item.source} ${item.target}`,
+          `gh repo clone ${item.source} ${item.target}`,
           { cwd: `./repositories` }
       );
     });

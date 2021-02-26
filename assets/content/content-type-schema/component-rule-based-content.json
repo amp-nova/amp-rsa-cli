@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/component-rule-based-content-schema.json",
-  "schemaId": "https://anyafinn.online/component-rule-based-content.json",
-  "validationLevel": "CONTENT_TYPE"
-}

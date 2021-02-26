@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/taxonomy-page-type-group-schema.json",
-  "schemaId": "https://anyafinn.online/taxonomy-page-type-group.json",
-  "validationLevel": "CONTENT_TYPE"
-}

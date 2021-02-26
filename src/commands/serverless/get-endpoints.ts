@@ -1,5 +1,6 @@
 import { Arguments } from 'yargs';
 import { readFileSync, writeFileSync } from 'fs';
+import childProcess from 'child_process';
 
 const yaml = require('js-yaml');
 const lodash = require('lodash');
@@ -33,6 +34,18 @@ export const handler = async (
 
     // Cycle through the different services
     serverless.map((item: string) => {
+      console.log(`Saving serverless service information from ./repositories/${item}`);
+      childProcess.execSync(
+        `sls info > deployment.yaml`,
+        { cwd: `./repositories/${item}` }
+      );
+
+      // Removing first two lines from sls info
+      childProcess.execSync(
+        `sed -i -e '1,2d' deployment.yaml`,
+        { cwd: `./repositories/${item}` }
+      );
+
       console.log(`Loading serverless service information from ./repositories/${item}`);
       const deploymentYAML = readFileSync(`./repositories/${item}/deployment.yaml`).toString();
       const deploymentJSON = yaml.load(deploymentYAML);

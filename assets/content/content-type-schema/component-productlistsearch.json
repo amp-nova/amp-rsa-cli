@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/component-productlistsearch-schema.json",
-  "schemaId": "https://anyafinn.online/component-productlistsearch.json",
-  "validationLevel": "CONTENT_TYPE"
-}

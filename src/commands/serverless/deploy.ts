@@ -20,7 +20,7 @@ export const handler = async (
     serverless.map((item: string) => {
       console.log(`Deploying serverless service from ./repositories/${item}`);
       childProcess.execSync(
-        `npm run deploy`,
+        `rm -rf .build && npm run deploy`,
         { cwd: `./repositories/${item}` }
       );
       console.log(`Saving serverless service information from ./repositories/${item}`);

@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/taxonomy-tag-schema.json",
-  "schemaId": "https://anyafinn.online/taxonomy-tag.json",
-  "validationLevel": "CONTENT_TYPE"
-}

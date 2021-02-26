@@ -10,7 +10,7 @@ export const desc = "Deploy Web Application";
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
-  const webapp = "willow-demo-web-react";
+  const webapp = "amp-rsa";
 
   try {
 
@@ -22,19 +22,20 @@ export const handler = async (
     console.log('Global settings loaded');
 
     const webappFinal = `${webapp}-${settingsJSON.cms.hubName}`;
+    const scope = settingsJSON.app.scope;
 
     // Deploying Web Application to Vercel
-    console.log(`Deploying Web Application from ./repositories/${webappFinal} to Vercel`);
+    console.log(`Deploying Web Application to Vercel`);
     childProcess.execSync(
-      `vercel --prod --confirm &> deployment.out`,
+      `vercel --prod --confirm --name ${webappFinal} --scope ${scope} &> ./automation/repositories/deployment.out`,
       { 
-        cwd: `./repositories/${webappFinal}`,
+        cwd: `..`,
         stdio: [process.stdin, process.stdout, process.stdin]
       }
     );
 
     // Read deployment information
-    const deploymentOutput = readFileSync(`./repositories/${webappFinal}/deployment.out`).toString();
+    const deploymentOutput = readFileSync(`./repositories/deployment.out`).toString();
     
     // Backup settings
     writeFileSync("settings.yaml.backup", settingsYAML);

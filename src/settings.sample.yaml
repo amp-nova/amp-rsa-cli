@@ -1,0 +1,104 @@
+algolia:
+  appId: 4BS5I6EVVD
+  apiKey: 3f5c413d0801e402a0b3072131a9d895
+  tacit_appId: T7I8W0D1V2
+  tacit_apiKey: dac903cc5cce5d8163ec78284af6dcc0
+  indexes:
+    blog:
+      prod: Amp-RetailStorefront.blog-production
+      staging: Amp-RetailStorefront.blog-staging
+    ruleBased:
+      prod: Amp-RetailStorefront.rule-based-production
+      staging: Amp-RetailStorefront.rule-based-staging
+    productListSearch:
+      prod: prod_willow_products
+app:
+  publishStage: production
+  scope: amplience-presales
+  url: https://amp-rsa.vercel.app
+analytics:
+  ga:
+    trackingId: UA-138924869-5
+    enabled: false
+cms:
+  contentBaseUri: https://amp-rsa.amplience.com
+  contentApi: amprsa.cdn.content.amplience.net
+  stagingName: 1kwj9tiju6tgz16c4lq8hs7n9r
+  stagingApi: 1kwj9tiju6tgz16c4lq8hs7n9r.staging.bigcontent.io
+  trustedHostSuffixes:
+    - .cdn.content.amplience.net
+    - .staging.bigcontent.io
+  accountName: amprsa
+  hubName: Amp-RetailStorefront
+  productImageHubName: willow
+  imageBasePath: cdn.media.amplience.net
+  clientId: 155a793c-a3e3-4c56-928c-61d39dedad04
+  clientSecret: 187ea860b199970c4e62881f58acf295e42915d5715aa0fab11167967a8dd53d
+  hubId: 602d62974cedfd00014d5359
+  content:
+    sampleBlogId: null
+  workflowStates:
+    translationComplete: 603003e052faff0001fea5d0
+    translationInProgress: 603003e0cff47e0001cd6f06
+    new: 603003e0cff47e0001d755c2
+    readyForTranslation: 603003e0c9e77c0001112144
+    inProgress: 603003e0c9e77c0001a2fa5e
+    sentForTranslation: 603003e0c9e77c00011c0347
+    readyForReview: 603003e04cedfd0001f6ad7f
+    readyForScheduling: 603003e0c9e77c00012d720e
+    rejected: 603003e0c9e77c00010e7a48
+    approved: 603003e0c9e77c0001a2fa5d
+  repositories:
+    content: 602d63094cedfd00018fead0
+    contentfr: 602d630fc9e77c000173e1d5
+    contentde: 602d6314c9e77c0001a259bc
+    contentes: 602d6319cff47e0001cccefe
+    contentit: 602d631f4cedfd00018fead6
+    sitestructure: 602d6324c9e77c00010dda70
+    emailmarketing: 602d6329c9e77c0001a259c3
+    slots: 602d632ec9e77c00010dda71
+  defaultThemeId: 58ec5be7-d70a-40e4-98a4-3ce093d490e6
+  hierarchies:
+    pages: 44f4ad78-2c14-4c59-89aa-9e49e931d9df
+    taxonomies: db067d93-ba13-4c5e-b010-ebd717e2f31b
+    configuration: f9102e96-6069-40c2-9611-180f42061318
+commercetools:
+  authUrl: https://auth.europe-west1.gcp.commercetools.com
+  apiUrl: https://api.europe-west1.gcp.commercetools.com
+  projectKey: anyafinn
+  clientId: SFL2J4ysCuEHILRwYaV9_X9R
+  clientSecret: 3h9KNemP1P63-mlWpGRMTQ90bhKbTr_5
+  defaultScopes:
+    - view_products:anyafinn
+    - view_categories:anyafinn
+    - view_published_products:anyafinn
+    - create_anonymous_token:anyafinn
+  defaultFacets:
+    - type: standard
+      field: variants.attributes.color.label.en
+      title: Color
+    - type: standard
+      field: variants.attributes.designer.key
+      title: Designer
+    - type: standard
+      field: variants.attributes.size
+      title: Size
+    - type: standard
+      field: variants.attributes.style.key
+      title: Style
+dynamicyield:
+  apiKey: d432c29278bc753859b1a717acf0aaad4e61d01dc70f250dca09924abbf5a0ad
+personify:
+  personifyApi: 899nqj3ebi.execute-api.eu-west-1.amazonaws.com/amplience-uk-realtime-prod
+  active: true
+serverless:
+  provider:
+    stage: dev
+    region: eu-west-3
+  services:
+    dcContentDeliveryPoc:
+      service: willow-content-delivery-poc-amp-rsa
+      endpoint: https://8o0h6a0wfj.execute-api.eu-west-3.amazonaws.com/dev
+    willowDemoServices:
+      service: willow-demo-services-amp-rsa
+      endpoint: https://vbn7lr6pv2.execute-api.eu-west-3.amazonaws.com/dev

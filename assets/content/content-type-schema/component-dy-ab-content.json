@@ -1,5 +1,0 @@
-{
-  "body": "./schemas/component-dy-ab-content-schema.json",
-  "schemaId": "https://anyafinn.online/component-dy-ab-content.json",
-  "validationLevel": "CONTENT_TYPE"
-}

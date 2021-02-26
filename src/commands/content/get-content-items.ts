@@ -5,8 +5,8 @@ import childProcess from 'child_process';
 const yaml = require('js-yaml');
 const lodash = require('lodash');
 
-export const command = 'get-content-repositories';
-export const desc = "Get Content Repositories map and save to global settings";
+export const command = 'get-content-items';
+export const desc = "Get Content Items map and save to global settings";
 
 export const handler = async (
   argv: Arguments

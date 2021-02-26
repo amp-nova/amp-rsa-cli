@@ -13,6 +13,7 @@ algolia:
     productListSearch:
       prod: prod_willow_products
 app:
+  appName: amp-rsa
   publishStage: production
   scope: amplience-presales
   url: https://amp-rsa.vercel.app

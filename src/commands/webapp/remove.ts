@@ -10,8 +10,6 @@ export const desc = "Remove Web Application";
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
-  const webapp = "amp-rsa";
-
   try {
 
     // Reading global settings
@@ -21,21 +19,19 @@ export const handler = async (
     const settingsJSON = yaml.load(settingsYAML)
     console.log('Global settings loaded');
 
+    // Build app name, adding hub name to app name
+    const webapp = settingsJSON.app.appName.toLowerCase();
     const webappFinal = `${webapp}-${settingsJSON.cms.hubName}`;
 
     // Deploying Web Application to Vercel
-    console.log(`Deploying Web Application from ./repositories/${webappFinal} to Vercel`);
+    console.log(`Removing Web Application ${webappFinal} from Vercel`);
     childProcess.execSync(
       `vercel remove ${webappFinal} --yes`,
       { 
-        cwd: `./repositories/${webappFinal}`,
         stdio: [process.stdin, process.stdout, process.stdin]
       }
     );
 
-    // Read deployment information
-    const deploymentOutput = readFileSync(`./repositories/${webappFinal}/deployment.out`).toString();
-    
     // Backup settings
     writeFileSync("settings.yaml.backup", settingsYAML);
 

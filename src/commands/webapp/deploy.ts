@@ -10,8 +10,6 @@ export const desc = "Deploy Web Application";
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
-  const webapp = "amp-rsa";
-
   try {
 
     // Reading global settings
@@ -21,7 +19,10 @@ export const handler = async (
     const settingsJSON = yaml.load(settingsYAML)
     console.log('Global settings loaded');
 
+    // Build app name, adding hub name to app name
+    const webapp = settingsJSON.app.appName.toLowerCase();
     const webappFinal = `${webapp}-${settingsJSON.cms.hubName}`;
+
     const scope = settingsJSON.app.scope;
 
     // Deploying Web Application to Vercel

@@ -22,9 +22,13 @@ export const handler = async (
     const settingsJSON = yaml.load(settingsYAML)
     console.log('Global settings loaded');
 
+    // Create repositories folder
+    try { childProcess.execSync(`mkdir repositories`); } catch(error) {}
+    
     // Copy ./assets/content folder in repositories
     console.log('Copying webapp config files to repositories folder');
     try { childProcess.execSync(`rm -r ./repositories/webapp`); } catch (error) {}
+    try { childProcess.execSync(`mkdir -p ./repositories/webapp/config`); } catch(error) {}
     childProcess.execSync(`cp -r ./assets/webapp ./repositories`); 
 
     // Scan all handlebars files in ./repositories/assets/webapp

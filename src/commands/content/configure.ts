@@ -22,6 +22,9 @@ export const handler = async (
     const settingsJSON = yaml.load(settingsYAML)
     console.log('Global settings loaded');
 
+    // Create repositories folder
+    try { childProcess.execSync(`mkdir repositories`); } catch(error) {}
+
     // Copy ./assets/content folder in repositories
     console.log('Copying content assets to repositories folder');
     try { childProcess.execSync(`rm -r ./repositories/content`); } catch (error) {}
@@ -82,6 +85,9 @@ export const handler = async (
       // Remove template
       unlinkSync(item);
     });
+
+    // Create config folder if needed
+    try { childProcess.execSync(`mkdir ../config`); } catch(error) {}
 
     childProcess.execSync(`cp -r ./repositories/content/content-type-schemas ../config`); 
     childProcess.execSync(`cp -r ./repositories/content/content-types ../config`); 

@@ -38,7 +38,7 @@ export const handler = async (
     });
 
     // Add Images map to settings
-    settingsJSON.cms.imagesMap = imagesMap;
+    settingsJSON.dam.imagesMap = imagesMap;
 
     // Convert JSON to YAML and save to file
     console.log(`Saving global settings to file`);

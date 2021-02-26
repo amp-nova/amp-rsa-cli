@@ -25,7 +25,7 @@ export const handler = async (
     console.log('Global settings loaded');
 
     // Exporting Workflow States
-    console.log(`Listing Content Repositories`);
+    console.log(`Listing Content Items`);
     const contentItems = childProcess.execSync(
       `dc-cli content-item list --json`
     ).toString();

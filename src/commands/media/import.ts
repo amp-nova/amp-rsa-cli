@@ -31,6 +31,9 @@ export const handler = async (
       childProcess.execSync(
         `dam-cli assets import-s3 ${bucket} ${region}`
       );
+      childProcess.execSync(
+        `dam-cli assets publish-all`
+      );
     }
   } catch(error) {
     console.log(error.message);

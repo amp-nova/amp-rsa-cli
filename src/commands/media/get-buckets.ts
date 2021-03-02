@@ -5,8 +5,8 @@ import childProcess from 'child_process';
 const yaml = require('js-yaml');
 const lodash = require('lodash');
 
-export const command = 'get-assets';
-export const desc = "Get media assets";
+export const command = 'get-buckets';
+export const desc = "Get media buckets";
 
 export const handler = async (
   argv: Arguments
@@ -24,21 +24,21 @@ export const handler = async (
     console.log('Global settings loaded');
 
     // Listing Assets 
-    console.log(`Listing Assets`);
-    const assetsList = childProcess.execSync(
-      `dam-cli assets list ${settingsJSON.dam.bucketsMap.assets} --json`
+    console.log(`Listing Buckets`);
+    const bucketsList = childProcess.execSync(
+      `dam-cli buckets list --json`
     ).toString();
 
-    const assetsListJson = JSON.parse(assetsList);
-    let imagesMap: any = {};
-    assetsListJson.forEach((item: any)=>{
-      const imageName = lodash.camelCase(item.name);
+    const bucketsListJson = JSON.parse(bucketsList);
+    let bucketsMap: any = {};
+    bucketsListJson.forEach((item: any)=>{
+      const bucketName = lodash.camelCase(item.label);
       const id = item.id;
-      imagesMap[imageName] = id;
+      bucketsMap[bucketName] = id;
     });
 
     // Add Images map to settings
-    settingsJSON.dam.imagesMap = imagesMap;
+    settingsJSON.dam.bucketsMap = bucketsMap;
 
     // Convert JSON to YAML and save to file
     console.log(`Saving global settings to file`);

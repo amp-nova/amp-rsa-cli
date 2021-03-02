@@ -29,10 +29,10 @@ export const handler = async (
       const bucket = settingsJSON.dam.source.bucket;
       const region = settingsJSON.dam.source.region;
       childProcess.execSync(
-        `dam-cli assets import-s3 ${bucket} ${region}`
+        `dam-cli assets import-s3 ${bucket} ${region} ${settingsJSON.dam.bucketsMap.assets}`
       );
       childProcess.execSync(
-        `dam-cli assets publish-all`
+        `dam-cli assets publish-all ${settingsJSON.dam.bucketsMap.assets}`
       );
     }
   } catch(error) {

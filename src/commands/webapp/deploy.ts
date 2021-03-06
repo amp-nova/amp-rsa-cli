@@ -21,14 +21,13 @@ export const handler = async (
 
     // Build app name, adding hub name to app name
     const webapp = settingsJSON.app.appName.toLowerCase();
-    const webappFinal = `${webapp}-${settingsJSON.cms.hubName}`;
 
     const scope = settingsJSON.app.scope;
 
     // Deploying Web Application to Vercel
     console.log(`Deploying Web Application to Vercel`);
     childProcess.execSync(
-      `vercel --prod --confirm --name ${webappFinal} --scope ${scope} &> ./automation/repositories/deployment.out`,
+      `vercel --prod --confirm --name ${webapp} --scope ${scope} &> ./automation/repositories/deployment.out`,
       { 
         cwd: `..`,
         stdio: [process.stdin, process.stdout, process.stdin]

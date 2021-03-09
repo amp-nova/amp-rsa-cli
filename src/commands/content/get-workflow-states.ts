@@ -40,7 +40,8 @@ export const handler = async (
       const workflowStatesName = lodash.camelCase(item.label);
 
       // Filter out "Unused" Workflow States
-      if (!workflowStatesName.startsWith('unused')) {
+      if (!workflowStatesName.startsWith('unused')
+        && !workflowStatesName.startsWith('archived')) {
         workflowStatesMap[workflowStatesName] = item.id;
       }
     });

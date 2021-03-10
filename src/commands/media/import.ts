@@ -8,6 +8,8 @@ const lodash = require('lodash');
 export const command = 'import';
 export const desc = "Import media assets";
 
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
@@ -31,9 +33,13 @@ export const handler = async (
       childProcess.execSync(
         `dam-cli assets import-s3 ${bucket} ${region} ${settingsJSON.dam.bucketsMap.assets}`
       );
+      console.log('Importing assets from S3...');
+      await delay(10000);
       childProcess.execSync(
         `dam-cli assets publish-all ${settingsJSON.dam.bucketsMap.assets}`
       );
+      console.log('Publishing all assets...');
+      await delay(10000);
     }
   } catch(error) {
     console.log(error.message);

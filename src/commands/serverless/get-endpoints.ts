@@ -36,7 +36,7 @@ export const handler = async (
     serverless.map((item: string) => {
       console.log(`Saving serverless service information from ./repositories/${item}`);
       childProcess.execSync(
-        `sls info > deployment.yaml`,
+        `sls info --aws-profile ${settingsJSON.serverless.customProfileName} > deployment.yaml`,
         { cwd: `./repositories/${item}` }
       );
 

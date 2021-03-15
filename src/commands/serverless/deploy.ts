@@ -17,15 +17,26 @@ export const handler = async (
   ];
 
   try {
+
+    // Reading global settings
+    let settingsYAML = readFileSync(`./settings.yaml`).toString();
+
+    // Backup settings
+    writeFileSync("settings.yaml.backup", settingsYAML);
+
+    // Converting from YAML to JSON
+    const settingsJSON = yaml.load(settingsYAML)
+    console.log('Global settings loaded');
+
     serverless.map((item: string) => {
       console.log(`Deploying serverless service from ./repositories/${item}`);
       childProcess.execSync(
-        `rm -rf .build && npm run deploy`,
+        `rm -rf .build && sls deploy --aws-profile ${settingsJSON.serverless.customProfileName}`,
         { cwd: `./repositories/${item}` }
       );
       console.log(`Saving serverless service information from ./repositories/${item}`);
       childProcess.execSync(
-        `sls info > deployment.yaml`,
+        `sls info --aws-profile ${settingsJSON.serverless.customProfileName} > deployment.yaml`,
         { cwd: `./repositories/${item}` }
       );
 

@@ -32,7 +32,7 @@ export const handler = async (
 
     console.log('Configure aws cli...');
     childProcess.execSync(
-      `serverless config credentials --provider aws --key ${settingsJSON.serverless.accessKeyId} --secret ${settingsJSON.dam.secretAccessKey} --profile ${settingsJSON.dam.customProfileName}`
+      `serverless config credentials --provider aws --key ${settingsJSON.serverless.accessKeyId} --secret ${settingsJSON.serverless.secretAccessKey} --profile ${settingsJSON.serverless.customProfileName}`
     )
   } catch(error) {
     console.log(error.message);

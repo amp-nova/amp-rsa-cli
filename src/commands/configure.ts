@@ -10,7 +10,7 @@ export const desc = 'Configure CLIs';
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
-  console.log("Configuring dc-cli");
+  console.log("Configuring all CLIs");
   try {
 
     // Reading global settings

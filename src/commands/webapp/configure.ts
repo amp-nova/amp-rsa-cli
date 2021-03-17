@@ -89,6 +89,7 @@ export const handler = async (
 
     // Copy config files to webapp
     console.log('Copying JSON config files to webapp')
+    try { childProcess.execSync(`mkdir ../config`); } catch(error) {}
     childProcess.execSync(`cp ./repositories/webapp/config/*.json ../config`); 
 
   } catch(error) {

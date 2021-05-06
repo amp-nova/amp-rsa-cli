@@ -22,7 +22,7 @@ export const handler = async (
 
     console.log(`Installing Web Application from ..`);
     childProcess.execSync(
-      `npm install`,
+      `yarn install`,
       { cwd: `..` }
     );
   } catch(error) {

@@ -30,7 +30,7 @@ export const handler = async (
       ...intSettingsJSON
     }
 
-    const templateString = readFileSync('./assets/integration/sfmc.yaml.hbs').toString();
+    const templateString = readFileSync('./assets/integration/sfmc.json.hbs').toString();
     const template = handlebarsCompile(templateString);
     const contentJSON = template(finalSettingsJSON);
 

@@ -15,7 +15,10 @@ export const handler = async (
   const hierarchies = [
     { name: 'pages', key: 'homepage' },
     { name: 'taxonomies', key: 'hierarchy/taxonomies' },
-    { name: 'configuration', key: 'hierarchy/configuration' }
+    { name: 'band', key: 'hierarchy/band' },
+    { name: 'location', key: 'hierarchy/location' },
+    { name: 'nav', key: 'hierarchy/nav' },
+    { name: 'siteSettings', key: 'hierarchy/siteSettings' }
   ];
 
   try {

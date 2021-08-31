@@ -21,7 +21,6 @@ export const handler = async (
     console.log('Global settings loaded');
 
     const packages = [
-      { source: "amplience/dc-content-delivery-poc", target: "dc-content-delivery-poc" },
       { source: "amplience/willow-demo-services", target: "willow-demo-services" }
       // { source: "rezakalfane/amp-rsa", target: `amp-rsa-${settingsJSON.cms.hubName}` }
       // "willow-demo-cards",

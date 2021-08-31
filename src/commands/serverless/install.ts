@@ -9,7 +9,6 @@ export const handler = async (
 ): Promise<void> => {
 
   const serverless = [
-    "dc-content-delivery-poc",
     "willow-demo-services"
   ];
 

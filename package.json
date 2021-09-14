@@ -25,7 +25,7 @@
   "author": "Réza Kalfane",
   "license": "ISC",
   "dependencies": {
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "js-yaml": "^4.0.0",
     "lodash": "^4.17.20",
     "rimraf": "^3.0.2",

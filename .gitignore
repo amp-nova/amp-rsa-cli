@@ -3,5 +3,4 @@ assets/.DS_Store
 repositories.*
 repositories
 node_modules
-dist
 /packages

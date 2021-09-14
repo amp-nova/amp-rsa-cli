@@ -1,5 +1,5 @@
 {
-  "name": "@rezakalfane/demo-cli",
+  "name": "demo-cli",
   "version": "0.0.2",
   "description": "Willo Demo Automation",
   "main": "./build/index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rezakalfane/willow-demo-automation.git"
+    "url": "git+https://github.com/amp-nova/demo-cli.git"
   },
   "keywords": [
     "CLI",
@@ -24,10 +24,6 @@
   ],
   "author": "Réza Kalfane",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rezakalfane/willow-demo-automation/issues"
-  },
-  "homepage": "https://github.com/rezakalfane/willow-demo-automation#readme",
   "dependencies": {
     "handlebars": "^4.7.6",
     "js-yaml": "^4.0.0",

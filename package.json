@@ -5,7 +5,7 @@
   "main": "./build/index.js",
   "man": "./dist/demo-cli.1",
   "bin": {
-    "demo-cli": "./dist/index.js"
+    "demo-cli": "ts-node ./src/index.ts"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

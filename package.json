@@ -1,5 +1,5 @@
 {
-  "name": "amp-nova/demo-cli",
+  "name": "demo-cli",
   "version": "0.0.3",
   "description": "Willo Demo Automation",
   "main": "./build/index.js",

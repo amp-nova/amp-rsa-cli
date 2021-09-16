@@ -31,6 +31,6 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
   );
 };
 
-export default async (yargInstance = Yargs(process.argv.slice(2))): Promise<Arguments | void> => {
+module.exports = async (yargInstance = Yargs(process.argv.slice(2))): Promise<Arguments | void> => {
   return await configureYargs(yargInstance);
 };

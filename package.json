@@ -2,7 +2,7 @@
   "name": "demo-cli",
   "version": "0.0.3",
   "description": "Willo Demo Automation",
-  "main": "./build/index.js",
+  "main": "./dist/index.js",
   "man": "./dist/demo-cli.1",
   "bin": {
     "demo-cli": "./dist/index.js"

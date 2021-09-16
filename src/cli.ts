@@ -1,8 +1,11 @@
-import Yargs from 'yargs/yargs';
-import YargsCommandBuilderOptions from './common/yargs/yargs-command-builder-options';
-import { Arguments, Argv } from 'yargs';
+const Yargs = require('yargs/yargs')
+const YargsCommandBuilderOptions = require('./common/yargs/yargs-command-builder-options');
 
-const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
+// import Yargs from 'yargs/yargs';
+// import YargsCommandBuilderOptions from './common/yargs/yargs-command-builder-options';
+// import { Arguments, Argv } from 'yargs';
+
+const configureYargs = (yargInstance: any): Promise<any> => {
   return new Promise(
     async (resolve): Promise<void> => {
       let failInvoked = false;
@@ -31,6 +34,6 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
   );
 };
 
-module.exports = async (yargInstance = Yargs(process.argv.slice(2))): Promise<Arguments | void> => {
+module.exports = async (yargInstance = Yargs(process.argv.slice(2))): Promise<any | void> => {
   return await configureYargs(yargInstance);
 };

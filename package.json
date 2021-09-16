@@ -18,8 +18,8 @@
     "url": "git+https://github.com/amp-nova/demo-cli.git"
   },
   "files": [
-    "dist",
-    "src"
+    "dist/*",
+    "src/*"
   ],
   "keywords": [
     "CLI",

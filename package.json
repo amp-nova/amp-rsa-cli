@@ -17,6 +17,9 @@
     "type": "git",
     "url": "git+https://github.com/amp-nova/demo-cli.git"
   },
+  "files": [
+    "src"
+  ],
   "keywords": [
     "CLI",
     "automation",

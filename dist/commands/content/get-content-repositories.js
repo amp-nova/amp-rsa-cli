@@ -10,7 +10,7 @@ exports.command = 'get-content-repositories';
 exports.desc = "Get Content Repositories map and save to global settings";
 const handle = (settingsJSON) => {
     console.log(`Listing Content Repositories`);
-    const contentRepositories = childProcess.execSync(`./node_modules/.bin/dc-cli content-repository list --json`, { cwd: `./repositories` }).toString();
+    const contentRepositories = childProcess.execSync(`npx @amplience/dc-cli content-repository list --json`, { cwd: `./repositories` }).toString();
     const contentRepositoriesJSON = JSON.parse(contentRepositories);
     let contentRepositoriesMap = {};
     contentRepositoriesJSON.map((item) => {

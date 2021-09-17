@@ -24,7 +24,7 @@ const handle = (settingsJSON: any) => {
       const name = item.name;
       const key = item.key;
       const output = childProcess.execSync(
-        `./node_modules/.bin/dc-cli content-item get-by-key ${key} --json`
+        `npx @amplience/dc-cli content-item get-by-key ${key} --json`
       ).toString();
       return { name, contentItem: JSON.parse(output) };
     });

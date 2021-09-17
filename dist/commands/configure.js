@@ -10,12 +10,12 @@ exports.desc = 'Configure CLIs';
 const handle = (settingsJSON, argv) => {
     const childProcess = require('child_process');
     console.log('Configure dc-cli...');
-    childProcess.execSync(`npx @amplience/dc-cli configure --clientId ${settingsJSON.cms.clientId} --clientSecret ${settingsJSON.cms.clientSecret} --hubId ${settingsJSON.cms.hubId}`, {
+    childProcess.execSync(`npx dc-cli configure --clientId ${settingsJSON.cms.clientId} --clientSecret ${settingsJSON.cms.clientSecret} --hubId ${settingsJSON.cms.hubId}`, {
         cwd: argv.settingsDir
     });
     if (settingsJSON.dam.username) {
         console.log('Configure dam-cli...');
-        childProcess.execSync(`npx amp-nova/dam-cli configure --username ${settingsJSON.dam.username} --password ${settingsJSON.dam.password}`);
+        childProcess.execSync(`npx dam-cli configure --username ${settingsJSON.dam.username} --password ${settingsJSON.dam.password}`);
     }
     if (false && settingsJSON.serverless.accessKeyId) {
         console.log('Configure aws cli...');

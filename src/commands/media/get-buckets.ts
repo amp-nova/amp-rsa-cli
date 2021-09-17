@@ -13,7 +13,7 @@ const handle = (settingsJSON: any) => {
   // Listing Assets 
   console.log(`Listing Buckets`);
   const bucketsList = childProcess.execSync(
-    `./node_modules/.bin/dam-cli buckets list --json`
+    `npx amp-nova/dam-cli buckets list --json`
   ).toString();
 
   const bucketsListJson = JSON.parse(bucketsList);

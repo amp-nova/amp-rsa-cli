@@ -11,7 +11,7 @@ exports.command = 'get-content-items';
 exports.desc = "Get Content Items map and save to global settings";
 const handle = (settingsJSON) => {
     console.log(`Listing Content Items`);
-    const contentItems = childProcess.execSync(`./node_modules/.bin/dc-cli content-item list --json`).toString();
+    const contentItems = childProcess.execSync(`npx @amplience/dc-cli content-item list --json`).toString();
     const contentItemsJSON = JSON.parse(contentItems);
     let contentItemsMap = {};
     contentItemsJSON.map((item) => {

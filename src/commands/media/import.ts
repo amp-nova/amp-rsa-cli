@@ -15,12 +15,12 @@ const handle = async (settingsJSON: any) => {
     const bucket = settingsJSON.dam.source.bucket;
     const region = settingsJSON.dam.source.region;
     childProcess.execSync(
-      `./node_modules/.bin/dam-cli assets import-s3 ${bucket} ${region} ${settingsJSON.dam.bucketsMap.assets}`
+      `npx amp-nova/dam-cli assets import-s3 ${bucket} ${region} ${settingsJSON.dam.bucketsMap.assets}`
     );
     console.log('Importing assets from S3...');
     await delay(10000);
     childProcess.execSync(
-      `./node_modules/.bin/dam-cli assets publish-all ${settingsJSON.dam.bucketsMap.assets}`
+      `npx amp-nova/dam-cli assets publish-all ${settingsJSON.dam.bucketsMap.assets}`
     );
     console.log('Publishing all assets...');
     await delay(10000);

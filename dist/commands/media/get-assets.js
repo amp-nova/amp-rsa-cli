@@ -11,7 +11,7 @@ const handle = (settingsJSON) => {
     const childProcess = require('child_process');
     const lodash = require('lodash');
     console.log(`Listing Assets`);
-    const assetsList = childProcess.execSync(`./node_modules/.bin/dam-cli assets list ${settingsJSON.dam.bucketsMap.assets} --json`).toString();
+    const assetsList = childProcess.execSync(`npx amp-nova/dam-cli assets list ${settingsJSON.dam.bucketsMap.assets} --json`).toString();
     const assetsListJson = JSON.parse(assetsList);
     let imagesMap = {};
     assetsListJson.forEach((item) => {

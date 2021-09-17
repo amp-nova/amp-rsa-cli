@@ -12,7 +12,7 @@ const lodash = require('lodash')
 const handle = (settingsJSON: any) => {
     // Exporting Workflow States
     console.log(`Listing Content Items`);
-    const contentItems = childProcess.execSync(`./node_modules/.bin/dc-cli content-item list --json`).toString();
+    const contentItems = childProcess.execSync(`npx @amplience/dc-cli content-item list --json`).toString();
 
     // Get Content Repositories from output
     const contentItemsJSON = JSON.parse(contentItems);

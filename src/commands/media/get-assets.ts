@@ -13,7 +13,7 @@ const handle = (settingsJSON: any) => {
   // Listing Assets 
   console.log(`Listing Assets`);
   const assetsList = childProcess.execSync(
-    `./node_modules/.bin/dam-cli assets list ${settingsJSON.dam.bucketsMap.assets} --json`
+    `npx amp-nova/dam-cli assets list ${settingsJSON.dam.bucketsMap.assets} --json`
   ).toString();
 
   const assetsListJson = JSON.parse(assetsList);

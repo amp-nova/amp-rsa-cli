@@ -11,7 +11,7 @@ export const desc = "Get Default Theme ID and save to global settings";
 const handle = (settingsJSON: any) => {
   // Get list of indexes
   const output = childProcess.execSync(
-    `./node_modules/.bin/dc-cli indexes list --json`
+    `npx @amplience/dc-cli indexes list --json`
   ).toString();
   const indexes = JSON.parse(output);
 
@@ -23,7 +23,7 @@ const handle = (settingsJSON: any) => {
 
       // Get Algolia API Key from API Key ID
       const output = childProcess.execSync(
-        `./node_modules/.bin/dc-cli indexes get-search-api-key ${index.id} ${apiKeyId} --json`
+        `npx @amplience/dc-cli indexes get-search-api-key ${index.id} ${apiKeyId} --json`
       ).toString();
       const key = JSON.parse(output);
       settingsJSON.algolia.appId = key.applicationId;

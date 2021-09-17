@@ -11,7 +11,7 @@ const handle = (settingsJSON) => {
     const childProcess = require('child_process');
     const lodash = require('lodash');
     console.log(`Listing Buckets`);
-    const bucketsList = childProcess.execSync(`./node_modules/.bin/dam-cli buckets list --json`).toString();
+    const bucketsList = childProcess.execSync(`npx amp-nova/dam-cli buckets list --json`).toString();
     const bucketsListJson = JSON.parse(bucketsList);
     let bucketsMap = {};
     bucketsListJson.forEach((item) => {

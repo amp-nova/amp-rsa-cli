@@ -17,7 +17,7 @@ const handle = (settingsJSON: any, argv: Arguments) => {
     console.log(`${path.dirname(argv.settingsYaml)}`)
 
     const workflowStatesList = childProcess.execSync(
-      `./node_modules/.bin/dc-cli workflow-states list --json`,
+      `npx @amplience/dc-cli workflow-states list --json`,
       { cwd: `${path.dirname(argv.settingsYaml)}/repositories` }
     ).toString();
 

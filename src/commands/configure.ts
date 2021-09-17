@@ -11,7 +11,7 @@ const handle = (settingsJSON: any, argv: Arguments) => {
 
   console.log('Configure dc-cli...');
   childProcess.execSync(
-    `npx @amplience/dc-cli configure --clientId ${settingsJSON.cms.clientId} --clientSecret ${settingsJSON.cms.clientSecret} --hubId ${settingsJSON.cms.hubId}`, {
+    `npx dc-cli configure --clientId ${settingsJSON.cms.clientId} --clientSecret ${settingsJSON.cms.clientSecret} --hubId ${settingsJSON.cms.hubId}`, {
       cwd: argv.settingsDir
     }
   );
@@ -20,7 +20,7 @@ const handle = (settingsJSON: any, argv: Arguments) => {
   if (settingsJSON.dam.username) {
     console.log('Configure dam-cli...');
     childProcess.execSync(
-      `npx amp-nova/dam-cli configure --username ${settingsJSON.dam.username} --password ${settingsJSON.dam.password}`
+      `npx dam-cli configure --username ${settingsJSON.dam.username} --password ${settingsJSON.dam.password}`
     )
   }
 

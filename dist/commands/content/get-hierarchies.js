@@ -21,7 +21,7 @@ const handle = (settingsJSON) => {
     const allHierarchies = hierarchies.map((item) => {
         const name = item.name;
         const key = item.key;
-        const output = childProcess.execSync(`./node_modules/.bin/dc-cli content-item get-by-key ${key} --json`).toString();
+        const output = childProcess.execSync(`npx @amplience/dc-cli content-item get-by-key ${key} --json`).toString();
         return { name, contentItem: JSON.parse(output) };
     });
     settingsJSON.cms.hierarchies = {};

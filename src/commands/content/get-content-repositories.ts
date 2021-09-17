@@ -12,7 +12,7 @@ const handle = (settingsJSON: any) => {
     // Exporting Workflow States
     console.log(`Listing Content Repositories`);
     const contentRepositories = childProcess.execSync(
-      `./node_modules/.bin/dc-cli content-repository list --json`,
+      `npx @amplience/dc-cli content-repository list --json`,
       { cwd: `./repositories` }
     ).toString();
 

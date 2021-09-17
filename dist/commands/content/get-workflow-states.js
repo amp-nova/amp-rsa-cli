@@ -13,7 +13,7 @@ exports.desc = "Get Workflow States map and save to global settings";
 const handle = (settingsJSON, argv) => {
     console.log(`Listing Workflow States`);
     console.log(`${path.dirname(argv.settingsYaml)}`);
-    const workflowStatesList = childProcess.execSync(`./node_modules/.bin/dc-cli workflow-states list --json`, { cwd: `${path.dirname(argv.settingsYaml)}/repositories` }).toString();
+    const workflowStatesList = childProcess.execSync(`npx @amplience/dc-cli workflow-states list --json`, { cwd: `${path.dirname(argv.settingsYaml)}/repositories` }).toString();
     const workflowStateJson = JSON.parse(workflowStatesList);
     let workflowStatesMap = {};
     workflowStateJson.map((item) => {

@@ -8,11 +8,11 @@ export const command = 'get-content-item-by-key';
 export const desc = "Get Content Item by key and save ID to global settings";
 
 const childProcess = require('child_process')
-const lodash = require('lodash')
+const _ = require('lodash')
 const handle = (settingsJSON: any) => {
     // Exporting Workflow States
     console.log(`Listing Content Items`);
-    const contentItems = childProcess.execSync(`npx @amplience/dc-cli content-item list --json`).toString();
+    const contentItems = childProcess.execSync(`npx dc-cli content-item list --json`).toString();
 
     // Get Content Repositories from output
     const contentItemsJSON = JSON.parse(contentItems);
@@ -20,7 +20,7 @@ const handle = (settingsJSON: any) => {
     // Build Content Repositories map for settings
     let contentItemsMap: any = {};
     contentItemsJSON.map((item: any) => {
-      const itemName = lodash.camelCase(item.label);
+      const itemName = _.camelCase(item.label);
       contentItemsMap[itemName] = item.id;
     });
 

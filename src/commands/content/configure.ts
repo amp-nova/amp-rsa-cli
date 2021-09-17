@@ -1,24 +1,23 @@
 import { Arguments } from 'yargs';
-import { settingsBuilder, settingsHandler } from '../../common/settings-handler';
+import { ampRsaBuilder, settingsHandler } from '../../common/settings-handler';
+const fs = require('fs-extra')
 
-export const builder = settingsBuilder
+export const builder = ampRsaBuilder
 export const handler = async (argv: Arguments): Promise<void> => settingsHandler(argv, desc, command, handle)
 
 export const command = 'configure';
 export const desc = "Configure all content assets";
 
 import { compile as handlebarsCompile } from 'handlebars';
-const { readFileSync, writeFileSync, readdirSync, statSync, unlinkSync } = require('fs')
-const childProcess = require('child_process')
 
 const handle = (settingsJSON: any, argv: Arguments) => {
   // Create repositories folder
-  try { childProcess.execSync(`mkdir repositories`); } catch (error) { }
+  fs.mkdirpSync(`${argv.settingsDir}/repositories`)
 
   // Copy ./assets/content folder in repositories
   console.log('Copying content assets to repositories folder');
-  try { childProcess.execSync(`rm -r ./repositories/content`); } catch (error) { }
-  childProcess.execSync(`cp -r ./assets/content ./repositories`);
+  fs.removeSync(`${argv.settingsDir}/repositories/content`)
+  fs.copySync(`${argv.settingsDir}/assets/content`, `${argv.settingsDir}/repositories`)
 
   // Scan all handlebars files in ./repositories/assets/content
   const iterateDirectory = () => {
@@ -27,12 +26,12 @@ const handle = (settingsJSON: any, argv: Arguments) => {
 
     return function directoryIterator(directory: string) {
       try {
-        let dirContent = readdirSync(directory);
+        let dirContent = fs.readdirSync(directory);
         dirContent.forEach((path: string) => {
           const fullPath: string = `${directory}/${path}`;
 
           // Add to files list if it's an handlebars template
-          if (statSync(fullPath).isFile()) {
+          if (fs.statSync(fullPath).isFile()) {
             if (fullPath.endsWith('.hbs')) {
               files.push(fullPath);
             }
@@ -63,22 +62,21 @@ const handle = (settingsJSON: any, argv: Arguments) => {
 
   // Render each template to file
   files.map((item: string) => {
-    const templateString = readFileSync(item).toString();
+    const templateString = fs.readFileSync(item).toString();
     const template = handlebarsCompile(templateString);
     const contentJSON = template(settingsJSON);
 
     // Write json to file
     const file = item.replace('.hbs', '');
-    writeFileSync(file, contentJSON);
+    fs.writeFileSync(file, contentJSON);
     console.log(`Created json from template: ${file}`)
 
     // Remove template
-    unlinkSync(item);
+    fs.unlinkSync(item);
   });
 
   // Create config folder if needed
-  try { childProcess.execSync(`mkdir ../config`); } catch (error) { }
-
-  childProcess.execSync(`cp -r ./repositories/content/content-type-schemas ../config`);
-  childProcess.execSync(`cp -r ./repositories/content/content-types ../config`);
+  fs.mkdirpSync(`${argv.ampRsaDir}/config`)
+  fs.copySync(`${argv.settingsDir}/repositories/content/content-type-schemas`, `${argv.ampRsaDir}/config`)
+  fs.copySync(`${argv.settingsDir}/repositories/content/content-types`, `${argv.ampRsaDir}/config`)
 }

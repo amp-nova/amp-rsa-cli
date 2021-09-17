@@ -7,18 +7,12 @@ export const desc = "Install AWS serverless services";
 export const handler = async (
   argv: Arguments
 ): Promise<void> => {
-
-  const serverless = [
-    "willow-demo-services"
-  ];
-
+  const serverless = ["willow-demo-services"];
   try {
     serverless.map((item: string) => {
-      console.log(`Installing serverless service from ./repositories/${item}`);
-      childProcess.execSync(
-        `npm install`,
-        { cwd: `./repositories/${item}` }
-      );
+      let cwd = `${argv.settingsDir}/repositories/${item}`
+      console.log(`Installing serverless service from ${cwd}`);
+      childProcess.execSync(`npm install`, { cwd });
     });
   } catch(error) {
     console.log(error.message);

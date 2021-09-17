@@ -5,7 +5,6 @@ export const builder = settingsBuilder
 export const handler = async (argv: Arguments): Promise<void> => settingsHandler(argv, desc, command, handle)
 
 const childProcess = require('child_process')
-const lodash = require('lodash')
 
 export const command = 'get-hierarchies';
 export const desc = "Get Hierarchies and save to global settings";
@@ -23,15 +22,11 @@ const handle = (settingsJSON: any) => {
     hierarchies.map((item: any) => {
       const name = item.name;
       const key = item.key;
-      const output = childProcess.execSync(
-        `npx @amplience/dc-cli content-item get-by-key ${key} --json`
-      ).toString();
+      const output = childProcess.execSync(`npx dc-cli content-item get-by-key ${key} --json`).toString();
       return { name, contentItem: JSON.parse(output) };
     });
 
   // Add Hierarchies to settings
   settingsJSON.cms.hierarchies = {};
-  allHierarchies.forEach((item: any) => {
-    settingsJSON.cms.hierarchies[item.name] = item.contentItem.id;
-  });
+  allHierarchies.forEach((item: any) => { settingsJSON.cms.hierarchies[item.name] = item.contentItem.id });
 }

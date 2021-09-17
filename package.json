@@ -34,6 +34,7 @@
   "homepage": "https://github.com/rezakalfane/willow-demo-automation#readme",
   "dependencies": {
     "@amplience/dc-cli": "^0.12.0",
+    "fs-extra": "^10.0.0",
     "handlebars": "^4.7.6",
     "js-yaml": "^4.0.0",
     "lodash": "^4.17.20",

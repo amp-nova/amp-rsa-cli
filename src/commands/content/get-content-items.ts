@@ -5,16 +5,14 @@ export const builder = settingsBuilder
 export const handler = async (argv: Arguments): Promise<void> => settingsHandler(argv, desc, command, handle)
 
 const childProcess = require('child_process')
-const lodash = require('lodash')
+const _ = require('lodash')
 
 export const command = 'get-content-items';
 export const desc = "Get Content Items map and save to global settings";
 const handle = (settingsJSON: any) => {
     // Exporting Workflow States
     console.log(`Listing Content Items`);
-    const contentItems = childProcess.execSync(
-      `npx @amplience/dc-cli content-item list --json`
-    ).toString();
+    const contentItems = childProcess.execSync(`npx dc-cli content-item list --json`).toString();
 
     // Get Content Repositories from output
     const contentItemsJSON = JSON.parse(contentItems);
@@ -22,7 +20,7 @@ const handle = (settingsJSON: any) => {
     // Build Content Repositories map for settings
     let contentItemsMap: any = {};
     contentItemsJSON.map((item: any) => {
-      const itemName = lodash.camelCase(item.label);
+      const itemName = _.camelCase(item.label);
       contentItemsMap[itemName] = item.id;
     });
 

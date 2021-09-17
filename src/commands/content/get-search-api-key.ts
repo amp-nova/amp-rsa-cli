@@ -10,9 +10,7 @@ export const command = 'get-search-api-key';
 export const desc = "Get Default Theme ID and save to global settings";
 const handle = (settingsJSON: any) => {
   // Get list of indexes
-  const output = childProcess.execSync(
-    `npx @amplience/dc-cli indexes list --json`
-  ).toString();
+  const output = childProcess.execSync(`npx dc-cli indexes list --json`).toString();
   const indexes = JSON.parse(output);
 
   if (indexes.length > 0) {
@@ -22,9 +20,7 @@ const handle = (settingsJSON: any) => {
       const apiKeyId = searchKeyLink.split('/').slice(-1)[0];
 
       // Get Algolia API Key from API Key ID
-      const output = childProcess.execSync(
-        `npx @amplience/dc-cli indexes get-search-api-key ${index.id} ${apiKeyId} --json`
-      ).toString();
+      const output = childProcess.execSync(`npx dc-cli indexes get-search-api-key ${index.id} ${apiKeyId} --json`).toString();
       const key = JSON.parse(output);
       settingsJSON.algolia.appId = key.applicationId;
       settingsJSON.algolia.apiKey = key.key;

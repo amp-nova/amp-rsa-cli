@@ -6,10 +6,6 @@ const yaml = require('js-yaml');
 export const settingsBuilder = (yargs: Argv): Argv =>
     yargs
         .options({
-            ampRsaDir: {
-                alias: 'a',
-                describe: 'path to amp-rsa installation'
-            },
             settingsDir: {
                 alias: 's',
                 describe: 'path to directory containing settings.yaml',
@@ -17,6 +13,16 @@ export const settingsBuilder = (yargs: Argv): Argv =>
             }
         })
         .help();
+
+export const ampRsaBuilder = (yargs: Argv): Argv =>
+    settingsBuilder(yargs)
+        .options({
+            ampRsaDir: {
+                alias: 'a',
+                describe: 'path to amp-rsa installation'
+            },
+        })
+        .demandOption(['ampRsaDir'], 'must provide path to amp-rsa installation')
 
 export const settingsHandler = async (argv: Arguments, desc: string, command: string, callback: any) => {
     try {

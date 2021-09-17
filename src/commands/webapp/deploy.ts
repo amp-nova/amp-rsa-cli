@@ -6,7 +6,7 @@ export const builder = settingsBuilder
 export const handler = async (argv: Arguments): Promise<void> => settingsHandler(argv, desc, command, handle)
 
 const childProcess = require('child_process')
-const lodash = require('lodash')
+const _ = require('lodash')
 
 export const command = 'deploy';
 export const desc = "Deploy Web Application";

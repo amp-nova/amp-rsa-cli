@@ -1,97 +1,84 @@
 import { Arguments } from 'yargs';
-import { readFileSync, readdirSync, writeFileSync, statSync, unlinkSync } from 'fs';
-import childProcess from 'child_process';
-import { compile as handlebarsCompile } from 'handlebars';
+import { settingsBuilder, settingsHandler } from '../../common/settings-handler';
 
-const yaml = require('js-yaml');
-const lodash = require('lodash');
+export const builder = settingsBuilder
+export const handler = async (argv: Arguments): Promise<void> => settingsHandler(argv, desc, command, handle)
 
 export const command = 'configure';
 export const desc = "Configure all content assets";
 
-export const handler = async (
-  argv: Arguments
-): Promise<void> => {
+import { compile as handlebarsCompile } from 'handlebars';
+const { readFileSync, writeFileSync, readdirSync, statSync, unlinkSync } = require('fs')
+const childProcess = require('child_process')
 
-  try {
+const handle = (settingsJSON: any, argv: Arguments) => {
+  // Create repositories folder
+  try { childProcess.execSync(`mkdir repositories`); } catch (error) { }
 
-    // Reading global settings
-    const settingsYAML = readFileSync(`./settings.yaml`).toString();
+  // Copy ./assets/content folder in repositories
+  console.log('Copying content assets to repositories folder');
+  try { childProcess.execSync(`rm -r ./repositories/content`); } catch (error) { }
+  childProcess.execSync(`cp -r ./assets/content ./repositories`);
 
-    // Converting from YAML to JSON
-    const settingsJSON = yaml.load(settingsYAML)
-    console.log('Global settings loaded');
+  // Scan all handlebars files in ./repositories/assets/content
+  const iterateDirectory = () => {
+    const files: string[] = [];
+    const dirs: string[] = [];
 
-    // Create repositories folder
-    try { childProcess.execSync(`mkdir repositories`); } catch(error) {}
+    return function directoryIterator(directory: string) {
+      try {
+        let dirContent = readdirSync(directory);
+        dirContent.forEach((path: string) => {
+          const fullPath: string = `${directory}/${path}`;
 
-    // Copy ./assets/content folder in repositories
-    console.log('Copying content assets to repositories folder');
-    try { childProcess.execSync(`rm -r ./repositories/content`); } catch (error) {}
-    childProcess.execSync(`cp -r ./assets/content ./repositories`); 
+          // Add to files list if it's an handlebars template
+          if (statSync(fullPath).isFile()) {
+            if (fullPath.endsWith('.hbs')) {
+              files.push(fullPath);
+            }
+          } else {
 
-    // Scan all handlebars files in ./repositories/assets/content
-    const iterateDirectory = () => {
-      const files: string[] = [];
-      const dirs: string[] = [];
-  
-      return function directoryIterator(directory: string) {
-        try {
-            let dirContent = readdirSync(directory);
-            dirContent.forEach( path => {
-                const fullPath: string = `${directory}/${path}`;
+            // Add sub-directory to directory list
+            dirs.push(fullPath);
+          }
+        });
+        const directoryPop = dirs.pop();
 
-                // Add to files list if it's an handlebars template
-                if (statSync(fullPath).isFile()) {
-                  if (fullPath.endsWith('.hbs')) {
-                    files.push(fullPath);
-                  }
-                } else {
+        // Scan next sub-directory
+        if (directoryPop) { directoryIterator(directoryPop); }
 
-                  // Add sub-directory to directory list
-                  dirs.push(fullPath);
-                }
-            });
-            const directoryPop = dirs.pop();
-
-            // Scan next sub-directory
-            if (directoryPop) { directoryIterator(directoryPop); }
-
-            return files;
-        } catch(ex) {
-            console.log(ex);
-            return files;
-        }
-      };
+        return files;
+      } catch (ex) {
+        console.log(ex);
+        return files;
+      }
     };
+  };
 
-    // Finding all templates in content folder
-    const contentFolder = './repositories/content';
-    console.log(`Finding all templates from ${contentFolder} folder`);
-    const assetsIterator = iterateDirectory();
-    const files = assetsIterator(contentFolder);
+  // Finding all templates in content folder
+  const contentFolder = `${argv.settingsDir}/repositories/content`;
+  console.log(`Finding all templates from ${contentFolder} folder`);
+  const assetsIterator = iterateDirectory();
+  const files = assetsIterator(contentFolder);
 
-    // Render each template to file
-    files.map((item: string) => {
-      const templateString = readFileSync(item).toString();
-      const template = handlebarsCompile(templateString);
-      const contentJSON = template(settingsJSON);
+  // Render each template to file
+  files.map((item: string) => {
+    const templateString = readFileSync(item).toString();
+    const template = handlebarsCompile(templateString);
+    const contentJSON = template(settingsJSON);
 
-      // Write json to file
-      const file = item.replace('.hbs', '');
-      writeFileSync(file, contentJSON);
-      console.log(`Created json from template: ${file}`)
+    // Write json to file
+    const file = item.replace('.hbs', '');
+    writeFileSync(file, contentJSON);
+    console.log(`Created json from template: ${file}`)
 
-      // Remove template
-      unlinkSync(item);
-    });
+    // Remove template
+    unlinkSync(item);
+  });
 
-    // Create config folder if needed
-    try { childProcess.execSync(`mkdir ../config`); } catch(error) {}
+  // Create config folder if needed
+  try { childProcess.execSync(`mkdir ../config`); } catch (error) { }
 
-    childProcess.execSync(`cp -r ./repositories/content/content-type-schemas ../config`); 
-    childProcess.execSync(`cp -r ./repositories/content/content-types ../config`); 
-  } catch(error) {
-    console.log(error.message);
-  }
-};
+  childProcess.execSync(`cp -r ./repositories/content/content-type-schemas ../config`);
+  childProcess.execSync(`cp -r ./repositories/content/content-types ../config`);
+}

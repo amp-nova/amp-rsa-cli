@@ -13,22 +13,17 @@ export const handler = async (
 ): Promise<void> => {
 
   try {
+    let provisioningYAML = readFileSync(`${argv.settingsDir}/provisioning.yaml`).toString();
+    const provisioningJSON = yaml.load(provisioningYAML)
 
-    // Reading global settings
-    let settingsYAML = readFileSync(`./provisioning.yaml`).toString();
-
-    // Converting from YAML to JSON
-    const settingsJSON = yaml.load(settingsYAML)
-    console.log('Global settings loaded');
-
-    const templateString = readFileSync('./assets/provisioning/request.yaml.hbs').toString();
+    const templateString = readFileSync(`${argv.settingsDir}/assets/provisioning/request.yaml.hbs`).toString();
     const template = handlebarsCompile(templateString);
-    const contentJSON = template(settingsJSON);
+    const contentJSON = template(provisioningJSON);
 
     // Create repositories folder
-    try { childProcess.execSync(`mkdir -p repositories/provisioning`); } catch(error) {}
+    try { childProcess.execSync(`mkdir -p ${argv.settingsDir}/repositories/provisioning`); } catch(error) {}
 
-    writeFileSync('./repositories/provisioning/request.yaml', contentJSON);
+    writeFileSync(`${argv.settingsDir}/repositories/provisioning/request.yaml`, contentJSON);
   } catch(error) {
     console.log(error.message);
   }

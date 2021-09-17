@@ -1,59 +1,36 @@
 import { Arguments } from 'yargs';
-import childProcess from 'child_process';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
+import { settingsBuilder, settingsHandler } from '../../common/settings-handler';
 
-const yaml = require('js-yaml');
+export const builder = settingsBuilder
+export const handler = async (argv: Arguments): Promise<void> => settingsHandler(argv, desc, command, handle)
+
+const childProcess = require('child_process')
+const lodash = require('lodash')
 
 export const command = 'deploy';
 export const desc = "Deploy Web Application";
+const handle = (settingsJSON: any, argv: Arguments) => {
+  // Build app name, adding hub name to app name
+  const webapp = settingsJSON.app.appName.toLowerCase();
 
-export const handler = async (
-  argv: Arguments
-): Promise<void> => {
-  try {
+  const scope = settingsJSON.app.scope;
 
-    // Reading global settings
-    let settingsYAML = readFileSync(`./settings.yaml`).toString();
+  // Deploying Web Application to Vercel
+  console.log(`Deploying Web Application to Vercel`);
+  childProcess.execSync(`vercel --prod --confirm --name ${webapp} --scope ${scope} &> ./automation/repositories/deployment.out`, {
+    cwd: `..`,
+    stdio: [process.stdin, process.stdout, process.stdin]
+  });
 
-    // Converting from YAML to JSON
-    const settingsJSON = yaml.load(settingsYAML)
-    console.log('Global settings loaded');
+  // Read deployment information
+  const deploymentOutput = readFileSync(`${argv.settingsDir}/repositories/deployment.out`).toString();
 
-    // Build app name, adding hub name to app name
-    const webapp = settingsJSON.app.appName.toLowerCase();
-
-    const scope = settingsJSON.app.scope;
-
-    // Deploying Web Application to Vercel
-    console.log(`Deploying Web Application to Vercel`);
-    childProcess.execSync(
-      `vercel --prod --confirm --name ${webapp} --scope ${scope} &> ./automation/repositories/deployment.out`,
-      { 
-        cwd: `..`,
-        stdio: [process.stdin, process.stdout, process.stdin]
-      }
-    );
-
-    // Read deployment information
-    const deploymentOutput = readFileSync(`./repositories/deployment.out`).toString();
-    
-    // Backup settings
-    writeFileSync("settings.yaml.backup", settingsYAML);
-
-    // Adding Vercel production URL to settings
-    const regex = /Production: (.*?) /;
-    const matches = regex.exec(deploymentOutput);
-    if (matches && matches.length === 2) {
-      const url = matches[1];
-      settingsJSON.app.url = url;
-
-      // Convert JSON to YAML and save to file
-      console.log(`Saving global settings to file`);
-      settingsYAML = yaml.dump(settingsJSON);
-      writeFileSync(`./settings.yaml`, settingsYAML);
-    }
-  } catch(error) {
-    console.log(error.message);
+  // Adding Vercel production URL to settings
+  const regex = /Production: (.*?) /;
+  const matches = regex.exec(deploymentOutput);
+  if (matches && matches.length === 2) {
+    const url = matches[1];
+    settingsJSON.app.url = url;
   }
-
-};
+}

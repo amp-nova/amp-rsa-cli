@@ -1,31 +1,17 @@
 import { Arguments } from 'yargs';
-import childProcess from 'child_process';
-import { readFileSync, writeFileSync } from 'fs';
+import { settingsBuilder, settingsHandler } from '../../common/settings-handler';
 
-const yaml = require('js-yaml');
+export const builder = settingsBuilder
+export const handler = async (argv: Arguments): Promise<void> => settingsHandler(argv, desc, command, handle)
+
+const childProcess = require('child_process')
 
 export const command = 'install';
 export const desc = "Install Web Application";
-
-export const handler = async (
-  argv: Arguments
-): Promise<void> => {
-
-  try {
-
-    // Reading global settings
-    let settingsYAML = readFileSync(`./settings.yaml`).toString();
-
-    // Converting from YAML to JSON
-    const settingsJSON = yaml.load(settingsYAML)
-    console.log('Global settings loaded');
-
-    console.log(`Installing Web Application from ..`);
-    childProcess.execSync(
-      `yarn install`,
-      { cwd: `..` }
-    );
-  } catch(error) {
-    console.log(error.message);
-  }
-};
+const handle = (settingsJSON: any) => {
+  console.log(`Installing Web Application from ..`);
+  childProcess.execSync(
+    `yarn install`,
+    { cwd: `..` }
+  );
+}

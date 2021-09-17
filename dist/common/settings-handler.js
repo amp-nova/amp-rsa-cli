@@ -9,9 +9,10 @@ const settingsBuilder = (yargs) => yargs
         alias: 'a',
         describe: 'path to amp-rsa installation'
     },
-    settingsYaml: {
-        alias: 'y',
-        describe: 'path to settings.yaml (defaults to ./automation)'
+    settingsDir: {
+        alias: 's',
+        describe: 'path to directory containing settings.yaml',
+        default: './automation'
     }
 })
     .help();
@@ -19,13 +20,14 @@ exports.settingsBuilder = settingsBuilder;
 const settingsHandler = async (argv, desc, command, callback) => {
     try {
         console.log(`[ ${command} ] ${desc}`);
-        let settingsYAML = fs_1.readFileSync(`${argv.settingsYaml || './automation/settings.yaml'}`).toString();
+        let settingsYAML = fs_1.readFileSync(`${argv.settingsDir}/settings.yaml`).toString();
+        fs_1.writeFileSync(`${argv.settingsDir}/settings.yaml.backup`, settingsYAML);
         const settingsJSON = yaml.load(settingsYAML);
         console.log('Global settings loaded');
         await callback(settingsJSON, argv);
         console.log(`Saving global settings to file`);
         settingsYAML = yaml.dump(settingsJSON);
-        fs_1.writeFileSync(`${argv.settingsYaml}`, settingsYAML);
+        fs_1.writeFileSync(`${argv.settingsDir}/settings.yaml`, settingsYAML);
     }
     catch (error) {
         console.log(error.message);

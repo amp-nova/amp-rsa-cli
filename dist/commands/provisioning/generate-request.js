@@ -12,17 +12,16 @@ exports.command = 'generate-request';
 exports.desc = "Generate Provisioning Request";
 const handler = async (argv) => {
     try {
-        let settingsYAML = fs_1.readFileSync(`./provisioning.yaml`).toString();
-        const settingsJSON = yaml.load(settingsYAML);
-        console.log('Global settings loaded');
-        const templateString = fs_1.readFileSync('./assets/provisioning/request.yaml.hbs').toString();
+        let provisioningYAML = fs_1.readFileSync(`${argv.settingsDir}/provisioning.yaml`).toString();
+        const provisioningJSON = yaml.load(provisioningYAML);
+        const templateString = fs_1.readFileSync(`${argv.settingsDir}/assets/provisioning/request.yaml.hbs`).toString();
         const template = handlebars_1.compile(templateString);
-        const contentJSON = template(settingsJSON);
+        const contentJSON = template(provisioningJSON);
         try {
-            child_process_1.default.execSync(`mkdir -p repositories/provisioning`);
+            child_process_1.default.execSync(`mkdir -p ${argv.settingsDir}/repositories/provisioning`);
         }
         catch (error) { }
-        fs_1.writeFileSync('./repositories/provisioning/request.yaml', contentJSON);
+        fs_1.writeFileSync(`${argv.settingsDir}/repositories/provisioning/request.yaml`, contentJSON);
     }
     catch (error) {
         console.log(error.message);

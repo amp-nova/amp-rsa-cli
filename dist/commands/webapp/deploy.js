@@ -1,40 +1,28 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = exports.desc = exports.command = void 0;
-const child_process_1 = __importDefault(require("child_process"));
+exports.desc = exports.command = exports.handler = exports.builder = void 0;
 const fs_1 = require("fs");
-const yaml = require('js-yaml');
+const settings_handler_1 = require("../../common/settings-handler");
+exports.builder = settings_handler_1.settingsBuilder;
+const handler = async (argv) => settings_handler_1.settingsHandler(argv, exports.desc, exports.command, handle);
+exports.handler = handler;
+const childProcess = require('child_process');
+const lodash = require('lodash');
 exports.command = 'deploy';
 exports.desc = "Deploy Web Application";
-const handler = async (argv) => {
-    try {
-        let settingsYAML = fs_1.readFileSync(`./settings.yaml`).toString();
-        const settingsJSON = yaml.load(settingsYAML);
-        console.log('Global settings loaded');
-        const webapp = settingsJSON.app.appName.toLowerCase();
-        const scope = settingsJSON.app.scope;
-        console.log(`Deploying Web Application to Vercel`);
-        child_process_1.default.execSync(`vercel --prod --confirm --name ${webapp} --scope ${scope} &> ./automation/repositories/deployment.out`, {
-            cwd: `..`,
-            stdio: [process.stdin, process.stdout, process.stdin]
-        });
-        const deploymentOutput = fs_1.readFileSync(`./repositories/deployment.out`).toString();
-        fs_1.writeFileSync("settings.yaml.backup", settingsYAML);
-        const regex = /Production: (.*?) /;
-        const matches = regex.exec(deploymentOutput);
-        if (matches && matches.length === 2) {
-            const url = matches[1];
-            settingsJSON.app.url = url;
-            console.log(`Saving global settings to file`);
-            settingsYAML = yaml.dump(settingsJSON);
-            fs_1.writeFileSync(`./settings.yaml`, settingsYAML);
-        }
-    }
-    catch (error) {
-        console.log(error.message);
+const handle = (settingsJSON, argv) => {
+    const webapp = settingsJSON.app.appName.toLowerCase();
+    const scope = settingsJSON.app.scope;
+    console.log(`Deploying Web Application to Vercel`);
+    childProcess.execSync(`vercel --prod --confirm --name ${webapp} --scope ${scope} &> ./automation/repositories/deployment.out`, {
+        cwd: `..`,
+        stdio: [process.stdin, process.stdout, process.stdin]
+    });
+    const deploymentOutput = fs_1.readFileSync(`${argv.settingsDir}/repositories/deployment.out`).toString();
+    const regex = /Production: (.*?) /;
+    const matches = regex.exec(deploymentOutput);
+    if (matches && matches.length === 2) {
+        const url = matches[1];
+        settingsJSON.app.url = url;
     }
 };
-exports.handler = handler;

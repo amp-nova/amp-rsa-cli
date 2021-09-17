@@ -1,86 +1,78 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = exports.desc = exports.command = void 0;
-const fs_1 = require("fs");
-const child_process_1 = __importDefault(require("child_process"));
+exports.desc = exports.command = exports.handler = exports.builder = void 0;
 const handlebars_1 = require("handlebars");
-const yaml = require('js-yaml');
-const lodash = require('lodash');
+const settings_handler_1 = require("../../common/settings-handler");
+const fs_1 = require("fs");
+const builder = (yargs) => settings_handler_1.settingsBuilder(yargs).
+    demandOption(['ampRsaDir'], 'must provide path to amp-rsa installation');
+exports.builder = builder;
+const handler = async (argv) => settings_handler_1.settingsHandler(argv, exports.desc, exports.command, handle);
+exports.handler = handler;
+const childProcess = require('child_process');
 exports.command = 'configure';
 exports.desc = "Configure webapp config files";
-const handler = async (argv) => {
+const handle = (settingsJSON, argv) => {
     try {
-        const settingsYAML = fs_1.readFileSync(`./settings.yaml`).toString();
-        const settingsJSON = yaml.load(settingsYAML);
-        console.log('Global settings loaded');
-        try {
-            child_process_1.default.execSync(`mkdir repositories`);
-        }
-        catch (error) { }
-        console.log('Copying webapp config files to repositories folder');
-        try {
-            child_process_1.default.execSync(`rm -r ./repositories/webapp`);
-        }
-        catch (error) { }
-        try {
-            child_process_1.default.execSync(`mkdir -p ./repositories/webapp/config`);
-        }
-        catch (error) { }
-        child_process_1.default.execSync(`cp -r ./assets/webapp ./repositories`);
-        const iterateDirectory = () => {
-            const files = [];
-            const dirs = [];
-            return function directoryIterator(directory) {
-                try {
-                    let dirContent = fs_1.readdirSync(directory);
-                    dirContent.forEach(path => {
-                        const fullPath = `${directory}/${path}`;
-                        if (fs_1.statSync(fullPath).isFile()) {
-                            if (fullPath.endsWith('.hbs')) {
-                                files.push(fullPath);
-                            }
+        childProcess.execSync(`mkdir ${argv.settingsDir}/repositories`);
+    }
+    catch (error) { }
+    console.log('Copying webapp config files to repositories folder');
+    try {
+        childProcess.execSync(`rm -r ${argv.settingsDir}/repositories/webapp`);
+    }
+    catch (error) { }
+    try {
+        childProcess.execSync(`mkdir -p ${argv.settingsDir}/repositories/webapp/config`);
+    }
+    catch (error) { }
+    childProcess.execSync(`cp -r ${argv.settingsDir}/assets/webapp ${argv.settingsDir}/repositories`);
+    const iterateDirectory = () => {
+        const files = [];
+        const dirs = [];
+        return function directoryIterator(directory) {
+            try {
+                let dirContent = fs_1.readdirSync(directory);
+                dirContent.forEach(path => {
+                    const fullPath = `${directory}/${path}`;
+                    if (fs_1.statSync(fullPath).isFile()) {
+                        if (fullPath.endsWith('.hbs')) {
+                            files.push(fullPath);
                         }
-                        else {
-                            dirs.push(fullPath);
-                        }
-                    });
-                    const directoryPop = dirs.pop();
-                    if (directoryPop) {
-                        directoryIterator(directoryPop);
                     }
-                    return files;
+                    else {
+                        dirs.push(fullPath);
+                    }
+                });
+                const directoryPop = dirs.pop();
+                if (directoryPop) {
+                    directoryIterator(directoryPop);
                 }
-                catch (ex) {
-                    console.log(ex);
-                    return files;
-                }
-            };
+                return files;
+            }
+            catch (ex) {
+                console.log(ex);
+                return files;
+            }
         };
-        const folder = './repositories/webapp';
-        console.log(`Finding all templates from ${folder} folder`);
-        const assetsIterator = iterateDirectory();
-        const files = assetsIterator(folder);
-        files.map((item) => {
-            const templateString = fs_1.readFileSync(item).toString();
-            const template = handlebars_1.compile(templateString);
-            const contentJSON = template(settingsJSON);
-            const file = item.replace('.hbs', '');
-            fs_1.writeFileSync(file, contentJSON);
-            console.log(`Created json from template: ${file}`);
-            fs_1.unlinkSync(item);
-        });
-        console.log('Copying JSON config files to webapp');
-        try {
-            child_process_1.default.execSync(`mkdir ../config`);
-        }
-        catch (error) { }
-        child_process_1.default.execSync(`cp ./repositories/webapp/config/*.json ../config`);
+    };
+    const folder = `${argv.settingsDir}/repositories/webapp`;
+    console.log(`Finding all templates from ${folder} folder`);
+    const assetsIterator = iterateDirectory();
+    const files = assetsIterator(folder);
+    files.map((item) => {
+        const templateString = fs_1.readFileSync(item).toString();
+        const template = handlebars_1.compile(templateString);
+        const contentJSON = template(settingsJSON);
+        const file = item.replace('.hbs', '');
+        fs_1.writeFileSync(file, contentJSON);
+        console.log(`Created json from template: ${file}`);
+        fs_1.unlinkSync(item);
+    });
+    console.log('Copying JSON config files to webapp');
+    try {
+        childProcess.execSync(`mkdir ${argv.ampRsaDir}/config`);
     }
-    catch (error) {
-        console.log(error.message);
-    }
+    catch (error) { }
+    childProcess.execSync(`cp ${argv.settingsDir}/repositories/webapp/config/*.json ${argv.ampRsaDir}/config`);
 };
-exports.handler = handler;

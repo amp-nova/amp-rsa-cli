@@ -1,48 +1,30 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = exports.builder = exports.desc = exports.command = void 0;
+exports.desc = exports.command = exports.handler = exports.builder = void 0;
 const fs_1 = require("fs");
-const handlebars_1 = require("handlebars");
-const child_process_1 = __importDefault(require("child_process"));
+const settings_handler_1 = require("../../common/settings-handler");
+exports.builder = settings_handler_1.settingsBuilder;
+const handler = async (argv) => settings_handler_1.settingsHandler(argv, exports.desc, exports.command, handle);
+exports.handler = handler;
+const childProcess = require('child_process');
 const yaml = require('js-yaml');
+const handlebars_1 = require("handlebars");
 exports.command = 'generate-sfmc-request';
 exports.desc = "Generate SalesForce Marketing Cloud Integration Request";
-const builder = (yargs) => yargs
-    .options({
-    settingsYaml: {
-        alias: 'y',
-        describe: 'path to settings.yaml',
-        demandOption: true
-    }
-})
-    .help();
-exports.builder = builder;
-const handler = async (argv) => {
+const handle = (settingsJSON, argv) => {
+    let intSettingsYAML = fs_1.readFileSync(`${argv.settingsDir}/integration.yaml`).toString();
+    const intSettingsJSON = yaml.load(intSettingsYAML);
+    const finalSettingsJSON = {
+        ...settingsJSON,
+        ...intSettingsJSON
+    };
+    const templateString = fs_1.readFileSync(`${argv.settingsDir}/assets/integration/sfmc.json.hbs`).toString();
+    const template = handlebars_1.compile(templateString);
+    const contentJSON = template(finalSettingsJSON);
     try {
-        let intSettingsYAML = fs_1.readFileSync(`./settings.yaml`).toString();
-        let settingsYAML = fs_1.readFileSync(`./integration.yaml`).toString();
-        const intSettingsJSON = yaml.load(intSettingsYAML);
-        const settingsJSON = yaml.load(settingsYAML);
-        console.log('Global settings loaded');
-        const finalSettingsJSON = {
-            ...settingsJSON,
-            ...intSettingsJSON
-        };
-        const templateString = fs_1.readFileSync('./assets/integration/sfmc.json.hbs').toString();
-        const template = handlebars_1.compile(templateString);
-        const contentJSON = template(finalSettingsJSON);
-        try {
-            child_process_1.default.execSync(`mkdir -p repositories/integration`);
-        }
-        catch (error) { }
-        fs_1.writeFileSync('./repositories/integration/sfmc.json', contentJSON);
-        console.log('Integration request saved to repositories/integration folder');
+        childProcess.execSync(`mkdir -p ${argv.settingsDir}/repositories/integration`);
     }
-    catch (error) {
-        console.log(error.message);
-    }
+    catch (error) { }
+    fs_1.writeFileSync(`${argv.settingsDir}/repositories/integration/sfmc.json`, contentJSON);
+    console.log('Integration request saved to repositories/integration folder');
 };
-exports.handler = handler;

@@ -10,7 +10,7 @@ exports.desc = "Configure all content assets";
 const handlebars_1 = require("handlebars");
 const { readFileSync, writeFileSync, readdirSync, statSync, unlinkSync } = require('fs');
 const childProcess = require('child_process');
-const handle = (settingsJSON) => {
+const handle = (settingsJSON, argv) => {
     try {
         childProcess.execSync(`mkdir repositories`);
     }
@@ -50,7 +50,7 @@ const handle = (settingsJSON) => {
             }
         };
     };
-    const contentFolder = './repositories/content';
+    const contentFolder = `${argv.settingsDir}/repositories/content`;
     console.log(`Finding all templates from ${contentFolder} folder`);
     const assetsIterator = iterateDirectory();
     const files = assetsIterator(contentFolder);

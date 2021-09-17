@@ -6,19 +6,21 @@ export const handler = async (argv: Arguments): Promise<void> => settingsHandler
 
 export const command = 'configure';
 export const desc = 'Configure CLIs';
-const handle = (settingsJSON: any) => {
+const handle = (settingsJSON: any, argv: Arguments) => {
   const childProcess = require('child_process');
 
   console.log('Configure dc-cli...');
   childProcess.execSync(
-    `./node_modules/.bin/dc-cli configure --clientId ${settingsJSON.cms.clientId} --clientSecret ${settingsJSON.cms.clientSecret} --hubId ${settingsJSON.cms.hubId}`
+    `npx @amplience/dc-cli configure --clientId ${settingsJSON.cms.clientId} --clientSecret ${settingsJSON.cms.clientSecret} --hubId ${settingsJSON.cms.hubId}`, {
+      cwd: argv.settingsDir
+    }
   );
 
   // Configure DAM CLI if needed
   if (settingsJSON.dam.username) {
     console.log('Configure dam-cli...');
     childProcess.execSync(
-      `./node_modules/.bin/dam-cli configure --username ${settingsJSON.dam.username} --password ${settingsJSON.dam.password}`
+      `npx amp-nova/dam-cli configure --username ${settingsJSON.dam.username} --password ${settingsJSON.dam.password}`
     )
   }
 

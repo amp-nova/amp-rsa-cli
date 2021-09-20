@@ -15,14 +15,14 @@ const handle = (settingsJSON, argv) => {
     serverless.map((item) => {
         console.log(`Deploying serverless service from ./repositories/${item}`);
         childProcess.execSync(`rm -rf .build && sls deploy --aws-profile ${settingsJSON.serverless.customProfileName}`, {
-            cwd: `${argv.settingsDir}/repositories/${item}`
+            cwd: `${argv.automationDir}/repositories/${item}`
         });
         console.log(`Saving serverless service information from ./repositories/${item}`);
         childProcess.execSync(`sls info --aws-profile ${settingsJSON.serverless.customProfileName} > deployment.yaml`, {
-            cwd: `${argv.settingsDir}/repositories/${item}`
+            cwd: `${argv.automationDir}/repositories/${item}`
         });
         childProcess.execSync(`sed -i -e '1,2d' deployment.yaml`, {
-            cwd: `${argv.settingsDir}/repositories/${item}`
+            cwd: `${argv.automationDir}/repositories/${item}`
         });
     });
 };

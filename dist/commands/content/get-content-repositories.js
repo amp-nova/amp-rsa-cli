@@ -8,13 +8,11 @@ exports.handler = handler;
 const childProcess = require('child_process');
 exports.command = 'get-content-repositories';
 exports.desc = "Get Content Repositories map and save to global settings";
-const handle = (settingsJSON) => {
+const handle = (settingsJSON, argv) => {
     console.log(`Listing Content Repositories`);
-    const contentRepositories = childProcess.execSync(`npx @amplience/dc-cli content-repository list --json`, { cwd: `./repositories` }).toString();
+    const contentRepositories = childProcess.execSync(`npx dc-cli content-repository list --json`, { cwd: `${argv.automationDir}/repositories` }).toString();
     const contentRepositoriesJSON = JSON.parse(contentRepositories);
     let contentRepositoriesMap = {};
-    contentRepositoriesJSON.map((item) => {
-        contentRepositoriesMap[item.name] = item.id;
-    });
+    contentRepositoriesJSON.map((item) => { contentRepositoriesMap[item.name] = item.id; });
     settingsJSON.cms.repositories = contentRepositoriesMap;
 };

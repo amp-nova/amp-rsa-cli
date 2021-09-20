@@ -8,13 +8,12 @@ const child_process_1 = __importDefault(require("child_process"));
 exports.command = 'install';
 exports.desc = "Install AWS serverless services";
 const handler = async (argv) => {
-    const serverless = [
-        "willow-demo-services"
-    ];
+    const serverless = ["willow-demo-services"];
     try {
         serverless.map((item) => {
-            console.log(`Installing serverless service from ./repositories/${item}`);
-            child_process_1.default.execSync(`npm install`, { cwd: `./repositories/${item}` });
+            let cwd = `${argv.automationDir}/repositories/${item}`;
+            console.log(`Installing serverless service from ${cwd}`);
+            child_process_1.default.execSync(`npm install`, { cwd });
         });
     }
     catch (error) {

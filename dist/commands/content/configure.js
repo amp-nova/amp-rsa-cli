@@ -2,34 +2,27 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.desc = exports.command = exports.handler = exports.builder = void 0;
 const settings_handler_1 = require("../../common/settings-handler");
-exports.builder = settings_handler_1.settingsBuilder;
+const fs = require('fs-extra');
+exports.builder = settings_handler_1.ampRsaBuilder;
 const handler = async (argv) => settings_handler_1.settingsHandler(argv, exports.desc, exports.command, handle);
 exports.handler = handler;
 exports.command = 'configure';
 exports.desc = "Configure all content assets";
 const handlebars_1 = require("handlebars");
-const { readFileSync, writeFileSync, readdirSync, statSync, unlinkSync } = require('fs');
-const childProcess = require('child_process');
 const handle = (settingsJSON, argv) => {
-    try {
-        childProcess.execSync(`mkdir repositories`);
-    }
-    catch (error) { }
+    fs.mkdirpSync(`${argv.automationDir}/repositories`);
     console.log('Copying content assets to repositories folder');
-    try {
-        childProcess.execSync(`rm -r ./repositories/content`);
-    }
-    catch (error) { }
-    childProcess.execSync(`cp -r ./assets/content ./repositories`);
+    fs.removeSync(`${argv.automationDir}/repositories/content`);
+    fs.copySync(`${argv.automationDir}/assets/content`, `${argv.automationDir}/repositories`);
     const iterateDirectory = () => {
         const files = [];
         const dirs = [];
         return function directoryIterator(directory) {
             try {
-                let dirContent = readdirSync(directory);
+                let dirContent = fs.readdirSync(directory);
                 dirContent.forEach((path) => {
                     const fullPath = `${directory}/${path}`;
-                    if (statSync(fullPath).isFile()) {
+                    if (fs.statSync(fullPath).isFile()) {
                         if (fullPath.endsWith('.hbs')) {
                             files.push(fullPath);
                         }
@@ -50,23 +43,20 @@ const handle = (settingsJSON, argv) => {
             }
         };
     };
-    const contentFolder = `${argv.settingsDir}/repositories/content`;
+    const contentFolder = `${argv.automationDir}/repositories/content`;
     console.log(`Finding all templates from ${contentFolder} folder`);
     const assetsIterator = iterateDirectory();
     const files = assetsIterator(contentFolder);
     files.map((item) => {
-        const templateString = readFileSync(item).toString();
+        const templateString = fs.readFileSync(item).toString();
         const template = handlebars_1.compile(templateString);
         const contentJSON = template(settingsJSON);
         const file = item.replace('.hbs', '');
-        writeFileSync(file, contentJSON);
+        fs.writeFileSync(file, contentJSON);
         console.log(`Created json from template: ${file}`);
-        unlinkSync(item);
+        fs.unlinkSync(item);
     });
-    try {
-        childProcess.execSync(`mkdir ../config`);
-    }
-    catch (error) { }
-    childProcess.execSync(`cp -r ./repositories/content/content-type-schemas ../config`);
-    childProcess.execSync(`cp -r ./repositories/content/content-types ../config`);
+    fs.mkdirpSync(`${argv.ampRsaDir}/config`);
+    fs.copySync(`${argv.automationDir}/repositories/content/content-type-schemas`, `${argv.ampRsaDir}/config`);
+    fs.copySync(`${argv.automationDir}/repositories/content/content-types`, `${argv.ampRsaDir}/config`);
 };

@@ -8,12 +8,13 @@ exports.handler = handler;
 const childProcess = require('child_process');
 exports.command = 'remove';
 exports.desc = "Remove AWS serverless services";
-const handle = (settingsJSON) => {
+const handle = (settingsJSON, argv) => {
     const serverless = [
         "willow-demo-services"
     ];
     serverless.map((item) => {
-        console.log(`Removing serverless service from ./repositories/${item}`);
-        childProcess.execSync(`sls remove --aws-profile ${settingsJSON.serverless.customProfileName}`, { cwd: `./repositories/${item}` });
+        let cwd = `${argv.automationDir}/repositories/${item}`;
+        console.log(`Removing serverless service from ${cwd}`);
+        childProcess.execSync(`sls remove --aws-profile ${settingsJSON.serverless.customProfileName}`, { cwd });
     });
 };

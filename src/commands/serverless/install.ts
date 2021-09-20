@@ -1,8 +1,10 @@
 import { Arguments } from 'yargs';
 import childProcess from 'child_process';
+import { settingsBuilder } from '../../common/settings-handler';
 
 export const command = 'install';
 export const desc = "Install AWS serverless services";
+export const builder = settingsBuilder
 
 export const handler = async (
   argv: Arguments

@@ -12,7 +12,6 @@ export const settingsBuilder = (yargs: Argv): Argv =>
                 default: '.'
             }
         })
-        .demandOption(['automationDir'], 'must provide path to amp-rsa installation')
         .help();
 
 export const ampRsaBuilder = (yargs: Argv): Argv =>

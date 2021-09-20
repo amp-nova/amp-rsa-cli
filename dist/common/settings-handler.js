@@ -11,7 +11,6 @@ const settingsBuilder = (yargs) => yargs
         default: '.'
     }
 })
-    .demandOption(['automationDir'], 'must provide path to amp-rsa installation')
     .help();
 exports.settingsBuilder = settingsBuilder;
 const ampRsaBuilder = (yargs) => exports.settingsBuilder(yargs)

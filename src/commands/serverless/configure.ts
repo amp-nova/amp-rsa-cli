@@ -14,14 +14,14 @@ const handle = (settingsJSON: any, argv: Arguments) => {
   // Configure all services
   serverless.map((item: string) => {
     // Getting and compiling serverless config template
-    const configTemplate = fs.readFileSync(`${argv.settingsDir}/assets/serverless/${item}/serverless.yml.hbs`).toString();
+    const configTemplate = fs.readFileSync(`${argv.automationDir}/assets/serverless/${item}/serverless.yml.hbs`).toString();
     const configTemplateCompiled = handlebarsCompile(configTemplate);
 
     // Applying settings to template
     const serverlessConfigYAML = configTemplateCompiled(settingsJSON);
 
     // Write serverless config to file
-    let dir = `${argv.settingsDir}/repositories/${item}`
+    let dir = `${argv.automationDir}/repositories/${item}`
     fs.mkdirpSync(dir)
     fs.writeFileSync(`${dir}/serverless.yml`, serverlessConfigYAML);
     console.log(`Wrote serverless config to file ${dir}/serverless.yml`)

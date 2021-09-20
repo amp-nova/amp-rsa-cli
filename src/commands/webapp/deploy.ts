@@ -18,13 +18,13 @@ const handle = (settingsJSON: any, argv: Arguments) => {
 
   // Deploying Web Application to Vercel
   console.log(`Deploying Web Application to Vercel`);
-  childProcess.execSync(`vercel --prod --confirm --name ${webapp} --scope ${scope} &> ./automation/repositories/deployment.out`, {
+  childProcess.execSync(`vercel --prod --confirm --name ${webapp} --scope ${scope} &> ${argv.automationDir}/repositories/deployment.out`, {
     cwd: `..`,
     stdio: [process.stdin, process.stdout, process.stdin]
   });
 
   // Read deployment information
-  const deploymentOutput = readFileSync(`${argv.settingsDir}/repositories/deployment.out`).toString();
+  const deploymentOutput = readFileSync(`${argv.automationDir}/repositories/deployment.out`).toString();
 
   // Adding Vercel production URL to settings
   const regex = /Production: (.*?) /;

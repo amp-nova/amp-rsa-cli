@@ -11,7 +11,7 @@ export const desc = "Get Content Repositories map and save to global settings";
 const handle = (settingsJSON: any, argv: Arguments) => {
     // Exporting Workflow States
     console.log(`Listing Content Repositories`);
-    const contentRepositories = childProcess.execSync(`npx dc-cli content-repository list --json`, { cwd: `${argv.settingsDir}/repositories` }).toString();
+    const contentRepositories = childProcess.execSync(`npx dc-cli content-repository list --json`, { cwd: `${argv.automationDir}/repositories` }).toString();
 
     // Get Content Repositories from output
     const contentRepositoriesJSON = JSON.parse(contentRepositories);

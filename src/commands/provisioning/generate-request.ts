@@ -11,16 +11,16 @@ export const handler = async (
   argv: Arguments
 ): Promise<void> => {
   try {
-    let provisioningYAML = fs.readFileSync(`${argv.settingsDir}/provisioning.yaml`).toString();
+    let provisioningYAML = fs.readFileSync(`${argv.automationDir}/provisioning.yaml`).toString();
     const provisioningJSON = yaml.load(provisioningYAML)
 
-    const templateString = fs.readFileSync(`${argv.settingsDir}/assets/provisioning/request.yaml.hbs`).toString();
+    const templateString = fs.readFileSync(`${argv.automationDir}/assets/provisioning/request.yaml.hbs`).toString();
     const template = handlebarsCompile(templateString);
     const contentJSON = template(provisioningJSON);
 
     // Create repositories folder
-    fs.mkdirpSync(`${argv.settingsDir}/repositories/provisioning`)
-    fs.writeFileSync(`${argv.settingsDir}/repositories/provisioning/request.yaml`, contentJSON);
+    fs.mkdirpSync(`${argv.automationDir}/repositories/provisioning`)
+    fs.writeFileSync(`${argv.automationDir}/repositories/provisioning/request.yaml`, contentJSON);
   } catch(error) {
     console.log(error.message);
   }

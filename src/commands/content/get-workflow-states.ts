@@ -13,7 +13,7 @@ const handle = (settingsJSON: any, argv: Arguments) => {
     // Listing Workflow States
     console.log(`Listing Workflow States`);
 
-    const workflowStatesList = childProcess.execSync(`npx dc-cli workflow-states list --json`, { cwd: `${argv.settingsDir}/repositories` }).toString();
+    const workflowStatesList = childProcess.execSync(`npx dc-cli workflow-states list --json`, { cwd: `${argv.automationDir}/repositories` }).toString();
 
     // Get Workflow States from output
     const workflowStateJson = JSON.parse(workflowStatesList);

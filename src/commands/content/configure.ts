@@ -12,12 +12,12 @@ import { compile as handlebarsCompile } from 'handlebars';
 
 const handle = (settingsJSON: any, argv: Arguments) => {
   // Create repositories folder
-  fs.mkdirpSync(`${argv.settingsDir}/repositories`)
+  fs.mkdirpSync(`${argv.automationDir}/repositories`)
 
   // Copy ./assets/content folder in repositories
   console.log('Copying content assets to repositories folder');
-  fs.removeSync(`${argv.settingsDir}/repositories/content`)
-  fs.copySync(`${argv.settingsDir}/assets/content`, `${argv.settingsDir}/repositories`)
+  fs.removeSync(`${argv.automationDir}/repositories/content`)
+  fs.copySync(`${argv.automationDir}/assets/content`, `${argv.automationDir}/repositories`)
 
   // Scan all handlebars files in ./repositories/assets/content
   const iterateDirectory = () => {
@@ -55,7 +55,7 @@ const handle = (settingsJSON: any, argv: Arguments) => {
   };
 
   // Finding all templates in content folder
-  const contentFolder = `${argv.settingsDir}/repositories/content`;
+  const contentFolder = `${argv.automationDir}/repositories/content`;
   console.log(`Finding all templates from ${contentFolder} folder`);
   const assetsIterator = iterateDirectory();
   const files = assetsIterator(contentFolder);
@@ -77,6 +77,6 @@ const handle = (settingsJSON: any, argv: Arguments) => {
 
   // Create config folder if needed
   fs.mkdirpSync(`${argv.ampRsaDir}/config`)
-  fs.copySync(`${argv.settingsDir}/repositories/content/content-type-schemas`, `${argv.ampRsaDir}/config`)
-  fs.copySync(`${argv.settingsDir}/repositories/content/content-types`, `${argv.ampRsaDir}/config`)
+  fs.copySync(`${argv.automationDir}/repositories/content/content-type-schemas`, `${argv.ampRsaDir}/config`)
+  fs.copySync(`${argv.automationDir}/repositories/content/content-types`, `${argv.ampRsaDir}/config`)
 }

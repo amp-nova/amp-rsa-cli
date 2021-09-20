@@ -13,7 +13,7 @@ const handle = (settingsJSON: any, argv: Arguments) => {
     "willow-demo-services"
   ];
   serverless.map((item: string) => {
-    let cwd = `${argv.settingsDir}/repositories/${item}`
+    let cwd = `${argv.automationDir}/repositories/${item}`
     console.log(`Removing serverless service from ${cwd}`);
     childProcess.execSync(`sls remove --aws-profile ${settingsJSON.serverless.customProfileName}`, { cwd });
   });

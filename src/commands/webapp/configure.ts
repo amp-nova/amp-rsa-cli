@@ -10,12 +10,12 @@ export const command = 'configure';
 export const desc = "Configure webapp config files";
 const handle = (settingsJSON: any, argv: Arguments) => {
   // Create repositories folder
-  fs.mkdirpSync(`${argv.settingsDir}/repositories/webapp/config`)
+  fs.mkdirpSync(`${argv.automationDir}/repositories/webapp/config`)
 
   // Copy ./assets/content folder in repositories
   console.log('Copying webapp config files to repositories folder');
-  fs.removeSync(`${argv.settingsDir}/repositories/webapp`)
-  fs.copySync(`${argv.settingsDir}/assets/webapp`, `${argv.settingsDir}/repositories`)
+  fs.removeSync(`${argv.automationDir}/repositories/webapp`)
+  fs.copySync(`${argv.automationDir}/assets/webapp`, `${argv.automationDir}/repositories`)
 
   // Scan all handlebars files in ./repositories/assets/webapp
   const iterateDirectory = () => {
@@ -53,7 +53,7 @@ const handle = (settingsJSON: any, argv: Arguments) => {
   };
 
   // Finding all templates in folder
-  const folder = `${argv.settingsDir}/repositories/webapp`;
+  const folder = `${argv.automationDir}/repositories/webapp`;
   console.log(`Finding all templates from ${folder} folder`);
   const assetsIterator = iterateDirectory();
   const files = assetsIterator(folder);
@@ -76,5 +76,5 @@ const handle = (settingsJSON: any, argv: Arguments) => {
   // Copy config files to webapp
   console.log('Copying JSON config files to webapp')
   fs.mkdirpSync(`${argv.ampRsaDir}/config`)
-  fs.copySync(`${argv.settingsDir}/repositories/webapp/config/*.json`, `${argv.ampRsaDir}/config`)
+  fs.copySync(`${argv.automationDir}/repositories/webapp/config/*.json`, `${argv.ampRsaDir}/config`)
 }

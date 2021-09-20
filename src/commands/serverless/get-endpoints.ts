@@ -19,7 +19,7 @@ const handle = (settingsJSON: any, argv: Arguments) => {
 
   // Cycle through the different services
   serverless.map((item: string) => {
-    let cwd = `${argv.settingsDir}/repositories/${item}`
+    let cwd = `${argv.automationDir}/repositories/${item}`
     console.log(`Saving serverless service information from ./repositories/${item}`);
     childProcess.execSync(`sls info --aws-profile ${settingsJSON.serverless.customProfileName} > deployment.yaml`, { cwd });
 

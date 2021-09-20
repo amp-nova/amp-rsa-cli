@@ -12,15 +12,15 @@ export const command = 'generate-sfmc-request';
 export const desc = "Generate SalesForce Marketing Cloud Integration Request";
 const handle = (settingsJSON: any, argv: Arguments) => {
   // Reading specific settings
-  let intSettingsYAML = fs.readFileSync(`${argv.settingsDir}/integration.yaml`).toString();
+  let intSettingsYAML = fs.readFileSync(`${argv.automationDir}/integration.yaml`).toString();
   const intSettingsJSON = yaml.load(intSettingsYAML)
 
-  const templateString = fs.readFileSync(`${argv.settingsDir}/assets/integration/sfmc.json.hbs`).toString();
+  const templateString = fs.readFileSync(`${argv.automationDir}/assets/integration/sfmc.json.hbs`).toString();
   const template = handlebarsCompile(templateString);
   const contentJSON = template({ ...settingsJSON, ...intSettingsJSON });
 
   // Create repositories folder
-  fs.mkdirpSync(`${argv.settingsDir}/repositories/integration`)
-  fs.writeFileSync(`${argv.settingsDir}/repositories/integration/sfmc.json`, contentJSON);
+  fs.mkdirpSync(`${argv.automationDir}/repositories/integration`)
+  fs.writeFileSync(`${argv.automationDir}/repositories/integration/sfmc.json`, contentJSON);
   console.log('Integration request saved to repositories/integration folder');
 }

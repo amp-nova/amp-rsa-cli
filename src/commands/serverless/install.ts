@@ -10,7 +10,7 @@ export const handler = async (
   const serverless = ["willow-demo-services"];
   try {
     serverless.map((item: string) => {
-      let cwd = `${argv.settingsDir}/repositories/${item}`
+      let cwd = `${argv.automationDir}/repositories/${item}`
       console.log(`Installing serverless service from ${cwd}`);
       childProcess.execSync(`npm install`, { cwd });
     });

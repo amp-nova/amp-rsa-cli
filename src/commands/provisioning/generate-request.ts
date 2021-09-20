@@ -1,11 +1,13 @@
 import { Arguments } from 'yargs';
 import { compile as handlebarsCompile } from 'handlebars';
+import { settingsBuilder } from '../../common/settings-handler';
 
 const fs = require('fs-extra')
 const yaml = require('js-yaml');
 
 export const command = 'generate-request';
 export const desc = "Generate Provisioning Request";
+export const builder = settingsBuilder
 
 export const handler = async (
   argv: Arguments

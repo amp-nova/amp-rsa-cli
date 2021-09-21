@@ -1,12 +1,20 @@
-import { Arguments } from 'yargs';
+import { Arguments, Argv } from 'yargs';
 import { readFileSync, writeFileSync } from 'fs';
 import childProcess from 'child_process';
 
 const yaml = require('js-yaml');
 const lodash = require('lodash');
 
-export const command = 'get-content-item-by-key';
+export const command = 'get-content-item-by-key <key>';
 export const desc = "Get Content Item by key and save ID to global settings";
+
+export const builder = (yargs: Argv): void => {
+  yargs
+  .positional('key', {
+    describe: 'delivery key of the content item to get',
+    type: 'string'
+  })
+};
 
 export const handler = async (
   argv: Arguments
@@ -25,20 +33,18 @@ export const handler = async (
     console.log('Global settings loaded');
 
     // Exporting Workflow States
-    console.log(`Listing Content Items`);
-    const contentItems = childProcess.execSync(
-      `dc-cli content-item list --json`
+    console.log(`Getting content item with key ${argv.key}`);
+    const contentItem = childProcess.execSync(
+      `dc-cli content-item get-by-key ${argv.key} --json`
     ).toString();
 
     // Get Content Repositories from output
-    const contentItemsJSON = JSON.parse(contentItems);
+    const contentItemsJSON = JSON.parse(contentItem);
 
     // Build Content Repositories map for settings
     let contentItemsMap: any = {};
-    contentItemsJSON.map((item: any) => {
-      const itemName = lodash.camelCase(item.label);
-      contentItemsMap[itemName] = item.id;
-    });
+    const itemName = lodash.camelCase(contentItemsJSON.label);
+    contentItemsMap[itemName] = contentItemsJSON.id;
 
     // Add Workflow States map to settings
     settingsJSON.cms.contentItemsMap = contentItemsMap;

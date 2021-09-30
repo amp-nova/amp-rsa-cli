@@ -1,5 +1,5 @@
 {
-  "name": "demo-cli",
+  "name": "@amp-nova/demo-cli",
   "version": "0.0.3",
   "description": "Willo Demo Automation",
   "main": "./dist/index.js",
@@ -11,7 +11,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node ./src/index.ts configure --ampRsaDir 'foo'",
     "clean": "rimraf dist packages",
-    "build": "npm run clean && tsc"
+    "build": "npm run clean && tsc",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",

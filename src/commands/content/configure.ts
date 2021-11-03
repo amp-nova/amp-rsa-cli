@@ -17,7 +17,7 @@ const handle = (settingsJSON: any, argv: Arguments) => {
   // Copy ./assets/content folder in repositories
   console.log('Copying content assets to repositories folder');
   fs.removeSync(`${argv.automationDir}/repositories/content`)
-  fs.copySync(`${argv.automationDir}/assets/content`, `${argv.automationDir}/repositories`)
+  fs.copySync(`${argv.automationDir}/assets/content`, `${argv.automationDir}/repositories/content`)
 
   // Scan all handlebars files in ./repositories/assets/content
   const iterateDirectory = () => {

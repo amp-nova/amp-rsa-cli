@@ -77,6 +77,6 @@ const handle = (settingsJSON: any, argv: Arguments) => {
 
   // Create config folder if needed
   fs.mkdirpSync(`${argv.ampRsaDir}/config`)
-  fs.copySync(`${argv.automationDir}/repositories/content/content-type-schemas`, `${argv.ampRsaDir}/config`)
-  fs.copySync(`${argv.automationDir}/repositories/content/content-types`, `${argv.ampRsaDir}/config`)
+  fs.copySync(`${argv.automationDir}/repositories/content/content-type-schemas`, `${argv.ampRsaDir}/config/content-type-schemas`)
+  fs.copySync(`${argv.automationDir}/repositories/content/content-types`, `${argv.ampRsaDir}/config/content-types`)
 }

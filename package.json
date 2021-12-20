@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "@types/async": "^3.2.10",
+    "@types/fs-extra": "^9.0.13",
     "@types/lodash": "^4.14.176",
     "@types/nanoid-dictionary": "^4.2.0",
     "@types/node": "^14.14.22",

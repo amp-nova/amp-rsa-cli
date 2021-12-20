@@ -29,9 +29,9 @@
   "author": "Amplience Innovation Team",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rezakalfane/willow-demo-automation/issues"
+    "url": "https://github.com/amp-nova/amp-rsa-cli/issues"
   },
-  "homepage": "https://github.com/rezakalfane/willow-demo-automation#readme",
+  "homepage": "https://github.com/amp-nova/amp-rsa-cli#readme",
   "dependencies": {
     "@rauschma/stringio": "^1.4.0",
     "async": "^3.2.2",

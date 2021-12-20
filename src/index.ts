@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
-import cli from './cli';
+import fs from 'fs-extra'
+import { nanoid } from 'nanoid'
+global.tempDir = `/tmp/amprsa/amprsa-${nanoid()}`
+fs.mkdirSync(global.tempDir)
 
+import cli from './cli';
 cli();

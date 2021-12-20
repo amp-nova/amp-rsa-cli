@@ -5,3 +5,4 @@ repositories
 node_modules
 /packages
 dist
+*.log

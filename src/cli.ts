@@ -7,9 +7,11 @@ import { DynamicContent, Hub } from 'dc-management-sdk-js';
 import amplienceHelper from './common/amplience-helper';
 
 import logger from './common/logger';
-import fs from 'fs-extra'
 import { prompts } from './common/prompts';
 import { DAMService } from './common/dam/dam-service';
+import fs from 'fs-extra'
+import { nanoid } from 'nanoid'
+import _ from 'lodash';
 
 const punycode = require('punycode')
 
@@ -52,29 +54,35 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
         .middleware([async (argv) => {
           logger.info(`run [ ${chalk.green(argv._)} ]`)
 
-          // get DC & DAM configuration
-          let { dc } = currentEnvironment()
+          // don't run this middleware for 'env' commands
+          if (!_.includes(argv._, 'env')) {
+            global.tempDir = `/tmp/amprsa/amprsa-${nanoid()}`
+            fs.mkdirpSync(global.tempDir as string)
 
-          // log in to DC
-          let client = new DynamicContent({
-            client_id: dc.clientId,
-            client_secret: dc.clientSecret
-          })
+            // get DC & DAM configuration
+            let { dc } = currentEnvironment()
 
-          let hub: Hub = await client.hubs.get(dc.hubId)
-          if (!hub) {
-            throw new Error(`hubId not found: ${dc.hubId}`)
+            // log in to DC
+            let client = new DynamicContent({
+              client_id: dc.clientId,
+              client_secret: dc.clientSecret
+            })
+
+            let hub: Hub = await client.hubs.get(dc.hubId)
+            if (!hub) {
+              throw new Error(`hubId not found: ${dc.hubId}`)
+            }
+
+            let damService = new DAMService()
+            await damService.init(currentEnvironment().dam)
+            argv.damService = damService
+
+            await amplienceHelper.login(dc)
+            argv.client = client
+            argv.hub = hub
+            argv.cdn = await amplienceHelper.cdn(hub)
+            argv.startTime = new Date()
           }
-
-          let damService = new DAMService()
-          await damService.init(currentEnvironment().dam)
-          argv.damService = damService
-          
-          await amplienceHelper.login(dc)
-          argv.client = client
-          argv.hub = hub
-          argv.cdn = await amplienceHelper.cdn(hub)
-          argv.startTime = new Date()
         }])
         .fail(failFn).argv;
       resolve(argv);

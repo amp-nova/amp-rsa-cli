@@ -60,7 +60,7 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
             fs.mkdirpSync(global.tempDir as string)
 
             // get DC & DAM configuration
-            let { dc } = currentEnvironment()
+            let { dc, dam } = currentEnvironment()
 
             // log in to DC
             let client = new DynamicContent({
@@ -74,7 +74,7 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
             }
 
             let damService = new DAMService()
-            await damService.init(currentEnvironment().dam)
+            await damService.init(dam)
             argv.damService = damService
 
             await amplienceHelper.login(dc)

@@ -73,9 +73,9 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
               throw new Error(`hubId not found: ${dc.hubId}`)
             }
 
-            let damService = new DAMService()
-            await damService.init(currentEnvironment().dam)
-            argv.damService = damService
+            // let damService = new DAMService()
+            // await damService.init(currentEnvironment().dam)
+            // argv.damService = damService
 
             await amplienceHelper.login(dc)
             argv.client = client

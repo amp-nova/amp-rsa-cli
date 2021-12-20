@@ -6,16 +6,40 @@ import chalk from "chalk";
 import async from 'async'
 import logger from '../common/logger';
 import { ResourceHandler } from '../common/handlers/resource-handler';
+import { Argv } from 'yargs';
 
 const { Confirm, MultiSelect } = require('enquirer');
 
 export const command = 'cleanup';
 export const desc = "Clean up hub";
 
-export const builder = settingsBuilder
+export const builder = (yargs: Argv): Argv =>
+    yargs
+        .options({
+            include: {
+                alias: 'i',
+                describe: 'types to include'
+            },
+            skipConfirmation: {
+                alias: 'c',
+                describe: 'skip confirmation prompt',
+                type: 'boolean'
+            },
+            all: {
+                alias: 'a',
+                describe: 'clean up all resource types',
+                type: 'boolean'
+            },
+        })
+        .array('include')
+        .help();
+
 export const handler = async (argv: Context): Promise<void> => {
     let choices: Cleanable[] = []
-    if (argv.include) {
+    if (argv.all) {
+        choices = Cleanables
+    }
+    else if (argv.include) {
         choices = _.compact(_.map(argv.include, inc => _.find(Cleanables, handler => handler.resourceTypeDescription === inc)))
     }
     else {

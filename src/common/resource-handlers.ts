@@ -8,6 +8,7 @@ import { ContentTypeImportHandler, ContentTypeCleanupHandler } from './handlers/
 import { ContentTypeSchemaImportHandler, ContentTypeSchemaCleanupHandler } from './handlers/content-type-schema-handler';
 import { SettingsImportHandler } from './handlers/settings-handler';
 import _ from 'lodash';
+import { WebhookCleanupHandler } from './handlers/webhook-handler';
 
 export const Handlers: ResourceHandler[] = [
     new EventCleanupHandler(),
@@ -21,7 +22,8 @@ export const Handlers: ResourceHandler[] = [
     new ContentTypeImportHandler(),
     new ContentTypeSchemaCleanupHandler(),
     new ContentTypeSchemaImportHandler(),
-    new SettingsImportHandler()
+    new SettingsImportHandler(),
+    new WebhookCleanupHandler
 ]
 
 export const Cleanables: Cleanable[] = _.filter(Handlers, h => 'cleanup' in h) as Cleanable[]

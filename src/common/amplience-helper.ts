@@ -1,6 +1,6 @@
 import axios from "axios"
 import fetch from 'isomorphic-unfetch'
-import { ContentRepository, Hub } from "dc-management-sdk-js"
+import { ContentRepository, Folder, Hub } from "dc-management-sdk-js"
 import { CDN } from "./interfaces"
 import logger from "./logger"
 
@@ -39,6 +39,10 @@ const createAndPublishContentItem = async (item: any, repo: ContentRepository) =
 
 const publishContentItem = async (item: any) => {
     return await axios.post(`${dcUrl}/content-items/${item.id}/publish`, {}, dcHeaders)
+}
+
+export const deleteFolder = async (folder: Folder) => {
+    return await axios.delete(`${dcUrl}/folders/${folder.id}`, dcHeaders)
 }
 
 const cdn = (hub: Hub): CDN => {

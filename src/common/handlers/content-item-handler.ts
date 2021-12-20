@@ -1,5 +1,5 @@
 import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
-import { ContentItem, ContentRepository } from "dc-management-sdk-js"
+import { ContentItem, ContentRepository, Folder } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
 import logger from "../logger"
@@ -8,6 +8,7 @@ import { prompts } from "../prompts"
 import { execWithOutput } from "../exec-helper"
 import { HubSettingsOptions } from "../settings-handler"
 import fs from 'fs-extra'
+import { deleteFolder } from '../amplience-helper'
 
 export class ContentItemImportHandler extends ImportableResourceHandler {
     constructor(sourceDir?: string) {
@@ -52,6 +53,17 @@ export class ContentItemCleanupHandler extends CleanableResourceHandler {
                 }
                 await contentItem.related.archive()
             }))
+
+            const cleanupFolder = (async (folder: Folder) => {
+                let subfolders = await paginator(folder.related.folders.list)
+                await Promise.all(subfolders.map(cleanupFolder))
+                logger.info(`${prompts.delete} folder ${folder.name}`)
+                return await deleteFolder(folder)
+            })
+
+            // also clean up folders
+            let folders = await paginator(repository.related.folders.list)
+            await Promise.all(folders.map(cleanupFolder))
         }))
     }
 }

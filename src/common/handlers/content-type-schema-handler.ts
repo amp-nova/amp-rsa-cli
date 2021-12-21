@@ -11,7 +11,6 @@ import { resolveSchemaBody } from "../schema-helper"
 import { HubSettingsOptions } from "../settings-handler"
 import fs from 'fs-extra'
 import { logUpdate, logComplete } from '../logger'
-import { SingleBar } from 'cli-progress'
 import { prompts } from '../prompts'
 
 export class ContentTypeSchemaImportHandler extends ImportableResourceHandler {

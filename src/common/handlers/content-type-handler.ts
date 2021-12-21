@@ -156,10 +156,11 @@ export class ContentTypeImportHandler extends ImportableResourceHandler {
                 }
             }
             else {
-                stored = await hub.related.contentTypes.register(contentType)
+                stored = await hub.related.contentTypes.register(contentType) as ContentTypeWithRepositoryAssignments
+                stored.repositories = contentType.repositories
                 createCount++
                 logUpdate(`${chalk.green('create')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
-                await synchronizeContentType(contentType, namedRepositories)
+                await synchronizeContentType(stored, namedRepositories)
             }
         }
 

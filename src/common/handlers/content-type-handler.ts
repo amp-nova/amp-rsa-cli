@@ -139,7 +139,7 @@ export class ContentTypeImportHandler extends ImportableResourceHandler {
         let updateCount = 0
         let createCount = 0
         for (const [filename, contentType] of Object.entries(contentTypes)) {
-            let stored = _.find(storedContentTypes, ct => ct.contentTypeUri === contentType.contentTypeUri)
+            let stored = _.find(storedContentTypes, ct => ct.contentTypeUri === contentType.contentTypeUri) as ContentTypeWithRepositoryAssignments
             if (stored) {
                 if (stored.status === 'ARCHIVED') {
                     stored = await stored.related.unarchive()
@@ -148,10 +148,11 @@ export class ContentTypeImportHandler extends ImportableResourceHandler {
                 }
 
                 if (!_.isEqual(stored.settings, contentType.settings)) {
-                    stored = await stored.related.update(contentType)
+                    stored = await stored.related.update(stored)
+                    stored.repositories = contentType.repositories
                     updateCount++
                     logUpdate(`${chalk.green('update')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
-                    await synchronizeContentType(contentType, namedRepositories)
+                    await synchronizeContentType(stored, namedRepositories)
                 }
             }
             else {

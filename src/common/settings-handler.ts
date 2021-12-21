@@ -333,6 +333,7 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
             await updateAutomation(automation, mappingStats, argv)
         }
     } catch (error) {
+        logger.error(error.message);
         logger.error(JSON.stringify(error));
     } finally {
         logRunEnd(argv)

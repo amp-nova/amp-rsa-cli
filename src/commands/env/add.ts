@@ -1,36 +1,36 @@
 import { Arguments } from 'yargs';
-import { settingsBuilder } from '../../common/settings-handler';
 import readline from 'readline-sync'
 import { addEnvironment, getEnvironments } from '../../common/environment-manager';
 import _ from 'lodash';
 import chalk from 'chalk';
+import { builder as commonBuilder } from './common';
 
-export const command = 'add';
+const { Input, Password } = require('enquirer');
+
+export const command = 'add [env]';
 export const desc = "Add an ARIA environment";
-export const builder = settingsBuilder
+export const builder = commonBuilder
 
-export const handler = async (
-  argv: Arguments
-): Promise<void> => {
-  try {
+export const handler = async (argv: Arguments): Promise<void> => {
+  try {    
     // get loaded environments
     let environments = getEnvironments()
-    let envName = readline.question('environment name: ')
+    let name = await (new Input({ message: 'env name:', initial: argv.env }).run())
 
-    if (_.find(environments, env => envName === env.envName)) {
-      throw new Error(`environment already exists: ${envName}`)
+    if (_.find(environments, env => name === env.name)) {
+      throw new Error(`environment already exists: ${name}`)
     }
 
-    let cmsClientId = readline.question('cms client id: ')
-    let cmsClientSecret = readline.question('cms client secret: ', { hideEchoBack: true })
-    let cmsHubId = readline.question('cms hub id: ')
-    let damUsername = readline.question('dam username: ')
-    let damPassword = readline.question('dam password: ', { hideEchoBack: true })
-    let appUrl = readline.question('application deployment url: ')
+    let cmsClientId = await (new Input({ message: `${chalk.cyanBright('cms')} client id:` }).run())
+    let cmsClientSecret = await (new Password({ message: `${chalk.cyanBright('cms')} client secret:` }).run())
+    let cmsHubId = await (new Input({ message: `${chalk.cyanBright('cms')} hub id:` }).run())
+    let damUsername = await (new Input({ message: `${chalk.cyanBright('dam')} client id:` }).run())
+    let damPassword = await (new Input({ message: `${chalk.cyanBright('dam')} client id:` }).run())
+    let url = await (new Input({ message: `${chalk.cyanBright('app')} deployment url:` }).run())
 
     addEnvironment({
-      envName,
-      appUrl,
+      name,
+      url,
       dc: {
         clientId: cmsClientId,
         clientSecret: cmsClientSecret,

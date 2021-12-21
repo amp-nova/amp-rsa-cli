@@ -26,7 +26,7 @@ export class ContentItemImportHandler extends ImportableResourceHandler {
         }
 
         logger.info(`${prompts.import} content items...`)
-        await execWithOutput(`npx @amp-nova/dc-cli content-item import ${this.sourceDir} -f --mapFile ${global.tempDir}/mapping.json --republish`)
+        await execWithOutput(`npx @amp-nova/dc-cli content-item import ${this.sourceDir} -f --mapFile ${global.tempDir}/mapping.json --republish --publish`)
     }
 }
 

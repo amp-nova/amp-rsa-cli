@@ -6,6 +6,8 @@ import { currentEnvironment } from './common/environment-manager';
 import { DynamicContent, Hub } from 'dc-management-sdk-js';
 import amplienceHelper from './common/amplience-helper';
 
+import connectionMiddleware from './common/connection-middleware'
+
 import logger from './common/logger';
 import { prompts } from './common/prompts';
 import { DAMService } from './common/dam/dam-service';
@@ -55,29 +57,7 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
           // don't run this middleware for 'env' commands
           if (!_.includes(argv._, 'env')) {
             logger.info(`temp dir: ${global.tempDir}`)
-
-            // get DC & DAM configuration
-            let { dc, dam } = currentEnvironment()
-
-            // log in to DC
-            let client = new DynamicContent({
-              client_id: dc.clientId,
-              client_secret: dc.clientSecret
-            })
-
-            let hub: Hub = await client.hubs.get(dc.hubId)
-            if (!hub) {
-              throw new Error(`hubId not found: ${dc.hubId}`)
-            }
-
-            let damService = new DAMService()
-            await damService.init(dam)
-            argv.damService = damService
-
-            await amplienceHelper.login(dc)
-            argv.client = client
-            argv.hub = hub
-            argv.cdn = await amplienceHelper.cdn(hub)
+            await connectionMiddleware(argv)
             argv.startTime = new Date()
           }
         }])

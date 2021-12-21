@@ -113,11 +113,11 @@ const readAutomation = async (argv: Context) => {
     if (!automation) {
         logger.info(`${deliveryKey} not found, creating...`)
         let automationItem = {
-            label: `${env} AMPRSA automation`,
+            label: `${env.name} AMPRSA automation`,
             folderId: null,
             body: {
                 _meta: {
-                    name: `${env} AMPRSA automation`,
+                    name: `${env.name} AMPRSA automation`,
                     schema: `https://amprsa.net/amprsa/automation`,
                     deliveryKey
                 },
@@ -187,15 +187,15 @@ const readEnvConfig = async (argv: Context) => {
     if (!envConfig) {
         logger.info(`${deliveryKey} not found, creating...`)
 
-        const name = env
+        const name = env.name
 
         let config = {
-            label: `${env} AMPRSA config`,
+            label: `${env.name} AMPRSA config`,
             folderId: null,
             body: {
                 ...mapping,
                 _meta: {
-                    name: `${env} AMPRSA config`,
+                    name: `${env.name} AMPRSA config`,
                     schema: `https://amprsa.net/amprsa/config`,
                     deliveryKey
                 },
@@ -240,7 +240,7 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
         logger.info(`${chalk.green(command)}: ${desc} started at ${chalk.magentaBright(argv.startTime)}`)
 
         // get DC & DAM configuration
-        let { env, appUrl } = currentEnvironment()
+        let { env } = currentEnvironment()
         let { hub, damService } = argv
 
         logHeadline(chalk.greenBright(`Phase 1: preparation`))
@@ -277,7 +277,7 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
         let envConfig = await readEnvConfig(argv)
         let mapping: any = {
             ...envConfig,
-            app: { url: appUrl },
+            app: { url: env.url },
             dam: {
                 imagesMap: await readDAMMapping(argv)
             }

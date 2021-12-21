@@ -2,7 +2,7 @@ import { join, dirname } from 'path';
 import { readJsonSync, existsSync, mkdirpSync, writeJsonSync } from 'fs-extra';
 import _ from 'lodash';
 import chalk from 'chalk'
-import { env } from 'yargs';
+import { Arguments, Argv, env } from 'yargs';
 import childProcess from 'child_process'
 const { Select } = require('enquirer');
 import logger from '../common/logger'
@@ -11,13 +11,32 @@ const getConfigPath = (platform: string = process.platform): string => join(proc
 const CONFIG_PATH = getConfigPath()
 const ENV_FILE_PATH = `${CONFIG_PATH}/environments.json`
 
-// make sure config directory exists
-mkdirpSync(CONFIG_PATH)
-let envConfig = existsSync(ENV_FILE_PATH) ? readJsonSync(ENV_FILE_PATH) : { envs: [], current: null }
-
 const saveConfig = () => {
     writeJsonSync(ENV_FILE_PATH, envConfig, { encoding: 'utf-8' })
 }
+
+export const updateEnvironments = () => {
+    _.each(envConfig.envs, env => {
+        // envName to name
+        if (env.envName) {
+            env.name = env.envName
+            delete env.envName
+        }
+
+        // appUrl to url
+        if (env.appUrl) {
+            env.url = env.appUrl
+            delete env.appUrl
+        }
+    })
+    delete envConfig.appUrl
+    saveConfig()
+}
+
+// make sure config directory exists
+mkdirpSync(CONFIG_PATH)
+let envConfig = existsSync(ENV_FILE_PATH) ? readJsonSync(ENV_FILE_PATH) : { envs: [], current: null }
+updateEnvironments()
 
 export const addEnvironment = (env: any) => {
     envConfig.envs.push(env)
@@ -25,54 +44,67 @@ export const addEnvironment = (env: any) => {
 }
 
 export const deleteEnvironment = (env: any) => {
-    _.remove(envConfig.envs, (e: any) => e.envName === env.envName)
+    _.remove(envConfig.envs, (e: any) => e.name === env.name)
     saveConfig()
 }
 
 export const getEnvironments = () => {
     return _.map(envConfig.envs, env => ({
         ...env,
-        active: envConfig.current === env.envName
+        active: envConfig.current === env.name
     }))
 }
 
-export const chooseEnvironment = async(handler: any) => {
+export const getEnvironment = (name: string) => {
+    return _.find(envConfig.envs, env => name === env.name)
+}
+
+export const selectEnvironment = async (argv: Arguments) => {
+    return argv.env ? getEnvironment(argv.env as string) : await chooseEnvironment()
+}
+
+export const chooseEnvironment = async(handler?: any) => {
     const envs = getEnvironments()
 
     const prompt = new Select({
         name: 'env',
         message: 'choose an environment',
-        choices: _.map(envs, 'envName')
+        choices: _.map(envs, 'name')
     });
 
-    let envName = await prompt.run()
-    let env = _.find(envs, e => e.envName === envName)
-    await handler(env)
+    let name = await prompt.run()
+    let env = _.find(envs, e => e.name === name)
+
+    if (handler) {
+        await handler(env)
+    }
+    else {
+        return env
+    }
 }
 
 export const listEnvironments = () => {
     _.each(getEnvironments(), env => {
-        let str = `  ${env.envName}`
+        let str = `  ${env.name}`
         if (env.active) {
-            str = chalk.greenBright(`* ${env.envName}`)
+            str = chalk.greenBright(`* ${env.name}`)
         }
         console.log(str)
     })
 }
 
 export const useEnvironment = (env: any) => {
-    logger.info(`[ ${chalk.greenBright(env.envName)} ] configure dc-cli...`);
+    logger.info(`[ ${chalk.greenBright(env.name)} ] configure dc-cli...`);
     childProcess.execSync(`npx @amp-nova/dc-cli configure --clientId ${env.dc.clientId} --clientSecret ${env.dc.clientSecret} --hubId ${env.dc.hubId}`);
 
     // Configure DAM CLI if needed
     if (env.dam.username) {
-        logger.info(`[ ${chalk.greenBright(env.envName)} ] configure dam-cli...`);
+        logger.info(`[ ${chalk.greenBright(env.name)} ] configure dam-cli...`);
         childProcess.execSync(`npx @amp-nova/dam-cli configure --username ${env.dam.username} --password ${env.dam.password}`)
     }
 
-    logger.info(`[ ${chalk.greenBright(env.envName)} ] environment active`);
-    envConfig.current = env.envName
-    envConfig.appUrl = env.appUrl
+    logger.info(`[ ${chalk.greenBright(env.name)} ] environment active`);
+    envConfig.current = env.name
     saveConfig()
 }
 
@@ -81,7 +113,8 @@ export const currentEnvironment = () => {
         throw new Error(`no envs found, use 'amprsa env init'`)
     }
 
+    let env = getEnvironment(envConfig.current)
     let dc = readJsonSync(`${CONFIG_PATH}/dc-cli-config.json`)
     let dam = readJsonSync(`${CONFIG_PATH}/dam-cli-config.json`)
-    return { dc, dam, env: envConfig.current, appUrl: envConfig.appUrl }
+    return { dc, dam, env }
 }

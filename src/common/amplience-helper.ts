@@ -28,7 +28,7 @@ const login = async (dc: DynamicContentCredentials) => {
     accessToken = oauthResponse.data.access_token
     dcHeaders = { headers: { authorization: `bearer ${accessToken}` } }
 
-    logger.info(`${chalk.green('logged in')} to dynamic content at ${chalk.yellow(new Date().valueOf())}`)
+    logger.debug(`${chalk.green('logged in')} to dynamic content at ${chalk.yellow(new Date().valueOf())}`)
     setTimeout(() => { login(dc) }, oauthResponse.data.expires_in * 1000)
 }
 

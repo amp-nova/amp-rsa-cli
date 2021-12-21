@@ -33,9 +33,11 @@
   "dependencies": {
     "@rauschma/stringio": "^1.4.0",
     "@types/cli-progress": "^3.9.2",
+    "@types/cli-table": "^0.3.0",
     "async": "^3.2.2",
     "axios": "^0.24.0",
     "chalk": "^4.1.2",
+    "cli-table": "^0.3.11",
     "dc-management-sdk-js": "^1.14.0",
     "enquirer": "^2.3.6",
     "fs-extra": "^10.0.0",

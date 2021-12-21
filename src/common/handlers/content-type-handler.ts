@@ -148,6 +148,7 @@ export class ContentTypeImportHandler extends ImportableResourceHandler {
                 }
 
                 if (!_.isEqual(stored.settings, contentType.settings)) {
+                    stored.settings = contentType.settings
                     stored = await stored.related.update(stored)
                     stored.repositories = contentType.repositories
                     updateCount++

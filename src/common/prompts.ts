@@ -6,9 +6,14 @@ export const prompts: any = {
     update: chalk.green('update'),
 
     imported: chalk.greenBright('imported'),
+    done: chalk.bold.greenBright('done'),
 
     delete: chalk.red('delete'),
-    unschedule: chalk.red('unschedule'),
+    deleted: chalk.red('deleted'),
+
     archive: chalk.yellowBright('archive'),
+    archived: chalk.yellowBright('archived'),
+
+    unschedule: chalk.red('unschedule'),
     error: chalk.redBright('error'),
 }

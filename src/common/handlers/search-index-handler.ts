@@ -2,12 +2,34 @@ import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./
 import { SearchIndex, Webhook } from "dc-management-sdk-js"
 import { paginator, searchIndexPaginator, replicaPaginator } from "../paginator"
 import _, { keyBy } from 'lodash'
-import logger from "../logger"
+import logger, { logComplete, logUpdate } from "../logger"
 import chalk from 'chalk'
 import { prompts } from "../prompts"
 import fs from 'fs-extra'
 import async from 'async'
 import { HubSettingsOptions } from "../settings-handler"
+
+const retry = (count: number) => async (fn: () => Promise<any>, message: string) => {
+    let retryCount = 0
+    while (retryCount < count) {
+        try {
+            let runMessage = message
+            if (retryCount > 0) {
+                runMessage = runMessage + ` ` + chalk.red(`[ retry ${retryCount} ]`)
+            }
+            logUpdate(runMessage)
+            return await fn()
+        } catch (error) {
+            if (error.response.status === 504) {
+                retryCount++
+            }
+            else {
+                throw error
+            }
+        }
+    }
+}
+const retrier = retry(3)
 
 export class SearchIndexImportHandler extends ImportableResourceHandler {
     constructor() {
@@ -27,18 +49,19 @@ export class SearchIndexImportHandler extends ImportableResourceHandler {
         let publishedIndexes = await paginator(searchIndexPaginator(hub))
         let unpublishedIndexes = _.filter(indexes, idx => !_.includes(_.map(publishedIndexes, 'name'), idx.indexDetails.name))
 
+        let searchIndexCount = 0
+        let replicaCount = 0
+        let webhookCount = 0
+
         await async.each(unpublishedIndexes, async item => {
             // Remove ID and replica count for creation
             delete item.indexDetails.id;
             delete item.indexDetails.replicaCount;
 
-            // Create index
-            logger.info(`create index: ${chalk.cyanBright(item.indexDetails.name)}`);
-            let createdIndex = await hub.related.searchIndexes.create(item.indexDetails)
+            let createdIndex = await retrier(() => hub.related.searchIndexes.create(item.indexDetails), `create index: ${chalk.cyanBright(item.indexDetails.name)}`)
+            searchIndexCount++
 
-            // update the index with its settings
-            logger.info(`apply settings: ${chalk.cyanBright(item.indexDetails.name)}`);
-            await createdIndex.related.settings.update(item.settings)
+            await retrier(() => createdIndex.related.settings.update(item.settings), `apply settings: ${chalk.cyanBright(item.indexDetails.name)}`)
 
             // reload published indexes
             publishedIndexes = await paginator(searchIndexPaginator(hub))
@@ -48,8 +71,8 @@ export class SearchIndexImportHandler extends ImportableResourceHandler {
             const replicasIndexes = _.map(replicasSettings, (item: any) => _.find(publishedIndexes, i => i.name === item.name))
 
             await Promise.all(replicasIndexes.map(async (replicaIndex: SearchIndex, index: number) => {
-                logger.info(`apply replica settings: ${chalk.cyanBright(replicaIndex.name)}`);
-                await replicaIndex.related.settings.update(replicasSettings[index].settings)
+                await retrier(() => replicaIndex.related.settings.update(replicasSettings[index].settings), `apply replica settings: ${chalk.cyanBright(replicaIndex.name)}`)
+                replicaCount++
             }))
 
             const types: any[] = await paginator(createdIndex.related.assignedContentTypes.list)
@@ -66,19 +89,19 @@ export class SearchIndexImportHandler extends ImportableResourceHandler {
                 const archivedContentWebhook: Webhook = _.find(webhooks, hook => hook.id === archivedContentWebhookId)
 
                 if (activeContentWebhook && archivedContentWebhook) {
-                    logger.info(`update webhook: ${chalk.cyanBright(activeContentWebhook.label)}`);
                     activeContentWebhook.customPayload = {
                         type: 'text/x-handlebars-template',
                         value: item.activeContentWebhook
                     }
-                    await activeContentWebhook.related.update(activeContentWebhook)
+                    await retrier(() => activeContentWebhook.related.update(activeContentWebhook), `update webhook: ${chalk.cyanBright(activeContentWebhook.label)}`)
+                    webhookCount++
 
-                    logger.info(`update webhook: ${chalk.cyanBright(archivedContentWebhook.label)}`);
                     activeContentWebhook.customPayload = {
                         type: 'text/x-handlebars-template',
                         value: item.archivedContentWebhook
                     }
-                    await archivedContentWebhook.related.update(archivedContentWebhook)
+                    await retrier(() => archivedContentWebhook.related.update(archivedContentWebhook), `update webhook: ${chalk.cyanBright(archivedContentWebhook.label)}`)
+                    webhookCount++
                 }
             }
         })
@@ -97,6 +120,8 @@ export class SearchIndexImportHandler extends ImportableResourceHandler {
 
         algolia.indexes = _.keyBy(mapping.algolia.indexes, 'key')
         mapping.algolia = algolia
+
+        logComplete(`${chalk.blueBright(`searchIndexes`)}: [ ${chalk.green(searchIndexCount)} created ] [ ${chalk.green(replicaCount)} replicas created ] [ ${chalk.green(webhookCount)} webhooks created ]`)
     }
 }
 
@@ -107,21 +132,23 @@ export class SearchIndexCleanupHandler extends CleanableResourceHandler {
     }
 
     async cleanup(argv: Context): Promise<any> {
-        // let searchIndexes: SearchIndex[] = await searchIndexPaginator(argv.hub.related.searchIndexes.list)
         let searchIndexes: SearchIndex[] = await paginator(searchIndexPaginator(argv.hub))
 
-        logger.info(`${prompts.delete} [ ${searchIndexes.length} ] ${chalk.cyan('search indexes')}...`)
-        await Promise.all(searchIndexes.map(async (searchIndex: SearchIndex) => {
+        let searchIndexCount = 0
+        let replicaCount = 0
+        await async.each(searchIndexes, (async (searchIndex: SearchIndex) => {
             if (searchIndex.replicaCount && searchIndex.replicaCount > 0) {
                 // get the replicas
                 let replicas: SearchIndex[] = await paginator(replicaPaginator(searchIndex))
                 await Promise.all(replicas.map(async (replica: SearchIndex) => {
-                    logger.info(`${prompts.delete} replica index ${chalk.cyan(replica.name)}...`)
-                    await replica.related.delete()
+                    await retrier(() => replica.related.delete(), `${prompts.delete} replica index ${chalk.cyan(replica.name)}...`)
+                    replicaCount++
                 }))
             }
-            logger.info(`${prompts.delete} search index ${chalk.cyan(searchIndex.name)}...`)
-            await searchIndex.related.delete()
+            await retrier(() => searchIndex.related.delete(), `${prompts.delete} search index ${chalk.cyan(searchIndex.name)}...`)
+            searchIndexCount++
         }))
+
+        logComplete(`${chalk.blueBright(`searchIndexes`)}: [ ${chalk.red(searchIndexCount)} deleted ] [ ${chalk.red(replicaCount)} replicas deleted ]`)
     }
 }

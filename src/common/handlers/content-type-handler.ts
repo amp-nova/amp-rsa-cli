@@ -10,6 +10,8 @@ import { loadJsonFromDirectory } from "../importer"
 import { ContentTypeWithRepositoryAssignments } from '../schema-helper'
 import { HubSettingsOptions } from "../settings-handler"
 import fs from 'fs-extra'
+import { logUpdate, logComplete } from '../logger'
+import { prompts } from '../prompts'
 
 type ContentTypeUri = string;
 type ContentTypeFile = string;
@@ -91,14 +93,6 @@ export const synchronizeContentTypeRepositories = async (
     return changedAssignment;
 };
 
-let synchronizeContentType = async (contentType: ContentType, namedRepositories: MappedContentRepositories) => {
-    logger.info(`${chalk.green('sync  ')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
-    await synchronizeContentTypeRepositories(
-        new ContentTypeWithRepositoryAssignments(contentType),
-        namedRepositories
-    )    
-}
-
 export class ContentTypeImportHandler extends ImportableResourceHandler {
     constructor(sourceDir?: string) {
         super(ContentType, 'contentTypes', sourceDir)
@@ -131,26 +125,44 @@ export class ContentTypeImportHandler extends ImportableResourceHandler {
             contentRepositoryList.map(value => [value.name || '', value])
         );
 
+        let synchronizeContentType = async (contentType: ContentType, namedRepositories: MappedContentRepositories) => {
+            synchronizedCount++
+            logUpdate(`${chalk.green('sync  ')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
+            await synchronizeContentTypeRepositories(
+                new ContentTypeWithRepositoryAssignments(contentType),
+                namedRepositories
+            )    
+        }        
+
+        let archiveCount = 0
+        let updateCount = 0
+        let createCount = 0
+        let synchronizedCount = 0
         for (const [filename, contentType] of Object.entries(contentTypes)) {
             let stored = _.find(storedContentTypes, ct => ct.contentTypeUri === contentType.contentTypeUri)
             if (stored) {
                 if (stored.status === 'ARCHIVED') {
                     stored = await stored.related.unarchive()
-                    logger.info(`${chalk.green('unarch')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
+                    archiveCount++
+                    logUpdate(`${chalk.green('unarch')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
                 }
 
                 if (!_.isEqual(stored.settings, contentType.settings)) {
                     stored = await stored.related.update(contentType)
-                    logger.info(`${chalk.green('update')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
+                    updateCount++
+                    logUpdate(`${chalk.green('update')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
                     await synchronizeContentType(contentType, namedRepositories)
                 }
             }
             else {
                 stored = await hub.related.contentTypes.register(contentType)
-                logger.info(`${chalk.green('create')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
+                createCount++
+                logUpdate(`${chalk.green('create')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
                 await synchronizeContentType(contentType, namedRepositories)
             }
         }
+
+        logComplete(`${chalk.blueBright(`contentTypes`)}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ] [ ${chalk.green(synchronizedCount)} synced ]`)
     }
 }
 

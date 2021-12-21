@@ -9,8 +9,6 @@ import amplienceHelper from './common/amplience-helper';
 import logger from './common/logger';
 import { prompts } from './common/prompts';
 import { DAMService } from './common/dam/dam-service';
-import fs from 'fs-extra'
-import { nanoid } from 'nanoid'
 import _ from 'lodash';
 
 const punycode = require('punycode')
@@ -56,8 +54,7 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
 
           // don't run this middleware for 'env' commands
           if (!_.includes(argv._, 'env')) {
-            global.tempDir = `/tmp/amprsa/amprsa-${nanoid()}`
-            fs.mkdirpSync(global.tempDir as string)
+            logger.info(`temp dir: ${global.tempDir}`)
 
             // get DC & DAM configuration
             let { dc, dam } = currentEnvironment()

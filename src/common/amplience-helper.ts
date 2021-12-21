@@ -3,6 +3,7 @@ import fetch from 'isomorphic-unfetch'
 import { ContentRepository, Folder, Hub } from "dc-management-sdk-js"
 import { CDN } from "./interfaces"
 import logger from "./logger"
+import chalk from "chalk"
 
 export class DynamicContentCredentials {
     clientId: string
@@ -27,7 +28,7 @@ const login = async (dc: DynamicContentCredentials) => {
     accessToken = oauthResponse.data.access_token
     dcHeaders = { headers: { authorization: `bearer ${accessToken}` } }
 
-    logger.info(`logged in to dynamic content at ${new Date().valueOf()}`)
+    logger.info(`${chalk.green('logged in')} to dynamic content at ${chalk.yellow(new Date().valueOf())}`)
     setTimeout(() => { login(dc) }, oauthResponse.data.expires_in * 1000)
 }
 

@@ -23,6 +23,8 @@ import { SearchIndexImportHandler } from './handlers/search-index-handler';
 import { SettingsImportHandler } from './handlers/settings-handler';
 import { Stats } from 'fs';
 import { DAMService } from './dam/dam-service';
+import { logRunEnd } from './status-helper';
+import { logHeadline } from './logger';
 
 const { Input } = require('enquirer');
 
@@ -121,7 +123,8 @@ const readAutomation = async (argv: Context) => {
                 workflowStates: []
             }
         }
-        let a = await amplience.createAndPublishContentItem(automationItem, argv.content)
+
+        let a = await amplience.createAndPublishContentItem(automationItem, argv.repositories.content)
         automation = a.body
         automation._meta.deliveryId = a.id
     }
@@ -135,6 +138,7 @@ const readAutomation = async (argv: Context) => {
     return automation
 }
 
+const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
 const updateAutomation = async (automation: any, mappingStats: Stats, argv: Context) => {
     // read the mapping file and update if necessary
     let newMappingStats = fs.statSync(`${global.tempDir}/mapping.json`)
@@ -148,10 +152,11 @@ const updateAutomation = async (automation: any, mappingStats: Stats, argv: Cont
 
         let automationItem = await argv.client.contentItems.get(automation._meta.deliveryId)
         automationItem.body = {
-            ...automation,
+            ...automationItem.body,
             contentItems: _.map(newMapping.contentItems, x => ({ from: x[0], to: x[1] })),
             workflowStates: _.map(newMapping.workflowStates, x => ({ from: x[0], to: x[1] }))
         }
+
         automationItem = await automationItem.related.update(automationItem)
         await amplience.publishContentItem(automationItem)
     }
@@ -179,9 +184,6 @@ const readEnvConfig = async (argv: Context) => {
     let envConfig = contentMap[deliveryKey]?.body
     if (!envConfig) {
         logger.info(`${deliveryKey} not found, creating...`)
-
-        // const name = await new Input({ message: 'name of this configuration', initial: env }).run()
-        // const baseUrl = await new Input({ message: 'application base url', initial: `https://${env}.amprsa.net` }).run()
 
         const name = env
 
@@ -226,7 +228,7 @@ const readEnvConfig = async (argv: Context) => {
         }
 
         // process step 8: npm run automate:webapp:configure
-        envConfig = (await amplience.createAndPublishContentItem(config, argv.content)).body
+        envConfig = (await amplience.createAndPublishContentItem(config, argv.repositories.content)).body
     }
     return envConfig
 }
@@ -239,20 +241,27 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
         let { env, appUrl } = currentEnvironment()
         let { hub, damService } = argv
 
-        logger.info('')
-        logger.info(`Phase 1: preparation`)
-        logger.info('')
+        logHeadline(chalk.greenBright(`Phase 1: preparation`))
 
         let workflowStates: WorkflowState[] = await paginator(hub.related.workflowStates.list)
         let repositories: ContentRepository[] = await paginator(hub.related.contentRepositories.list)
+
         let content = _.find(repositories, repo => repo.name === 'content')
+        let siteComponents = _.find(repositories, repo => repo.name === 'sitestructure')
 
         if (!content) {
             throw new Error(`repository 'content' not found, please make sure it exists`)
         }
 
+        if (!siteComponents) {
+            throw new Error(`repository 'sitestructure' not found, please make sure it exists`)
+        }
+
         // add the content repository to our context
-        argv.content = content
+        argv.repositories = {
+            content,
+            siteComponents
+        }
 
         // caching a map of current content items. this appears to obviate the issue of archived items
         // hanging out on published delivery keys
@@ -284,9 +293,7 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
 
         copyTemplateFilesToTempDir(argv.automationDir as string, mapping)
 
-        logger.info('')
-        logger.info(`Phase 2: import/update`)
-        logger.info('')
+        logHeadline(chalk.greenBright(`Phase 2: import/update`))
 
         // process step 1: npm run automate:settings
         await new SettingsImportHandler().import(argv)
@@ -307,9 +314,7 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
             // recache
             await cacheContentMap(content)
 
-            logger.info('')
-            logger.info(`Phase 3: reentrant update`)
-            logger.info('')
+            logHeadline(chalk.greenBright(`Phase 3: reentrant import`))
 
             // process step 7: npm run automate:schemas
             // now that we've installed the core content, we need to go through again for content types
@@ -320,9 +325,7 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
             copyTemplateFilesToTempDir(argv.automationDir as string, mapping)
             await installContentTypes(argv)
 
-            logger.info('')
-            logger.info(`Phase 4: cleanup`)
-            logger.info('')
+            logHeadline(chalk.greenBright(`Phase 4: cleanup`))
 
             // update the automation content item with any new mapping content generated
             await updateAutomation(automation, mappingStats, argv)
@@ -330,12 +333,7 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
     } catch (error) {
         logger.error(error.message);
     } finally {
-        let duration = new Date().valueOf() - argv.startTime.valueOf()
-        let minutes = Math.floor((duration / 1000) / 60)
-        let seconds = Math.floor((duration / 1000) - (minutes * 60))
-        logger.info(`logs and temp files stored in ${chalk.blueBright(global.tempDir)}`)
-        logger.info(`run completed in [ ${chalk.green(`${minutes}m${seconds}s`)} ]`)
-        process.exit(0)
+        logRunEnd(argv)
     }
 }
 

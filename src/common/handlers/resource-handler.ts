@@ -7,13 +7,19 @@ import { HubOptions, IncludeOptions, RunOptions, MappingOptions } from "../inter
 import { Arguments } from "yargs"
 import { prompts } from "../prompts"
 import { HubSettingsOptions } from "../settings-handler"
+import { logComplete } from "../logger"
 
 export type Context = Arguments<HubOptions & MappingOptions & IncludeOptions & RunOptions>
 
 const takeAction = async (related: any, key: string, action: string) => {
     let pageables = await paginator(related[key].list, { status: 'ACTIVE' })
-    logger.info(`${prompts[action]} [ ${pageables.length} ] ${chalk.cyan(key)}...`)
-    await Promise.all(pageables.map(async (y: any) => await y.related[action]()))
+    let actionCount = 0
+    await Promise.all(pageables.map(async (y: any) => {
+        actionCount++
+        await y.related[action]()
+    }))
+    let color = action === 'delete' ? chalk.red : chalk.yellow
+    logComplete(`${chalk.blueBright(key)}: [ ${color(actionCount)} ${action}d ]`)
 }
 
 export interface Importable extends ResourceHandler {

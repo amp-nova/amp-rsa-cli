@@ -1,6 +1,7 @@
 import { ContentItem, ContentRepository, DynamicContent, Hub } from 'dc-management-sdk-js';
 import { DAMService } from './dam/dam-service';
 import { AlgoliaConfig, AmplienceHub, AmplienceHubPointer, AMPRSAMapping } from './types';
+import { Dictionary } from 'lodash';
 
 export interface CDN {
     getById(id: string): Promise<any>
@@ -13,8 +14,13 @@ export interface HubOptions {
     hub: Hub;
     cdn: CDN
     client: DynamicContent
-    content: ContentRepository
+    repositories: RepositoryMapping
     damService: DAMService
+}
+
+export interface RepositoryMapping {
+    content: ContentRepository
+    siteComponents: ContentRepository
 }
 
 export interface RunOptions {

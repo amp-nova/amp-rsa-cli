@@ -10,6 +10,9 @@ import { loadJsonFromDirectory } from "../importer"
 import { resolveSchemaBody } from "../schema-helper"
 import { HubSettingsOptions } from "../settings-handler"
 import fs from 'fs-extra'
+import { logUpdate, logComplete } from '../logger'
+import { SingleBar } from 'cli-progress'
+import { prompts } from '../prompts'
 
 export class ContentTypeSchemaImportHandler extends ImportableResourceHandler {
     sourceDir?: string
@@ -42,25 +45,34 @@ export class ContentTypeSchemaImportHandler extends ImportableResourceHandler {
             throw new Error(`Unable to resolve the body for the following files:\n${errors}`);
         }
 
+        let archiveCount = 0
+        let updateCount = 0
+        let createCount = 0
+
         const storedSchemas = await paginator(hub.related.contentTypeSchema.list);
         await Promise.all(Object.values(resolvedSchemas).map(async schema => {
             let stored = _.find(storedSchemas, s => s.schemaId === schema.schemaId)
             if (stored) {
                 if (stored.status === 'ARCHIVED') {
+                    archiveCount++
                     stored = await stored.related.unarchive()
-                    logger.info(`${chalk.green('unarch')} schema [ ${chalk.gray(schema.schemaId)} ]`)
+                    logUpdate(`${chalk.green('unarch')} schema [ ${chalk.gray(schema.schemaId)} ]`)
                 }
 
                 if (!_.isEqual(stored.body, schema.body)) {
+                    updateCount++
                     stored = await stored.related.update(schema)
-                    logger.info(`${chalk.green('update')} schema [ ${chalk.gray(schema.schemaId)} ]`)
+                    logUpdate(`${chalk.green('update')} schema [ ${chalk.gray(schema.schemaId)} ]`)
                 }
             }
             else {
+                createCount++
                 stored = await hub.related.contentTypeSchema.create(schema)
-                logger.info(`${chalk.green('create')} schema [ ${chalk.gray(schema.schemaId)} ]`)
+                logUpdate(`${chalk.green('create')} schema [ ${chalk.gray(schema.schemaId)} ]`)
             }
         }))
+
+        logComplete(`${chalk.blueBright(`contentTypeSchema`)}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ]`)
     }
 }
 

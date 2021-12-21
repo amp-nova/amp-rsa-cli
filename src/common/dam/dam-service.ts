@@ -61,7 +61,6 @@ export class DAMService {
         const bucketsList = await this.getBucketsList();
         const bucket = bucketsList.filter((item: any) => item.label === bucketName);
         if (bucket.length > 0) {
-            console.log(`...Found bucket: ${bucket[0].id}`);
             return bucket[0];
         } else {
             console.log(`...No extension found for name ${bucketName}`);

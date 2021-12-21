@@ -125,6 +125,7 @@ export class ContentTypeImportHandler extends ImportableResourceHandler {
             contentRepositoryList.map(value => [value.name || '', value])
         );
 
+        let synchronizedCount = 0
         let synchronizeContentType = async (contentType: ContentType, namedRepositories: MappedContentRepositories) => {
             synchronizedCount++
             logUpdate(`${chalk.green('sync  ')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
@@ -137,7 +138,6 @@ export class ContentTypeImportHandler extends ImportableResourceHandler {
         let archiveCount = 0
         let updateCount = 0
         let createCount = 0
-        let synchronizedCount = 0
         for (const [filename, contentType] of Object.entries(contentTypes)) {
             let stored = _.find(storedContentTypes, ct => ct.contentTypeUri === contentType.contentTypeUri)
             if (stored) {

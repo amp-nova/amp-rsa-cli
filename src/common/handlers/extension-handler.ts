@@ -66,7 +66,7 @@ export class ExtensionCleanupHandler extends CleanableResourceHandler {
                 await ext.related.delete()
                 logUpdate(`${chalk.red('delete')} extension [ ${oldName} ]`)
             }))
-            logComplete(`${chalk.blueBright('extensions')}: [ ${chalk.red(deleteCount)} ] deleted`)
+            logComplete(`${chalk.blueBright('extensions')}: [ ${chalk.red(deleteCount)} deleted ]`)
         } catch (error) {
             logger.error(error.message || error)
         }

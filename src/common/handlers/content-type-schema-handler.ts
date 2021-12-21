@@ -80,5 +80,6 @@ export class ContentTypeSchemaCleanupHandler extends CleanableResourceHandler {
     constructor() {
         super(ContentTypeSchema, 'contentTypeSchema')
         this.icon = '🗄'
+        this.sortPriority = 1.09
     }
 }

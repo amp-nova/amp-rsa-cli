@@ -170,5 +170,6 @@ export class ContentTypeCleanupHandler extends CleanableResourceHandler {
     constructor() {
         super(ContentType, 'contentTypes')
         this.icon = '🗂'
+        this.sortPriority = 1.1
     }
 }

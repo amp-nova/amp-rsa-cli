@@ -96,11 +96,13 @@ const readDAMMapping = async (argv: Context) => {
 
 let contentMap: Dictionary<ContentItem> = {}
 const cacheContentMap = async (repo: ContentRepository) => {
-    let startTime = new Date()
+    let oldContentItemCount = Object.values(contentMap).length
     let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
-    let duration = new Date().valueOf() - startTime.valueOf()
     contentMap = _.keyBy(contentItems, 'body._meta.deliveryKey')
-    logger.info(`cached [ ${contentItems.length} ] content items in [ ${duration} ] ms`)
+
+    if (contentItems.length - oldContentItemCount > 0) {
+        logger.info(`${chalk.blueBright('contentItems')}: [ ${chalk.green(contentItems.length - oldContentItemCount)} created ]`)
+    }
 }
 
 const readAutomation = async (argv: Context) => {

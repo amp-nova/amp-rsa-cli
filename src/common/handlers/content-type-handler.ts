@@ -1,5 +1,5 @@
 import { CleanableResourceHandler, Importable, ImportableResourceHandler, Context, ResourceHandler } from "./resource-handler"
-import { ContentType, ContentRepository } from "dc-management-sdk-js"
+import { ContentType, ContentRepository, ContentRepositoryContentType } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
 import logger from "../logger"
@@ -12,6 +12,7 @@ import { HubSettingsOptions } from "../settings-handler"
 import fs from 'fs-extra'
 import { logUpdate, logComplete } from '../logger'
 import { prompts } from '../prompts'
+import amplienceHelper from '../amplience-helper'
 
 type ContentTypeUri = string;
 type ContentTypeFile = string;
@@ -128,44 +129,80 @@ export class ContentTypeImportHandler extends ImportableResourceHandler {
         let synchronizedCount = 0
         let synchronizeContentType = async (contentType: ContentType, namedRepositories: MappedContentRepositories) => {
             synchronizedCount++
-            logUpdate(`${chalk.green('sync  ')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
+            logUpdate(`${prompts.sync} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
             await synchronizeContentTypeRepositories(
                 new ContentTypeWithRepositoryAssignments(contentType),
                 namedRepositories
-            )    
-        }        
+            )
+        }
 
         let archiveCount = 0
         let updateCount = 0
         let createCount = 0
-        for (const [filename, contentType] of Object.entries(contentTypes)) {
+
+        await Promise.all(Object.entries(contentTypes).map(async ([__, contentType]) => {
             let stored = _.find(storedContentTypes, ct => ct.contentTypeUri === contentType.contentTypeUri) as ContentTypeWithRepositoryAssignments
             if (stored) {
                 if (stored.status === 'ARCHIVED') {
                     stored = await stored.related.unarchive()
                     archiveCount++
-                    logUpdate(`${chalk.green('unarch')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
+                    logUpdate(`${prompts.unarchive} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
                 }
 
                 if (!_.isEqual(stored.settings, contentType.settings)) {
                     stored.settings = contentType.settings
                     stored = await stored.related.update(stored)
-                    stored.repositories = contentType.repositories
                     updateCount++
-                    logUpdate(`${chalk.green('update')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
-                    await synchronizeContentType(stored, namedRepositories)
+                    logUpdate(`${prompts.update} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
                 }
             }
             else {
                 stored = await hub.related.contentTypes.register(contentType) as ContentTypeWithRepositoryAssignments
-                stored.repositories = contentType.repositories
                 createCount++
-                logUpdate(`${chalk.green('create')} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
-                await synchronizeContentType(stored, namedRepositories)
+                logUpdate(`${prompts.create} content type [ ${chalk.gray(contentType.contentTypeUri)} ]`)
             }
-        }
+        }))
+
+        let repos = await paginator(hub.related.contentRepositories.list)
+        let activeTypes = await paginator(hub.related.contentTypes.list, { status: 'ACTIVE' });
+        let file = Object.entries(contentTypes)
+        let fileTypes = file.map(e => e[1])
+
+        let unassignedCount = 0
+        let assignedCount = 0
+        await Promise.all(repos.map(async repo => {
+            // unassign content types that do not exist in our import
+            await Promise.all(repo.contentTypes!.map(async type => {
+                let activeType = _.find(fileTypes, ft => ft.contentTypeUri === type.contentTypeUri)
+                if (!activeType) {
+                    unassignedCount++
+                    logUpdate(`${prompts.unassign} content type [ ${chalk.grey(type.contentTypeUri)} ]`)
+                    await repo.related.contentTypes.unassign(type.hubContentTypeId!)
+                }
+            }))
+
+            // reassign new content types
+            await Promise.all(fileTypes.map(async fileType => {
+                let activeType = _.find(activeTypes, type => type.contentTypeUri === fileType.contentTypeUri)
+                if (activeType && 
+                        _.includes(fileType.repositories, repo.name) && 
+                        !_.includes(repo.contentTypes!.map(x => x.contentTypeUri), fileType.contentTypeUri)) {
+                    assignedCount++
+                    logUpdate(`${prompts.assign} content type [ ${chalk.grey(fileType.contentTypeUri)} ]`)
+                    await repo.related.contentTypes.assign(activeType.id!)
+                }
+            }))
+        }))
+
+        // sync the content type
+        await Promise.all(activeTypes.map(async type => {
+            synchronizedCount++
+            await type.related.contentTypeSchema.update()
+            logUpdate(`${prompts.sync} content type [ ${chalk.gray(type.contentTypeUri)} ]`)
+        }))
 
         logComplete(`${chalk.blueBright(`contentTypes`)}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ] [ ${chalk.green(synchronizedCount)} synced ]`)
+        logger.info(`${chalk.blueBright('repositories')}: [ ${chalk.green(assignedCount)} content types assigned ] [ ${chalk.red(unassignedCount)} content types unassigned ]`)
     }
 }
 
@@ -174,5 +211,26 @@ export class ContentTypeCleanupHandler extends CleanableResourceHandler {
         super(ContentType, 'contentTypes')
         this.icon = '🗂'
         this.sortPriority = 1.1
+    }
+
+    async cleanup(argv: Context): Promise<any> {
+        let { hub } = argv
+        let repos = await paginator(hub.related.contentRepositories.list)
+
+        let unassignedCount = 0
+        await Promise.all(repos.map(async repo => {
+            // unassign all current content types
+            let repoTypes = repo.contentTypes
+            if (repoTypes) {
+                await Promise.all(repoTypes.map(async type => {
+                    unassignedCount++
+                    logUpdate(`${prompts.unassign} content type [ ${chalk.grey(type.contentTypeUri)} ]`)
+                    await repo.related.contentTypes.unassign(type.hubContentTypeId!)
+                }))
+            }
+        }))
+
+        logComplete(`${chalk.blueBright(`repositories`)}: [ ${chalk.red(unassignedCount)} content types unassigned ]`)
+        return super.cleanup(argv)
     }
 }

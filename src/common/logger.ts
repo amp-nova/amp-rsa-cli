@@ -57,11 +57,11 @@ export const logUpdate = (message: string) => {
   message = message.substring(0, lineLength)
 
   let numSpaces = lineLength - message.length
-  process.stdout.write(`\r${chalk.bgWhite.black.bold('exec')}  ${message}${' '.repeat(numSpaces)}`)
+  process.stdout.write(`\r\r${chalk.bgWhite.black.bold('exec')}  ${message}${' '.repeat(numSpaces)}`)
 }
 
 export const logComplete = (message: string) => {
-  process.stdout.write(`\r${' '.repeat(lineLength)}`)
-  process.stdout.write(`\r`)
+  process.stdout.write(`\r\r${' '.repeat(lineLength)}`)
+  process.stdout.write(`\r\r`)
   logger.info(message)
 }

@@ -269,18 +269,26 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
         // hanging out on published delivery keys
         await cacheContentMap(content)
 
-        // read the automation content
-        let automation = await readAutomation(argv)
-        let mappingStats = fs.statSync(`${global.tempDir}/mapping.json`)
-
-        // read the configuration content
-        let envConfig = await readEnvConfig(argv)
         let mapping: any = {
-            ...envConfig,
             app: { url: env.url },
             dam: {
                 imagesMap: await readDAMMapping(argv)
             }
+        }
+
+        // set up our mapping template
+        argv.mapping = mapping
+
+        copyTemplateFilesToTempDir(argv.automationDir as string, mapping)
+
+        // process step 2: npm run automate:schemas
+        await installContentTypes(argv)
+
+        // read the configuration content
+        let envConfig = await readEnvConfig(argv)
+        argv.mapping = mapping = {
+            ...mapping,
+            ...envConfig
         }
 
         mapping.cms = {
@@ -290,8 +298,9 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
             hubs: _.keyBy(mapping.cms.hubs, 'key')
         }
 
-        // set up our mapping template
-        argv.mapping = mapping
+        // read the automation content
+        let automation = await readAutomation(argv)
+        let mappingStats = fs.statSync(`${global.tempDir}/mapping.json`)
 
         copyTemplateFilesToTempDir(argv.automationDir as string, mapping)
 
@@ -299,9 +308,6 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
 
         // process step 1: npm run automate:settings
         await new SettingsImportHandler().import(argv)
-
-        // process step 2: npm run automate:schemas
-        await installContentTypes(argv)
 
         // process step 4: npm run automate:extensions
         await new ExtensionImportHandler().import(argv)

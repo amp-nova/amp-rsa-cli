@@ -1,6 +1,6 @@
 import axios from "axios"
 import fetch from 'isomorphic-unfetch'
-import { ContentRepository, Folder, Hub } from "dc-management-sdk-js"
+import { ContentRepository, ContentType, Folder, Hub } from "dc-management-sdk-js"
 import { CDN } from "./interfaces"
 import logger from "./logger"
 import chalk from "chalk"
@@ -42,6 +42,10 @@ const publishContentItem = async (item: any) => {
     return await axios.post(`${dcUrl}/content-items/${item.id}/publish`, {}, dcHeaders)
 }
 
+const synchronizeContentType = async (contentType: ContentType) => {
+    return await axios.patch(`${dcUrl}/content-types/${contentType.id}/schema`, {}, dcHeaders)
+}
+
 export const deleteFolder = async (folder: Folder) => {
     return await axios.delete(`${dcUrl}/folders/${folder.id}`, dcHeaders)
 }
@@ -66,5 +70,6 @@ export default {
     login,
     createAndPublishContentItem,
     publishContentItem,
-    cdn
+    cdn,
+    synchronizeContentType
 }

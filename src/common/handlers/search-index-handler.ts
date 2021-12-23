@@ -23,6 +23,10 @@ const retry = (count: number) => async (fn: () => Promise<any>, message: string)
             if (error.response.status === 504) {
                 retryCount++
             }
+            else if (error.response.status === 409) {
+                // occasionally, we will get a 409 here for an index that has been already inserted. we can ignore it, but log it
+                logger.debug(`got a 409/conflict while running the command: ${message}`)                
+            }
             else {
                 throw error
             }
@@ -40,12 +44,7 @@ export class SearchIndexImportHandler extends ImportableResourceHandler {
 
     async import(argv: HubSettingsOptions) {
         const { hub, mapping } = argv
-
-        let testIndexes = fs.readJsonSync(`${global.tempDir}/content/indexes/test-index.json`)
-        let importIndexes = fs.readJsonSync(`${global.tempDir}/content/indexes/indexes.json`)
-
-        const indexes = importIndexes.concat(testIndexes)
-
+        let indexes = fs.readJsonSync(`${global.tempDir}/content/indexes/indexes.json`)
         let publishedIndexes = await paginator(searchIndexPaginator(hub))
         let unpublishedIndexes = _.filter(indexes, idx => !_.includes(_.map(publishedIndexes, 'name'), idx.indexDetails.name))
 

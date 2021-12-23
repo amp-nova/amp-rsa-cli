@@ -22,6 +22,23 @@ export const handler = async (argv: Arguments): Promise<void> => {
         let hub = argv.hub as Hub
 
         let repositories = await paginator(hub.related.contentRepositories.list)
+        let contentTypeSchemas = await paginator(hub.related.contentTypeSchema.list, { status: 'ACTIVE' })
+        let contentTypes = await paginator(hub.related.contentTypes.list, { status: 'ACTIVE' })
+
+        // dave you can take this out later
+        // let csv = _.map(contentTypeSchemas, schema => {
+        //     let contentType = _.find(contentTypes, ct => ct.contentTypeUri === schema.schemaId)
+        //     let str = `${schema.schemaId},${schema.validationLevel}`
+        //     if (contentType) {
+        //         str += `,${contentType.settings?.label}`
+        //     }
+        //     return str
+        // }).join('\n')
+
+        // const fs = require('fs-extra')
+        // console.log(csv)
+
+        // process.exit(0)
 
         let count: any = _.zipObject(_.map(repositories, r => r.name || ''), await Promise.all(repositories.map(async repo => {
             logUpdate(`reading repository ${repo.name}...`)
@@ -29,10 +46,10 @@ export const handler = async (argv: Arguments): Promise<void> => {
         })))
 
         logUpdate(`reading contentTypes...`)
-        count.contentTypes = (await paginator(hub.related.contentTypes.list, { status: 'ACTIVE' })).length
+        count.contentTypes = contentTypes.length
 
         logUpdate(`reading contentTypeSchemas...`)
-        count.contentTypeSchemas = (await paginator(hub.related.contentTypeSchema.list, { status: 'ACTIVE' })).length
+        count.contentTypeSchemas = contentTypeSchemas.length
 
         logUpdate(`reading searchIndexes...`)
         count.searchIndexes = (await paginator(searchIndexPaginator(hub), { status: 'ACTIVE' })).length
@@ -53,14 +70,6 @@ export const handler = async (argv: Arguments): Promise<void> => {
             table.push({ [chalk.yellow(key)]: value })
         })
         console.log(table.toString())
-    
-        // let count = {
-        //     repositories,
-        //     repositories: await paginator(hub.related.contentRepositories.list),
-        //     repositories: await paginator(hub.related.contentRepositories.list),
-        //     repositories: await paginator(hub.related.contentRepositories.list),
-        //     repositories: await paginator(hub.related.contentRepositories.list)
-        // }
     }
 
     process.exit(0)

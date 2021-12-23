@@ -1,13 +1,18 @@
 import axios from "axios"
 import fetch from 'isomorphic-unfetch'
-import { ContentRepository, ContentType, Folder, Hub } from "dc-management-sdk-js"
+import { ContentRepository, ContentType, DynamicContent, Folder, Hub } from "dc-management-sdk-js"
 import { CDN } from "./interfaces"
-import logger from "./logger"
+import logger, { logComplete } from "./logger"
 import chalk from "chalk"
+import { paginator } from "./paginator"
+import { logUpdate } from "./logger"
+import async from 'async'
+import _ from 'lodash'
 
 export class DynamicContentCredentials {
     clientId: string
     clientSecret: string
+    hubId: string
 }
 
 let dcUrl = `https://api.amplience.net/v2/content`
@@ -20,10 +25,19 @@ let loginHeaders = {
     }
 }
 
+let client: DynamicContent
+let hub: Hub
 const login = async (dc: DynamicContentCredentials) => {
     let oauthResponse = await axios.post(
         `https://auth.amplience.net/oauth/token?client_id=${dc.clientId}&client_secret=${dc.clientSecret}&grant_type=client_credentials`,
         {}, loginHeaders)
+
+    client = new DynamicContent({
+        client_id: dc.clientId,
+        client_secret: dc.clientSecret
+    })
+
+    hub = await client.hubs.get(dc.hubId)
 
     accessToken = oauthResponse.data.access_token
     dcHeaders = { headers: { authorization: `bearer ${accessToken}` } }
@@ -38,9 +52,8 @@ const createAndPublishContentItem = async (item: any, repo: ContentRepository) =
     return response.data
 }
 
-const publishContentItem = async (item: any) => {
-    return await axios.post(`${dcUrl}/content-items/${item.id}/publish`, {}, dcHeaders)
-}
+const publishContentItem = async (item: any) => await axios.post(`${dcUrl}/content-items/${item.id}/publish`, {}, dcHeaders)
+const unpublishContentItem = async (item: any) => await axios.post(`${dcUrl}/content-items/${item.id}/unpublish`, {}, dcHeaders)
 
 const synchronizeContentType = async (contentType: ContentType) => {
     return await axios.patch(`${dcUrl}/content-types/${contentType.id}/schema`, {}, dcHeaders)
@@ -48,6 +61,61 @@ const synchronizeContentType = async (contentType: ContentType) => {
 
 export const deleteFolder = async (folder: Folder) => {
     return await axios.delete(`${dcUrl}/folders/${folder.id}`, dcHeaders)
+}
+
+const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
+const publishAll = async () => {
+    logger.info(`looking for unpublished items...`)
+    let repositories = await paginator(hub.related.contentRepositories.list)
+    let publishedCount = 0
+
+    await async.eachSeries(repositories, async repo => {
+        logUpdate(`${chalk.greenBright('publish')} repo ${repo.label}`)
+        let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
+        let contentItemChunks = _.chunk(contentItems, 20)
+        await async.eachOfSeries(contentItemChunks, async (contentItemChunk, index) => {
+            logUpdate(`processing chunk ${index}/${contentItemChunks.length}`)
+            await Promise.all(contentItemChunk.map(async contentItem => {
+                if (!(contentItem as any).lastPublishedDate) {
+                    publishedCount++
+                    logUpdate(`${chalk.greenBright('publish')} content item ${contentItem.id}`)
+                    await publishContentItem(contentItem)
+                }
+            }))
+
+            logUpdate(`${chalk.grey('sleeping')} for 3 seconds...`)
+            await sleep(3000)
+        })
+    })
+
+    logComplete(`${chalk.blueBright('content items')}: [ ${chalk.green(publishedCount)} published ]`)
+}
+
+const unpublishAll = async () => {
+    logger.info(`looking for published items...`)
+    let repositories = await paginator(hub.related.contentRepositories.list)
+    let unpublishedCount = 0
+
+    await async.eachSeries(repositories, async repo => {
+        logUpdate(`${chalk.redBright('unpublish')} repo ${repo.label}`)
+        let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
+        let contentItemChunks = _.chunk(contentItems, 20)
+        await async.eachOfSeries(contentItemChunks, async (contentItemChunk, index) => {
+            logUpdate(`processing chunk ${index}/${contentItemChunks.length}`)
+            await Promise.all(contentItemChunk.map(async contentItem => {
+                if ((contentItem as any).lastPublishedDate) {
+                    unpublishedCount++
+                    logUpdate(`${chalk.redBright('unpublish')} content item ${contentItem.id} ${contentItem.label}`)
+                    await unpublishContentItem(contentItem)
+                }
+            }))
+
+            logUpdate(`${chalk.grey('sleeping')} for 3 seconds...`)
+            await sleep(3000)
+        })
+    })
+
+    logComplete(`${chalk.blueBright('content items')}: [ ${chalk.red(unpublishedCount)} unpublished ]`)
 }
 
 const cdn = (hub: Hub): CDN => {
@@ -71,5 +139,7 @@ export default {
     createAndPublishContentItem,
     publishContentItem,
     cdn,
-    synchronizeContentType
+    synchronizeContentType,
+    publishAll,
+    unpublishAll
 }

@@ -3,6 +3,7 @@ import { currentEnvironment } from "./environment-manager";
 import { DynamicContent, Hub } from "dc-management-sdk-js";
 import { DAMService } from "./dam/dam-service";
 import amplienceHelper from "./amplience-helper";
+import _ from 'lodash'
 
 const handler = async (argv: Arguments) => {
     // get DC & DAM configuration

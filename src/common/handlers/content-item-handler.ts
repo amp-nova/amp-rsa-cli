@@ -10,6 +10,7 @@ import { HubSettingsOptions } from "../settings-handler"
 import fs from 'fs-extra'
 import { deleteFolder } from '../amplience-helper'
 import { logUpdate, logComplete } from "../logger"
+import amplienceHelper from "../amplience-helper"
 
 export class ContentItemImportHandler extends ImportableResourceHandler {
     constructor(sourceDir?: string) {
@@ -26,7 +27,8 @@ export class ContentItemImportHandler extends ImportableResourceHandler {
         }
 
         logger.info(`${prompts.import} content items...`)
-        await execWithOutput(`npx @amp-nova/dc-cli content-item import ${this.sourceDir} -f --mapFile ${global.tempDir}/mapping.json --republish`)
+        await execWithOutput(`npx @amp-nova/dc-cli content-item import ${this.sourceDir} -f --mapFile ${global.tempDir}/mapping.json`)
+        await amplienceHelper.publishAll()
     }
 }
 

@@ -91,7 +91,12 @@ const getDAMAssets = async (argv: Context) => {
 
 const readDAMMapping = async (argv: Context) => {
     let assets = await getDAMAssets(argv)
-    return _.zipObject(_.map(assets, x => _.camelCase(x.name)), _.map(assets, 'id'))
+    let endpoints = await argv.damService.getEndpoints()
+    let endpoint: any = _.first(endpoints)!
+    return {
+        mediaEndpoint: endpoint.tag,
+        imagesMap: _.zipObject(_.map(assets, x => _.camelCase(x.name)), _.map(assets, 'id'))
+    }
 }
 
 let contentMap: Dictionary<ContentItem> = {}
@@ -140,7 +145,6 @@ const readAutomation = async (argv: Context) => {
     return automation
 }
 
-const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
 const updateAutomation = async (automation: any, mappingStats: Stats, argv: Context) => {
     // read the mapping file and update if necessary
     let newMappingStats = fs.statSync(`${global.tempDir}/mapping.json`)
@@ -271,9 +275,7 @@ export const settingsHandler = async (argv: Context, desc: string, command: stri
 
         let mapping: any = {
             app: { url: env.url },
-            dam: {
-                imagesMap: await readDAMMapping(argv)
-            }
+            dam: await readDAMMapping(argv)
         }
 
         // set up our mapping template

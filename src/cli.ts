@@ -56,7 +56,7 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
 
           // don't run this middleware for 'env' commands
           if (!_.includes(argv._, 'env')) {
-            logger.info(`temp dir: ${global.tempDir}`)
+            logger.info(`${prompts.created} temp dir: ${chalk.blue(global.tempDir)}`)
             await connectionMiddleware(argv)
             argv.startTime = new Date()
           }

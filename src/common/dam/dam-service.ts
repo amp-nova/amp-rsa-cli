@@ -74,6 +74,11 @@ export class DAMService {
         return assetsList;
     }
 
+    async getEndpoints(): Promise<any> {
+        const endpoints = await this.client.fetchPaginatedResourcesList(`/endpoints`);
+        return endpoints
+    }
+
     /**
      * Fetch list of all assets
      */

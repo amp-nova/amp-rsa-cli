@@ -2,6 +2,7 @@ import chalk from 'chalk'
 
 export const prompts: any = {
     create: chalk.green('create'),
+    created: chalk.green.bold('created'),
     import: chalk.green('import'),
     update: chalk.green('update'),
     unarchive: chalk.yellow('unarchive'),

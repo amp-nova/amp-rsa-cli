@@ -9,7 +9,7 @@ import { Arguments } from 'yargs';
 import { selectEnvironment } from '../../common/environment-manager';
 import connectionMiddleware from '../../common/connection-middleware'
 import { Hub, ContentType } from 'dc-management-sdk-js';
-import { Context } from '@lib/common/handlers/resource-handler';
+import { Context } from '../../common/handlers/resource-handler';
 
 export const builder = commonBuilder
 

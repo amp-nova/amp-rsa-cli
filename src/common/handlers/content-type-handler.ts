@@ -8,7 +8,7 @@ import { HubOptions, MappingOptions } from "../interfaces"
 import { Arguments } from "yargs"
 import { loadJsonFromDirectory } from "../importer"
 import { ContentTypeWithRepositoryAssignments } from '../schema-helper'
-import { HubSettingsOptions } from "../settings-handler"
+import { HubSettingsOptions } from "../../commands/import"
 import fs from 'fs-extra'
 import { logUpdate, logComplete } from '../logger'
 import { prompts } from '../prompts'
@@ -101,8 +101,8 @@ export class ContentTypeImportHandler extends ImportableResourceHandler {
         this.icon = '🗂'
     }
 
-    async import(argv: HubSettingsOptions): Promise<any> {
-        let { hub } = argv
+    async import(context: Context): Promise<any> {
+        let { hub } = context
         let baseDir = this.sourceDir || `${global.tempDir}/content/core`
         this.sourceDir = `${baseDir}/content-types`
         if (!fs.existsSync(this.sourceDir)) {

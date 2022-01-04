@@ -2,15 +2,11 @@ import Yargs from 'yargs/yargs';
 import YargsCommandBuilderOptions from './common/yargs/yargs-command-builder-options';
 import { Arguments, Argv } from 'yargs';
 import chalk from 'chalk'
-import { currentEnvironment } from './common/environment-manager';
-import { DynamicContent, Hub } from 'dc-management-sdk-js';
-import amplienceHelper from './common/amplience-helper';
 
 import connectionMiddleware from './common/connection-middleware'
 
 import logger from './common/logger';
 import { prompts } from './common/prompts';
-import { DAMService } from './common/dam/dam-service';
 import _ from 'lodash';
 
 const punycode = require('punycode')

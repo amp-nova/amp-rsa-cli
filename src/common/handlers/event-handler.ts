@@ -13,10 +13,9 @@ export class EventCleanupHandler extends CleanableResourceHandler {
     }
 
     async cleanup(argv: Context): Promise<any> {
-        let events = await paginator(argv.hub.related.events.list)
-
+        let events = await paginator(argv.hub.related.events.list, { status: 'ACTIVE' })
         await Promise.all(events.map(async event => {
-            let editions = await paginator(event.related.editions.list)
+            let editions = await paginator(event.related.editions.list, { status: 'ACTIVE' })
             let publishedEditions = _.filter(editions, e => e.publishingStatus === PublishingStatus.PUBLISHED)
 
             await Promise.all(editions.map(async edition => {

@@ -7,7 +7,7 @@ import chalk from 'chalk'
 import { prompts } from "../prompts"
 import fs from 'fs-extra'
 import async from 'async'
-import { HubSettingsOptions } from "../settings-handler"
+import { HubSettingsOptions } from "../../commands/import"
 
 const retry = (count: number) => async (fn: () => Promise<any>, message: string) => {
     let retryCount = 0
@@ -26,6 +26,7 @@ const retry = (count: number) => async (fn: () => Promise<any>, message: string)
             else if (error.response.status === 409) {
                 // occasionally, we will get a 409 here for an index that has been already inserted. we can ignore it, but log it
                 logger.debug(`got a 409/conflict while running the command: ${message}`)                
+                retryCount = count
             }
             else {
                 throw error
@@ -52,7 +53,7 @@ export class SearchIndexImportHandler extends ImportableResourceHandler {
         let replicaCount = 0
         let webhookCount = 0
 
-        await async.each(unpublishedIndexes, async item => {
+        await async.each(unpublishedIndexes, async (item, callback) => {
             // Remove ID and replica count for creation
             delete item.indexDetails.id;
             delete item.indexDetails.replicaCount;
@@ -103,6 +104,7 @@ export class SearchIndexImportHandler extends ImportableResourceHandler {
                     webhookCount++
                 }
             }
+            callback()
         })
 
         publishedIndexes = await paginator(searchIndexPaginator(hub))
@@ -135,7 +137,7 @@ export class SearchIndexCleanupHandler extends CleanableResourceHandler {
 
         let searchIndexCount = 0
         let replicaCount = 0
-        await async.each(searchIndexes, (async (searchIndex: SearchIndex) => {
+        await async.each(searchIndexes, (async (searchIndex: SearchIndex, callback) => {
             if (searchIndex.replicaCount && searchIndex.replicaCount > 0) {
                 // get the replicas
                 let replicas: SearchIndex[] = await paginator(replicaPaginator(searchIndex))
@@ -146,6 +148,7 @@ export class SearchIndexCleanupHandler extends CleanableResourceHandler {
             }
             await retrier(() => searchIndex.related.delete(), `${prompts.delete} search index ${chalk.cyan(searchIndex.name)}...`)
             searchIndexCount++
+            callback()
         }))
 
         logComplete(`${chalk.blueBright(`searchIndexes`)}: [ ${chalk.red(searchIndexCount)} deleted ] [ ${chalk.red(replicaCount)} replicas deleted ]`)

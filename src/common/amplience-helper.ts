@@ -64,30 +64,66 @@ export const deleteFolder = async (folder: Folder) => {
 }
 
 const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
+export const publishUnpublished = async() => {
+    let unpublishedItemCount = 1
+    let oldUnpublishedItemCount = 0
+
+    while (unpublishedItemCount > 0) {
+        unpublishedItemCount = await waitForPublishingQueue()
+
+        if (oldUnpublishedItemCount === unpublishedItemCount) {
+            return await publishAll()
+        }
+        else {
+            oldUnpublishedItemCount = unpublishedItemCount
+            if (unpublishedItemCount > 0) {
+                for (let index = 5; index > 0; index--) {
+                    logUpdate(`${chalk.red(unpublishedItemCount)} unpublished items remain, waiting ${chalk.blueBright(index)} seconds...`)
+                    await sleep(1000)
+                }
+            }
+        }
+    }
+}
+
+export const waitForPublishingQueue = async () => {
+    logUpdate(`wait for publishing queue to complete...`)
+    let repositories = await paginator(hub.related.contentRepositories.list)
+    let unpublishedCount = 0
+
+    await async.eachSeries(repositories, async (repo, callback) => {
+        let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
+        await async.eachSeries(contentItems, async (contentItem, cb) => {
+            if (!(contentItem as any).lastPublishedDate) {
+                unpublishedCount++
+            }
+            cb()
+        })
+        callback()
+    })
+
+    return unpublishedCount
+}
+
+
 const publishAll = async () => {
-    logger.info(`looking for unpublished items...`)
     let repositories = await paginator(hub.related.contentRepositories.list)
     let publishedCount = 0
 
-    await async.eachSeries(repositories, async repo => {
+    await async.eachSeries(repositories, async (repo, callback) => {
         logUpdate(`${chalk.greenBright('publish')} repo ${repo.label}`)
         let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
-        let contentItemChunks = _.chunk(contentItems, 20)
-        await async.eachOfSeries(contentItemChunks, async (contentItemChunk, index) => {
-            logUpdate(`processing chunk ${index}/${contentItemChunks.length}`)
-            await Promise.all(contentItemChunk.map(async contentItem => {
-                if (!(contentItem as any).lastPublishedDate) {
-                    publishedCount++
-                    logUpdate(`${chalk.greenBright('publish')} content item ${contentItem.id}`)
-                    await publishContentItem(contentItem)
-                }
-            }))
-
-            logUpdate(`${chalk.grey('sleeping')} for 3 seconds...`)
-            await sleep(3000)
+        await async.eachSeries(contentItems, async (contentItem, cb) => {
+            if (!(contentItem as any).lastPublishedDate) {
+                logUpdate(`${chalk.greenBright('publish')} content item ${contentItem.id}`)
+                await publishContentItem(contentItem)
+                await sleep(500)
+            }
+            publishedCount++
+            cb()
         })
+        callback()
     })
-
     logComplete(`${chalk.blueBright('content items')}: [ ${chalk.green(publishedCount)} published ]`)
 }
 
@@ -96,25 +132,20 @@ const unpublishAll = async () => {
     let repositories = await paginator(hub.related.contentRepositories.list)
     let unpublishedCount = 0
 
-    await async.eachSeries(repositories, async repo => {
+    await async.eachSeries(repositories, async (repo, callback) => {
         logUpdate(`${chalk.redBright('unpublish')} repo ${repo.label}`)
         let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
-        let contentItemChunks = _.chunk(contentItems, 20)
-        await async.eachOfSeries(contentItemChunks, async (contentItemChunk, index) => {
-            logUpdate(`processing chunk ${index}/${contentItemChunks.length}`)
-            await Promise.all(contentItemChunk.map(async contentItem => {
-                if ((contentItem as any).lastPublishedDate) {
-                    unpublishedCount++
-                    logUpdate(`${chalk.redBright('unpublish')} content item ${contentItem.id} ${contentItem.label}`)
-                    await unpublishContentItem(contentItem)
-                }
-            }))
-
-            logUpdate(`${chalk.grey('sleeping')} for 3 seconds...`)
-            await sleep(3000)
+        await async.eachSeries(contentItems, async (contentItem, cb) => {
+            if ((contentItem as any).lastPublishedDate) {
+                unpublishedCount++
+                logUpdate(`${chalk.redBright('unpublish')} content item ${contentItem.id} ${contentItem.label}`)
+                await unpublishContentItem(contentItem)
+                await sleep(500)
+            }
+            cb()
         })
+        callback()
     })
-
     logComplete(`${chalk.blueBright('content items')}: [ ${chalk.red(unpublishedCount)} unpublished ]`)
 }
 
@@ -141,5 +172,6 @@ export default {
     cdn,
     synchronizeContentType,
     publishAll,
-    unpublishAll
+    unpublishAll,
+    waitForPublishingQueue
 }

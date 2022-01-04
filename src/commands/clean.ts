@@ -3,10 +3,9 @@ import _ from 'lodash'
 import { Cleanables } from '../common/resource-handlers';
 import chalk from "chalk";
 import async from 'async'
-import logger from '../common/logger';
+import logger, { logRunEnd } from '../common/logger';
 import { ResourceHandler } from '../common/handlers/resource-handler';
 import { Argv } from 'yargs';
-import { logRunEnd } from '../common/status-helper';
 
 const { Confirm, MultiSelect } = require('enquirer');
 
@@ -60,10 +59,11 @@ export const handler = async (argv: Context): Promise<void> => {
         }
 
         if (argv.skipConfirmation || await new Confirm({ message: `${chalk.bold(chalk.greenBright('proceed?'))}` }).run()) {
-            await async.eachSeries(choices, async choice => { await choice.action(argv) })
+            await async.eachSeries(choices, async (choice, callback) => { 
+                await choice.cleanup(argv) 
+                callback()
+            })
         }
-
-        logRunEnd(argv)
     } catch (error) {
         logger.error(error.message);
     } finally {

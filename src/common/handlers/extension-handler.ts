@@ -8,7 +8,7 @@ import { HubOptions, MappingOptions } from "../interfaces"
 import { Arguments } from "yargs"
 import fs from 'fs-extra'
 import { prompts } from "../prompts"
-import { HubSettingsOptions } from "../settings-handler"
+import { HubSettingsOptions } from "../../commands/import"
 
 import { customAlphabet } from "nanoid"
 import { lowercase } from "nanoid-dictionary"

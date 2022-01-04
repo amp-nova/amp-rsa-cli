@@ -1,5 +1,4 @@
 import { Arguments } from 'yargs';
-import readline from 'readline-sync'
 import { addEnvironment, getEnvironments } from '../../common/environment-manager';
 import _ from 'lodash';
 import chalk from 'chalk';
@@ -21,24 +20,17 @@ export const handler = async (argv: Arguments): Promise<void> => {
       throw new Error(`environment already exists: ${name}`)
     }
 
-    let cmsClientId = await (new Input({ message: `${chalk.cyanBright('cms')} client id:` }).run())
-    let cmsClientSecret = await (new Password({ message: `${chalk.cyanBright('cms')} client secret:` }).run())
-    let cmsHubId = await (new Input({ message: `${chalk.cyanBright('cms')} hub id:` }).run())
-    let damUsername = await (new Input({ message: `${chalk.cyanBright('dam')} client id:` }).run())
-    let damPassword = await (new Input({ message: `${chalk.cyanBright('dam')} client id:` }).run())
-    let url = await (new Input({ message: `${chalk.cyanBright('app')} deployment url:` }).run())
-
     addEnvironment({
       name,
-      url,
+      url: await (new Input({ message: `${chalk.cyanBright('app')} deployment url:` }).run()),
       dc: {
-        clientId: cmsClientId,
-        clientSecret: cmsClientSecret,
-        hubId: cmsHubId        
+        clientId: await (new Input({ message: `${chalk.cyanBright('cms')} client id:` }).run()),
+        clientSecret: await (new Password({ message: `${chalk.cyanBright('cms')} client secret:` }).run()),
+        hubId: await (new Input({ message: `${chalk.cyanBright('cms')} hub id:` }).run())        
       },
       dam: {
-        username: damUsername,
-        password: damPassword
+        username: await (new Input({ message: `${chalk.cyanBright('dam')} username:` }).run()),
+        password: await (new Password({ message: `${chalk.cyanBright('dam')} password:` }).run())
       }
     })
   } catch(error) {

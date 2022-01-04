@@ -1,6 +1,5 @@
 import { ImportableResourceHandler } from "./resource-handler"
-import { execWithOutput } from "../exec-helper"
-import { HubSettingsOptions } from "../settings-handler"
+import { HubSettingsOptions } from "../../commands/import"
 import fs from 'fs-extra'
 import _ from 'lodash'
 import { paginator } from "../paginator"

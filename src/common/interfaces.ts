@@ -62,5 +62,6 @@ export interface HierarchyMapping {
 }
 
 export interface DAMMapping {
+    mediaEndpoint: string
     imagesMap: any
 }

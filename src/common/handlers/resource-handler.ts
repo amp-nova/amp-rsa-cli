@@ -6,7 +6,7 @@ import chalk from 'chalk'
 import { HubOptions, IncludeOptions, RunOptions, MappingOptions } from "../interfaces"
 import { Arguments } from "yargs"
 import { prompts } from "../prompts"
-import { HubSettingsOptions } from "../settings-handler"
+import { HubSettingsOptions } from "../../commands/import"
 import { logComplete } from "../logger"
 
 export type Context = Arguments<HubOptions & MappingOptions & IncludeOptions & RunOptions>

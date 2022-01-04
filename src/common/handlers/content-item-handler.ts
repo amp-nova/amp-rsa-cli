@@ -1,17 +1,15 @@
 import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
 import { ContentItem, ContentRepository, Folder } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
-import _ from 'lodash'
 import logger from "../logger"
 import chalk from 'chalk'
 import { prompts } from "../prompts"
-import { execWithOutput } from "../exec-helper"
-import { HubSettingsOptions } from "../settings-handler"
 import fs from 'fs-extra'
-import { deleteFolder } from '../amplience-helper'
+import { deleteFolder, publishUnpublished } from '../amplience-helper'
 import { logUpdate, logComplete } from "../logger"
-import amplienceHelper from "../amplience-helper"
+import { CLIJob } from "../exec-helper"
 
+const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
 export class ContentItemImportHandler extends ImportableResourceHandler {
     constructor(sourceDir?: string) {
         super(ContentItem, 'contentItems', sourceDir)
@@ -19,16 +17,19 @@ export class ContentItemImportHandler extends ImportableResourceHandler {
         this.icon = '📁'
     }
 
-    async import(argv: HubSettingsOptions) {
-        let baseDir = this.sourceDir || `${global.tempDir}/content/core`
+    async import(context: Context) {
+        let baseDir = this.sourceDir || `${global.tempDir}/content`
         this.sourceDir = `${baseDir}/content-items`
         if (!fs.existsSync(this.sourceDir)) {
             return
         }
 
         logger.info(`${prompts.import} content items...`)
-        await execWithOutput(`npx @amp-nova/dc-cli content-item import ${this.sourceDir} -f --mapFile ${global.tempDir}/mapping.json`)
-        await amplienceHelper.publishAll()
+
+        let importLogFile = `${global.tempDir}/item-import.log`
+        let importJob = new CLIJob(`npx @amp-nova/dc-cli content-item import ${this.sourceDir} -f --republish --publish --mapFile ${global.tempDir}/mapping.json --logFile ${importLogFile}`)
+        await importJob.exec()
+        await publishUnpublished()
     }
 }
 

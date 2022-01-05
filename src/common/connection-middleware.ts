@@ -27,6 +27,5 @@ const handler = async (argv: Arguments) => {
     await amplienceHelper.login(dc)
     argv.client = client
     argv.hub = hub
-    argv.cdn = await amplienceHelper.cdn(hub)
 }
 export default handler

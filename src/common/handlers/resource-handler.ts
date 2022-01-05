@@ -1,15 +1,12 @@
-import { Hub } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
-import logger from "../logger"
 import chalk from 'chalk'
-import { HubOptions, IncludeOptions, RunOptions, MappingOptions } from "../interfaces"
 import { Arguments } from "yargs"
 import { prompts } from "../prompts"
-import { HubSettingsOptions } from "../../commands/import"
 import { logComplete } from "../logger"
+import { Options } from "../types"
 
-export type Context = Arguments<HubOptions & MappingOptions & IncludeOptions & RunOptions>
+export type Context = Arguments<Options>
 
 const takeAction = async (related: any, key: string, action: string) => {
     let pageables = await paginator(related[key].list, { status: 'ACTIVE' })
@@ -23,7 +20,7 @@ const takeAction = async (related: any, key: string, action: string) => {
 }
 
 export interface Importable extends ResourceHandler {
-    import(argv: HubSettingsOptions): Promise<any>
+    import(argv: Context): Promise<any>
 }
 
 export interface Exportable extends ResourceHandler {
@@ -43,7 +40,7 @@ export abstract class ResourceHandler {
 
     constructor(resourceType: any, resourceTypeDescription: string) {
         this.resourceType = resourceType
-        this.resourceTypeDescription = resourceTypeDescription
+        this.resourceTypeDescription = chalk.cyan(resourceTypeDescription)
         this.sortPriority = 1
         this.icon = '🧩'
         this.resourceType = resourceType
@@ -55,34 +52,25 @@ export abstract class ResourceHandler {
     }
 
     getDescription() {
-        return `${this.icon} ${chalk.cyanBright(this.resourceTypeDescription)}`
+        return `${this.icon} ${this.resourceTypeDescription}`
     }
 
-    abstract action(argv: Context): Promise<any>
     abstract getLongDescription(): string
 }
 
 export class CleanableResourceHandler extends ResourceHandler implements Cleanable {
     async cleanup(argv: Context): Promise<any> {
-        await takeAction(argv.hub.related, this.resourceTypeDescription, this.resourceAction)
-    }
-
-    async action(argv: Context): Promise<any> {
-        return await this.cleanup(argv)
+        await takeAction(argv.hub.related, this.resourceType, this.resourceAction)
     }
 
     getLongDescription(): string {
-        return `${this.icon} ${prompts[this.resourceAction]} all ${chalk.cyanBright(this.resourceTypeDescription)}`
+        return `${this.icon} ${prompts[this.resourceAction]} all ${this.resourceTypeDescription}`
     }
 }
 
 export abstract class ImportableResourceHandler extends ResourceHandler implements Importable {
     sourceDir?: string
-    abstract import(argv: HubSettingsOptions): Promise<any>
-
-    async action(argv: Context): Promise<any> {
-        return await this.import(argv)
-    }
+    abstract import(argv: Context): Promise<any>
 
     constructor(resourceType: any, resourceTypeDescription: any, sourceDir?: string) {
         super(resourceType, resourceTypeDescription)
@@ -90,6 +78,6 @@ export abstract class ImportableResourceHandler extends ResourceHandler implemen
     }
 
     getLongDescription(): string {
-        return `${this.icon} ${chalk.green('import')} all ${chalk.cyanBright(this.resourceTypeDescription)}`
+        return `${this.icon} ${chalk.green('import')} all ${this.resourceTypeDescription}`
     }
 }

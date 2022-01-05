@@ -13,7 +13,6 @@ import { paginator, searchIndexPaginator } from '../common/paginator';
 
 import amplience from '../common/amplience-helper';
 import { Context } from '../common/handlers/resource-handler';
-import { HubOptions, Mapping, MappingOptions } from '../common/interfaces';
 import { ContentItemImportHandler } from '../common/handlers/content-item-handler';
 import { copyTemplateFilesToTempDir } from '../common/import-helper';
 import { ExtensionImportHandler } from '../common/handlers/extension-handler';
@@ -63,7 +62,6 @@ export const settingsBuilder = (yargs: Argv): Argv =>
         .array('include')
         .help();
 
-export type HubSettingsOptions = HubOptions & MappingOptions
 const installContent = async (context: Context) => {
     let contentItemHandler = new ContentItemImportHandler(`${global.tempDir}/content`)
     await contentItemHandler.import(context)
@@ -97,13 +95,8 @@ const readDAMMapping = async (argv: Context) => {
 
 let contentMap: Dictionary<ContentItem> = {}
 const cacheContentMap = async (repo: ContentRepository) => {
-    let oldContentItemCount = Object.values(contentMap).length
     let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
     contentMap = _.keyBy(contentItems, 'body._meta.deliveryKey')
-
-    if (contentItems.length - oldContentItemCount > 0) {
-        logger.info(`${chalk.blueBright('contentItems')}: [ ${chalk.green(contentItems.length - oldContentItemCount)} created ]`)
-    }
 }
 
 const initAutomation = async (argv: Context) => {
@@ -170,7 +163,7 @@ const updateAutomation = async (argv: Context) => {
     }
 }
 
-const readHierarchies = async (argv: HubSettingsOptions) => {
+const readHierarchies = async (argv: Context) => {
     let { mapping } = argv
     let taxonomies = contentMap['hierarchy/taxonomies'] as any
     let configuration = contentMap['hierarchy/configuration'] as any

@@ -1,13 +1,12 @@
 import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
 import { SearchIndex, Webhook } from "dc-management-sdk-js"
 import { paginator, searchIndexPaginator, replicaPaginator } from "../paginator"
-import _, { keyBy } from 'lodash'
+import _ from 'lodash'
 import logger, { logComplete, logUpdate } from "../logger"
 import chalk from 'chalk'
 import { prompts } from "../prompts"
 import fs from 'fs-extra'
 import async from 'async'
-import { HubSettingsOptions } from "../../commands/import"
 
 const retry = (count: number) => async (fn: () => Promise<any>, message: string) => {
     let retryCount = 0
@@ -38,12 +37,12 @@ const retrier = retry(3)
 
 export class SearchIndexImportHandler extends ImportableResourceHandler {
     constructor() {
-        super(SearchIndex, 'searchIndexes')
+        super(SearchIndex, 'search indexes')
         this.icon = '🔍'
         this.sortPriority = 1.09
     }
 
-    async import(argv: HubSettingsOptions) {
+    async import(argv: Context) {
         const { hub, mapping } = argv
         let indexes = fs.readJsonSync(`${global.tempDir}/content/indexes/indexes.json`)
         let publishedIndexes = await paginator(searchIndexPaginator(hub))
@@ -122,7 +121,7 @@ export class SearchIndexImportHandler extends ImportableResourceHandler {
         algolia.indexes = _.keyBy(mapping.algolia.indexes, 'key')
         mapping.algolia = algolia
 
-        logComplete(`${chalk.blueBright(`searchIndexes`)}: [ ${chalk.green(searchIndexCount)} created ] [ ${chalk.green(replicaCount)} replicas created ] [ ${chalk.green(webhookCount)} webhooks created ]`)
+        logComplete(`${this.resourceTypeDescription}: [ ${chalk.green(searchIndexCount)} created ] [ ${chalk.green(replicaCount)} replicas created ] [ ${chalk.green(webhookCount)} webhooks created ]`)
     }
 }
 
@@ -151,6 +150,6 @@ export class SearchIndexCleanupHandler extends CleanableResourceHandler {
             callback()
         }))
 
-        logComplete(`${chalk.blueBright(`searchIndexes`)}: [ ${chalk.red(searchIndexCount)} deleted ] [ ${chalk.red(replicaCount)} replicas deleted ]`)
+        logComplete(`${this.resourceTypeDescription}: [ ${chalk.red(searchIndexCount)} deleted ] [ ${chalk.red(replicaCount)} replicas deleted ]`)
     }
 }

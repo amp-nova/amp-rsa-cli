@@ -1,23 +1,18 @@
-import { CleanableResourceHandler, Importable, ImportableResourceHandler, Context, ResourceHandler } from "./resource-handler"
+import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
 import { ContentTypeSchema } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
-import logger from "../logger"
 import chalk from 'chalk'
-import { HubOptions, MappingOptions } from "../interfaces"
-import { Arguments } from "yargs"
 import { loadJsonFromDirectory } from "../importer"
 import { resolveSchemaBody } from "../schema-helper"
-import { HubSettingsOptions } from "../../commands/import"
 import fs from 'fs-extra'
 import { logUpdate, logComplete } from '../logger'
-import { prompts } from '../prompts'
 
 export class ContentTypeSchemaImportHandler extends ImportableResourceHandler {
     sourceDir?: string
 
     constructor(sourceDir?: string) {
-        super(ContentTypeSchema, 'contentTypeSchema', sourceDir)
+        super(ContentTypeSchema, 'content type schema', sourceDir)
         this.sortPriority = 0.01
         this.icon = '🗄'
     }
@@ -48,7 +43,7 @@ export class ContentTypeSchemaImportHandler extends ImportableResourceHandler {
         let updateCount = 0
         let createCount = 0
 
-        const storedSchemas = await paginator(hub.related.contentTypeSchema.list);
+        const storedSchemas: ContentTypeSchema[] = await paginator(hub.related.contentTypeSchema.list);
         await Promise.all(Object.values(resolvedSchemas).map(async schema => {
             let stored = _.find(storedSchemas, s => s.schemaId === schema.schemaId)
             if (stored) {
@@ -71,13 +66,13 @@ export class ContentTypeSchemaImportHandler extends ImportableResourceHandler {
             }
         }))
 
-        logComplete(`${chalk.blueBright(`contentTypeSchema`)}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ]`)
+        logComplete(`${this.resourceTypeDescription}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ]`)
     }
 }
 
 export class ContentTypeSchemaCleanupHandler extends CleanableResourceHandler {
     constructor() {
-        super(ContentTypeSchema, 'contentTypeSchema')
+        super(ContentTypeSchema, 'content type schema')
         this.icon = '🗄'
         this.sortPriority = 1.09
     }

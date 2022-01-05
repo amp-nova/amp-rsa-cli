@@ -1,5 +1,4 @@
-import { ImportableResourceHandler } from "./resource-handler"
-import { HubSettingsOptions } from "../../commands/import"
+import { ImportableResourceHandler, Context } from "./resource-handler"
 import fs from 'fs-extra'
 import _ from 'lodash'
 import { paginator } from "../paginator"
@@ -13,7 +12,7 @@ export class SettingsImportHandler extends ImportableResourceHandler {
         super(undefined, 'settings')
     }
 
-    async import(argv: HubSettingsOptions) {
+    async import(argv: Context) {
         let { hub } = argv
 
         let settings = hub.settings

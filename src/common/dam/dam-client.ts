@@ -1,4 +1,5 @@
 import { Arguments } from 'yargs';
+import fetch from 'isomorphic-unfetch';
 
 export type ConfigurationParameters = {
     username: string;

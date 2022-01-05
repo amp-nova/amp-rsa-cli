@@ -1,3 +1,55 @@
+import { ContentRepository, DynamicContent, Hub } from 'dc-management-sdk-js';
+import { DAMService } from './dam/dam-service';
+
+export interface Options {
+    hub: Hub
+    client: DynamicContent
+    repositories: RepositoryMapping
+    damService: DAMService
+
+    startTime: Date
+
+    include: string[]
+    skipConfirmation: boolean
+    ariaKey: string
+
+    mapping: Mapping
+}
+
+export interface RepositoryMapping {
+    content: ContentRepository
+    siteComponents: ContentRepository
+}
+
+export interface Mapping {
+    app: AppMapping
+    cms: CMSMapping
+    dam: DAMMapping
+    algolia: AlgoliaConfig
+}
+
+export interface AppMapping {
+    url: string
+}
+
+export interface CMSMapping {
+    hierarchies: HierarchyMapping
+    hub: AmplienceHub
+    hubs: any
+    repositories: any
+    workflowStates: any
+}
+
+export interface HierarchyMapping {
+    taxonomies: any
+    configuration: any
+}
+
+export interface DAMMapping {
+    mediaEndpoint: string
+    imagesMap: any
+}
+
 export class AMPRSAMapping {
     from: string
     to: string

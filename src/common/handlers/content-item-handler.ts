@@ -1,18 +1,17 @@
 import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
 import { ContentItem, ContentRepository, Folder } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
-import logger from "../logger"
 import chalk from 'chalk'
 import { prompts } from "../prompts"
 import fs from 'fs-extra'
 import { deleteFolder, publishUnpublished } from '../amplience-helper'
 import { logUpdate, logComplete } from "../logger"
 import { CLIJob } from "../exec-helper"
+import _ from "lodash"
 
-const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
 export class ContentItemImportHandler extends ImportableResourceHandler {
     constructor(sourceDir?: string) {
-        super(ContentItem, 'contentItems', sourceDir)
+        super(ContentItem, 'content items', sourceDir)
         this.sortPriority = 0.03
         this.icon = '📁'
     }
@@ -24,18 +23,33 @@ export class ContentItemImportHandler extends ImportableResourceHandler {
             return
         }
 
-        logger.info(`${prompts.import} content items...`)
-
         let importLogFile = `${global.tempDir}/item-import.log`
         let importJob = new CLIJob(`npx @amp-nova/dc-cli content-item import ${this.sourceDir} -f --republish --publish --mapFile ${global.tempDir}/mapping.json --logFile ${importLogFile}`)
+
         await importJob.exec()
+
+        // read the log file
+        let createdCount = 0
+        let updatedCount = 0
+        let logFile = fs.readFileSync(importLogFile, { encoding: "utf-8" })
+        _.each(logFile.split('\n'), line => {
+            if (line.startsWith('CREATE ')) {
+                createdCount++
+            }
+            else if (line.startsWith('UPDATE ')) {
+                updatedCount++
+            }
+        })
+
+        logComplete(`${this.resourceTypeDescription}: [ ${chalk.green(createdCount)} created ] [ ${chalk.blue(updatedCount)} updated ]`)
+
         await publishUnpublished()
     }
 }
 
 export class ContentItemCleanupHandler extends CleanableResourceHandler {
     constructor() {
-        super(ContentItem, 'contentItems')
+        super(ContentItem, 'content items')
         this.icon = '📁'
     }
 
@@ -44,7 +58,7 @@ export class ContentItemCleanupHandler extends CleanableResourceHandler {
         let archiveCount = 0
         let folderCount = 0
         await Promise.all(repositories.map(async (repository: ContentRepository) => {
-            logUpdate(`${prompts.archive} content-items in repository ${chalk.cyanBright(repository.name)}...`)
+            logUpdate(`${prompts.archive} content items in repository ${chalk.cyanBright(repository.name)}...`)
             let contentItems: ContentItem[] = await paginator(repository.related.contentItems.list, { status: 'ACTIVE' })
             await Promise.all(contentItems.map(async (contentItem: ContentItem) => {
                 if (contentItem.body._meta.deliveryKey?.length > 0) {
@@ -72,6 +86,6 @@ export class ContentItemCleanupHandler extends CleanableResourceHandler {
             await Promise.all(folders.map(cleanupFolder))
 
         }))
-        logComplete(`${chalk.blueBright(`contentItems`)}: [ ${chalk.yellow(archiveCount)} items archived ] [ ${chalk.red(folderCount)} folders deleted ]`)
+        logComplete(`${this.resourceTypeDescription}: [ ${chalk.yellow(archiveCount)} items archived ] [ ${chalk.red(folderCount)} folders deleted ]`)
     }
 }

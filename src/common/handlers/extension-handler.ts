@@ -1,14 +1,11 @@
-import { Cleanable, CleanableResourceHandler, Importable, ImportableResourceHandler, Context, ResourceHandler } from "./resource-handler"
-import { Hub, Extension } from "dc-management-sdk-js"
+import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
+import { Extension } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
 import logger, { logComplete, logUpdate } from "../logger"
 import chalk from 'chalk'
-import { HubOptions, MappingOptions } from "../interfaces"
-import { Arguments } from "yargs"
 import fs from 'fs-extra'
 import { prompts } from "../prompts"
-import { HubSettingsOptions } from "../../commands/import"
 
 import { customAlphabet } from "nanoid"
 import { lowercase } from "nanoid-dictionary"
@@ -21,7 +18,7 @@ export class ExtensionImportHandler extends ImportableResourceHandler {
         this.sortPriority = 1.1
     }
 
-    async import(argv: HubSettingsOptions): Promise<any> {
+    async import(argv: Context): Promise<any> {
         const { hub } = argv
         let extensions = fs.readJsonSync(`${global.tempDir}/content/extensions/extensions.json`)
 
@@ -44,7 +41,7 @@ export class ExtensionImportHandler extends ImportableResourceHandler {
             }
         }))
 
-        logComplete(`${chalk.blueBright(`extensions`)}: [ ${chalk.green(createCount)} created ]`)
+        logComplete(`${this.resourceTypeDescription}: [ ${chalk.green(createCount)} created ]`)
     }
 }
 
@@ -57,7 +54,7 @@ export class ExtensionCleanupHandler extends CleanableResourceHandler {
     async cleanup(argv: Context): Promise<any> {
         try {
             let deleteCount = 0
-            let extensions = await paginator(argv.hub.related.extensions.list)
+            let extensions: Extension[] = await paginator(argv.hub.related.extensions.list)
             await Promise.all(extensions.map(async ext => {
                 let oldName = ext.name
                 ext.name = nanoid()
@@ -66,7 +63,7 @@ export class ExtensionCleanupHandler extends CleanableResourceHandler {
                 await ext.related.delete()
                 logUpdate(`${chalk.red('delete')} extension [ ${oldName} ]`)
             }))
-            logComplete(`${chalk.blueBright('extensions')}: [ ${chalk.red(deleteCount)} deleted ]`)
+            logComplete(`${this.resourceTypeDescription}: [ ${chalk.red(deleteCount)} deleted ]`)
         } catch (error) {
             logger.error(error.message || error)
         }

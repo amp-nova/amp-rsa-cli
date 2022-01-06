@@ -9,6 +9,17 @@ import _ from 'lodash'
 import fetch from "node-fetch"
 import { ContentItemHandler } from "./handlers/content-item-handler"
 
+let post = async (url: string, data: any, config: any) => {
+    try {
+        console.log(`POST ${url}`)
+        let x = await axios.post(url, data, config)
+        return x
+    } catch (error) {
+        console.error(`error: ${error.message || error}`)
+        throw error
+    }
+}
+
 export class DynamicContentCredentials {
     clientId: string
     clientSecret: string
@@ -28,7 +39,7 @@ let loginHeaders = {
 let client: DynamicContent
 let hub: Hub
 const login = async (dc: DynamicContentCredentials) => {
-    let oauthResponse = await axios.post(
+    let oauthResponse = await post(
         `https://auth.amplience.net/oauth/token?client_id=${dc.clientId}&client_secret=${dc.clientSecret}&grant_type=client_credentials`,
         {}, loginHeaders)
 
@@ -47,8 +58,9 @@ const login = async (dc: DynamicContentCredentials) => {
 }
 
 const createAndPublishContentItem = async (item: any, repo: ContentRepository) => {
+    console.log(`test: createAndPublishContentItem`)
     try {
-        let response = await axios.post(`${dcUrl}/content-repositories/${repo.id}/content-items`, item, dcHeaders)
+        let response = await post(`${dcUrl}/content-repositories/${repo.id}/content-items`, item, dcHeaders)
         await publishContentItem(response.data)
         return response.data
     } catch (error) {
@@ -62,19 +74,25 @@ const retriablePost = (count: number) => async (url: string, data: any, headers:
     let retryCount = 0
     while (retryCount < count) {
         try {
-            return await axios.post(url, data, headers)
+            return await post(url, data, headers)
         } catch (error) {
             if (error.response.status === 429) { // rate limited            
                 retryCount++
                 await sleep(30)
+            }
+            else {
+                throw error
             }
         }
     }
 }
 const retrier = retriablePost(3)
 
-const publishContentItem = async (item: any) => await retrier(`${dcUrl}/content-items/${item.id}/publish`, {}, dcHeaders)
-const unpublishContentItem = async (item: any) => await axios.post(`${dcUrl}/content-items/${item.id}/unpublish`, {}, dcHeaders)
+const publishContentItem = async (item: any) => {
+    console.log(`test: publishContentItem`)
+    return await retrier(`${dcUrl}/content-items/${item.id}/publish`, {}, dcHeaders)
+}
+const unpublishContentItem = async (item: any) => await post(`${dcUrl}/content-items/${item.id}/unpublish`, {}, dcHeaders)
 
 const synchronizeContentType = async (contentType: ContentType) => await axios.patch(`${dcUrl}/content-types/${contentType.id}/schema`, {}, dcHeaders)
 export const deleteFolder = async (folder: Folder) => await axios.delete(`${dcUrl}/folders/${folder.id}`, dcHeaders)

@@ -199,21 +199,12 @@ const readEnvConfig = async (argv: Context) => {
                         key: 'blog',
                         prod: `${name}.blog-production`,
                         staging: `${name}.blog-staging`
-                    }, {
-                        key: 'ruleBased',
-                        prod: `${name}.rule-based-production`,
-                        staging: `${name}.rule-based-staging`
-                    }, {
-                        key: 'productListSearch',
-                        prod: 'prod_willow_products',
-                        staging: ''
                     }]
                 },
                 cms: {
                     hub: {
                         name,
-                        stagingApi,
-                        socketIoServer: 'https://socketio.prod.nova.amprsa.net'
+                        stagingApi
                     },
                     hubs: [{
                         key: 'productImages',
@@ -343,7 +334,6 @@ export const handler = async (argv: Context): Promise<void> => {
         }
     } catch (error) {
         logger.error(error.message);
-        logger.error(error.stack)
     } finally {
         logRunEnd(argv)
     }

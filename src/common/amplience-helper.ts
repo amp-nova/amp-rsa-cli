@@ -8,16 +8,32 @@ import async from 'async'
 import _ from 'lodash'
 import fetch from "node-fetch"
 import { ContentItemHandler } from "./handlers/content-item-handler"
+import stringify from 'json-stringify-safe'
 
-let post = async (url: string, data: any, config: any) => {
+let request = (method: string = 'get') => async (url: string, data: any = {}, config: any = dcHeaders) => {
     try {
-        console.log(`POST ${url}`)
-        let x = await axios.post(url, data, config)
-        return x
+        logger.debug(`${method.toUpperCase()} ${url}`)
+        if (method === 'post' || method === 'patch') {
+            logger.debug(JSON.stringify(data))
+        }
+
+        return await (axios as any)[method](url, data, config)
     } catch (error) {
-        console.error(`error: ${error.message || error}`)
+        if (error.response?.data?.errors) {
+            logger.error(`${method.toUpperCase()} ${url}`)
+            _.each(error.response?.data?.errors, error => {
+                logger.error(`\t* ${chalk.bold.red(error.code)}: ${error.message}`)
+            })
+        }
         throw error
     }
+}
+
+let http = {
+    post: request('post'),
+    patch: request('patch'),
+    get: request('get'),
+    delete: request('delete')
 }
 
 export class DynamicContentCredentials {
@@ -39,7 +55,7 @@ let loginHeaders = {
 let client: DynamicContent
 let hub: Hub
 const login = async (dc: DynamicContentCredentials) => {
-    let oauthResponse = await post(
+    let oauthResponse = await http.post(
         `https://auth.amplience.net/oauth/token?client_id=${dc.clientId}&client_secret=${dc.clientSecret}&grant_type=client_credentials`,
         {}, loginHeaders)
 
@@ -58,23 +74,17 @@ const login = async (dc: DynamicContentCredentials) => {
 }
 
 const createAndPublishContentItem = async (item: any, repo: ContentRepository) => {
-    console.log(`test: createAndPublishContentItem`)
-    try {
-        let response = await post(`${dcUrl}/content-repositories/${repo.id}/content-items`, item, dcHeaders)
-        await publishContentItem(response.data)
-        return response.data
-    } catch (error) {
-        logger.error(error)
-        throw error
-    }
+    let response = await http.post(`${dcUrl}/content-repositories/${repo.id}/content-items`, item, dcHeaders)
+    await publishContentItem(response.data)
+    return response.data
 }
 
 const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
-const retriablePost = (count: number) => async (url: string, data: any, headers: any) => {
+const retriablePost = (count: number) => async (url: string, data: any = {}, headers: any = dcHeaders) => {
     let retryCount = 0
     while (retryCount < count) {
         try {
-            return await post(url, data, headers)
+            return await http.post(url, data, headers)
         } catch (error) {
             if (error.response.status === 429) { // rate limited            
                 retryCount++
@@ -88,14 +98,11 @@ const retriablePost = (count: number) => async (url: string, data: any, headers:
 }
 const retrier = retriablePost(3)
 
-const publishContentItem = async (item: any) => {
-    console.log(`test: publishContentItem`)
-    return await retrier(`${dcUrl}/content-items/${item.id}/publish`, {}, dcHeaders)
-}
-const unpublishContentItem = async (item: any) => await post(`${dcUrl}/content-items/${item.id}/unpublish`, {}, dcHeaders)
+const publishContentItem = async (item: any) => await retrier(`${dcUrl}/content-items/${item.id}/publish`)
+const unpublishContentItem = async (item: any) => await http.post(`${dcUrl}/content-items/${item.id}/unpublish`)
 
-const synchronizeContentType = async (contentType: ContentType) => await axios.patch(`${dcUrl}/content-types/${contentType.id}/schema`, {}, dcHeaders)
-export const deleteFolder = async (folder: Folder) => await axios.delete(`${dcUrl}/folders/${folder.id}`, dcHeaders)
+const synchronizeContentType = async (contentType: ContentType) => await http.patch(`${dcUrl}/content-types/${contentType.id}/schema`)
+export const deleteFolder = async (folder: Folder) => await http.delete(`${dcUrl}/folders/${folder.id}`)
 
 export const publishUnpublished = async () => {
     let publishedItemCount = 0

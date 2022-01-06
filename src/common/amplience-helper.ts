@@ -52,13 +52,28 @@ const createAndPublishContentItem = async (item: any, repo: ContentRepository) =
     return response.data
 }
 
-const publishContentItem = async (item: any) => await axios.post(`${dcUrl}/content-items/${item.id}/publish`, {}, dcHeaders)
+const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
+const retriablePost = (count: number) => async (url: string, data: any, headers: any) => {
+    let retryCount = 0
+    while (retryCount < count) {
+        try {
+            return await axios.post(url, data, headers)
+        } catch (error) {
+            if (error.response.status === 429) { // rate limited            
+                retryCount++
+                await sleep(30)
+            }
+        }
+    }
+}
+const retrier = retriablePost(3)
+
+const publishContentItem = async (item: any) => await retrier(`${dcUrl}/content-items/${item.id}/publish`, {}, dcHeaders)
 const unpublishContentItem = async (item: any) => await axios.post(`${dcUrl}/content-items/${item.id}/unpublish`, {}, dcHeaders)
 
 const synchronizeContentType = async (contentType: ContentType) => await axios.patch(`${dcUrl}/content-types/${contentType.id}/schema`, {}, dcHeaders)
 export const deleteFolder = async (folder: Folder) => await axios.delete(`${dcUrl}/folders/${folder.id}`, dcHeaders)
 
-const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
 export const publishUnpublished = async () => {
     let publishedItemCount = 0
     let unpublishedItemCount = 1

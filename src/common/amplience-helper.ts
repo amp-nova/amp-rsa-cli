@@ -6,6 +6,8 @@ import { paginator } from "./paginator"
 import { logUpdate } from "./logger"
 import async from 'async'
 import _ from 'lodash'
+import fetch from "node-fetch"
+import { ContentItemHandler } from "./handlers/content-item-handler"
 
 export class DynamicContentCredentials {
     clientId: string
@@ -38,37 +40,38 @@ const login = async (dc: DynamicContentCredentials) => {
     hub = await client.hubs.get(dc.hubId)
 
     accessToken = oauthResponse.data.access_token
-    dcHeaders = { headers: { authorization: `bearer ${accessToken}` } }
-
-    axios.defaults.baseURL = dcUrl
-    axios.defaults.headers.common['authorization'] = `bearer ${accessToken}`
-    axios.defaults.data = {}
+    dcHeaders = { headers: { authorization: `bearer ${accessToken}`, 'content-type': 'application/json' } }
 
     logger.debug(`${chalk.green('logged in')} to dynamic content at ${chalk.yellow(new Date().valueOf())}`)
     setTimeout(() => { login(dc) }, oauthResponse.data.expires_in * 1000)
 }
 
 const createAndPublishContentItem = async (item: any, repo: ContentRepository) => {
-    let response = await axios.post(`/content-repositories/${repo.id}/content-items`, item)
+    let response = await axios.post(`${dcUrl}/content-repositories/${repo.id}/content-items`, item, dcHeaders)
     await publishContentItem(response.data)
     return response.data
 }
 
-const publishContentItem = async (item: any) => await axios.post(`/content-items/${item.id}/publish`)
-const unpublishContentItem = async (item: any) => await axios.post(`/content-items/${item.id}/unpublish`)
+const publishContentItem = async (item: any) => await axios.post(`${dcUrl}/content-items/${item.id}/publish`, {}, dcHeaders)
+const unpublishContentItem = async (item: any) => await axios.post(`${dcUrl}/content-items/${item.id}/unpublish`, {}, dcHeaders)
 
-const synchronizeContentType = async (contentType: ContentType) => await axios.patch(`/content-types/${contentType.id}/schema`)
-export const deleteFolder = async (folder: Folder) => await axios.delete(`/folders/${folder.id}`)
+const synchronizeContentType = async (contentType: ContentType) => await axios.patch(`${dcUrl}/content-types/${contentType.id}/schema`, {}, dcHeaders)
+export const deleteFolder = async (folder: Folder) => await axios.delete(`${dcUrl}/folders/${folder.id}`, dcHeaders)
 
 const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
 export const publishUnpublished = async () => {
+    let publishedItemCount = 0
     let unpublishedItemCount = 1
     let oldUnpublishedItemCount = 0
 
     while (unpublishedItemCount > 0) {
-        unpublishedItemCount = await waitForPublishingQueue()
+        let { published, unpublished } = await waitForPublishingQueue()
+
+        unpublishedItemCount = unpublished
+        publishedItemCount = published
 
         if (oldUnpublishedItemCount === unpublishedItemCount) {
+            logComplete(`${new ContentItemHandler().getDescription()}: [ ${chalk.green(publishedItemCount)} published ]`)
             return await publishAll()
         }
         else {
@@ -86,22 +89,27 @@ export const publishUnpublished = async () => {
 export const waitForPublishingQueue = async () => {
     logUpdate(`wait for publishing queue to complete...`)
     let repositories = await paginator(hub.related.contentRepositories.list)
-    let unpublishedCount = 0
+    let count = {
+        published: 0,
+        unpublished: 0
+    }
 
     await async.eachSeries(repositories, async (repo, callback) => {
         let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
         await async.eachSeries(contentItems, async (contentItem, cb) => {
             if (!(contentItem as any).lastPublishedDate) {
-                unpublishedCount++
+                count.unpublished++
+            }
+            else {
+                count.published++
             }
             cb()
         })
         callback()
     })
 
-    return unpublishedCount
+    return count
 }
-
 
 const publishAll = async () => {
     let repositories: ContentRepository[] = await paginator(hub.related.contentRepositories.list)
@@ -113,15 +121,15 @@ const publishAll = async () => {
         await async.eachSeries(contentItems, async (contentItem, cb) => {
             if (!contentItem.lastPublishedDate) {
                 logUpdate(`${chalk.greenBright('publish')} content item ${contentItem.id}`)
+                publishedCount++
                 await publishContentItem(contentItem)
                 await sleep(500)
             }
-            publishedCount++
             cb()
         })
         callback()
     })
-    logComplete(`${chalk.blueBright('content items')}: [ ${chalk.green(publishedCount)} published ]`)
+    logComplete(`${new ContentItemHandler().getDescription()}: [ ${chalk.green(publishedCount)} published ]`)
 }
 
 const unpublishAll = async () => {
@@ -143,7 +151,7 @@ const unpublishAll = async () => {
         })
         callback()
     })
-    logComplete(`${chalk.blueBright('content items')}: [ ${chalk.red(unpublishedCount)} unpublished ]`)
+    logComplete(`${new ContentItemHandler().getDescription()}: [ ${chalk.red(unpublishedCount)} unpublished ]`)
 }
 
 export default {

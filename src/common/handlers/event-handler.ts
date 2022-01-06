@@ -1,4 +1,4 @@
-import { CleanableResourceHandler, Context } from "./resource-handler"
+import { Context, ResourceHandler } from "./resource-handler"
 import { Event, PublishingStatus } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
@@ -6,10 +6,11 @@ import logger from "../logger"
 import chalk from 'chalk'
 import { prompts } from "../prompts"
 
-export class EventCleanupHandler extends CleanableResourceHandler {
+export class EventHandler extends ResourceHandler {
+    icon = '📅'
+
     constructor() {
         super(Event, 'events')
-        this.icon = ''
     }
 
     async cleanup(argv: Context): Promise<any> {

@@ -1,4 +1,4 @@
-import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
+import { CleanableResourceHandler, Context } from "./resource-handler"
 import { ContentTypeSchema } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
@@ -8,26 +8,25 @@ import { resolveSchemaBody } from "../schema-helper"
 import fs from 'fs-extra'
 import { logUpdate, logComplete } from '../logger'
 
-export class ContentTypeSchemaImportHandler extends ImportableResourceHandler {
-    sourceDir?: string
+export class ContentTypeSchemaHandler extends CleanableResourceHandler {
+    sortPriority = 1.09
+    icon = '🗄'
 
-    constructor(sourceDir?: string) {
-        super(ContentTypeSchema, 'content type schema', sourceDir)
-        this.sortPriority = 0.01
-        this.icon = '🗄'
+    constructor() {
+        super(ContentTypeSchema, 'contentTypeSchema')
     }
 
     async import(context: Context): Promise<any> {
-        let { hub } = context
-        let baseDir = this.sourceDir || `${global.tempDir}/content/core`
-        this.sourceDir = `${baseDir}/content-type-schemas`
+        let { hub, importSourceDir } = context
+        let baseDir = importSourceDir || `${global.tempDir}/content/core`
+        let sourceDir = `${baseDir}/content-type-schemas`
 
-        if (!fs.existsSync(this.sourceDir)) {
+        if (!fs.existsSync(sourceDir)) {
             return
         }
 
-        const schemas = loadJsonFromDirectory<ContentTypeSchema>(this.sourceDir, ContentTypeSchema);
-        const [resolvedSchemas, resolveSchemaErrors] = await resolveSchemaBody(schemas, this.sourceDir);
+        const schemas = loadJsonFromDirectory<ContentTypeSchema>(sourceDir, ContentTypeSchema);
+        const [resolvedSchemas, resolveSchemaErrors] = await resolveSchemaBody(schemas, sourceDir);
 
         if (Object.keys(resolveSchemaErrors).length > 0) {
             const errors = Object.entries(resolveSchemaErrors)
@@ -66,14 +65,6 @@ export class ContentTypeSchemaImportHandler extends ImportableResourceHandler {
             }
         }))
 
-        logComplete(`${this.resourceTypeDescription}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ]`)
-    }
-}
-
-export class ContentTypeSchemaCleanupHandler extends CleanableResourceHandler {
-    constructor() {
-        super(ContentTypeSchema, 'content type schema')
-        this.icon = '🗄'
-        this.sortPriority = 1.09
+        logComplete(`${this.getDescription()}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ]`)
     }
 }

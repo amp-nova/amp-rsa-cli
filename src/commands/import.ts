@@ -1,23 +1,23 @@
 import _, { Dictionary } from 'lodash'
-import { Argv } from 'yargs';
+import { Argv, config } from 'yargs';
 import fs from 'fs-extra'
 import { currentEnvironment } from '../common/environment-manager'
 import { ContentRepository, ContentItem, WorkflowState } from 'dc-management-sdk-js'
 import chalk from 'chalk'
 import logger, { logHeadline, logRunEnd } from '../common/logger';
 
-import { ContentTypeSchemaImportHandler } from '../common/handlers/content-type-schema-handler';
-import { ContentTypeImportHandler } from '../common/handlers/content-type-handler';
+import { ContentTypeSchemaHandler } from '../common/handlers/content-type-schema-handler';
+import { ContentTypeHandler } from '../common/handlers/content-type-handler';
+import { ContentItemHandler } from '../common/handlers/content-item-handler';
+import { ExtensionHandler } from '../common/handlers/extension-handler';
+import { SearchIndexHandler } from '../common/handlers/search-index-handler';
+import { SettingsHandler } from '../common/handlers/settings-handler';
 
 import { paginator, searchIndexPaginator } from '../common/paginator';
 
 import amplience from '../common/amplience-helper';
 import { Context } from '../common/handlers/resource-handler';
-import { ContentItemImportHandler } from '../common/handlers/content-item-handler';
 import { copyTemplateFilesToTempDir } from '../common/import-helper';
-import { ExtensionImportHandler } from '../common/handlers/extension-handler';
-import { SearchIndexImportHandler } from '../common/handlers/search-index-handler';
-import { SettingsImportHandler } from '../common/handlers/settings-handler';
 import { Stats } from 'fs';
 import { DAMService } from '../common/dam/dam-service';
 
@@ -63,19 +63,16 @@ export const settingsBuilder = (yargs: Argv): Argv =>
         .help();
 
 const installContent = async (context: Context) => {
-    let contentItemHandler = new ContentItemImportHandler(`${global.tempDir}/content`)
-    await contentItemHandler.import(context)
+    await new ContentItemHandler().import(context)
 }
 
 const installContentTypes = async (context: Context) => {
     await installContentTypeSchemas(context)
-    let contentTypeHandler = new ContentTypeImportHandler(`${global.tempDir}/content`)
-    await contentTypeHandler.import(context)
+    await new ContentTypeHandler().import(context)
 }
 
 const installContentTypeSchemas = async (context: Context) => {
-    let contentTypeSchemaHandler = new ContentTypeSchemaImportHandler(`${global.tempDir}/content`)
-    await contentTypeSchemaHandler.import(context)
+    await new ContentTypeSchemaHandler().import(context)
 }
 
 const getDAMAssets = async (argv: Context) => {
@@ -94,9 +91,17 @@ const readDAMMapping = async (argv: Context) => {
 }
 
 let contentMap: Dictionary<ContentItem> = {}
-const cacheContentMap = async (repo: ContentRepository) => {
-    let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
-    contentMap = _.keyBy(contentItems, 'body._meta.deliveryKey')
+const cacheContentMap = async (argv: Context) => {
+    await Promise.all((await paginator(argv.hub.related.contentRepositories.list, { status: 'ACTIVE' })).map(async repo => {
+        let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
+        _.each(_.filter(contentItems, ci => ci.body._meta?.deliveryKey), (ci: ContentItem) => {
+            contentMap[ci.body._meta.deliveryKey] = ci
+        })
+    }))
+}
+
+const getContentItemByKey = async (key: string) => {
+    return contentMap[key]
 }
 
 const initAutomation = async (argv: Context) => {
@@ -116,7 +121,7 @@ const readAutomation = async (argv: Context) => {
     let { env } = currentEnvironment()
     let deliveryKey = `aria/automation/${argv.ariaKey}`
 
-    let automation = contentMap[deliveryKey] as any
+    let automation = await getContentItemByKey(deliveryKey) as any
     if (!automation) {
         logger.info(`${deliveryKey} not found, creating...`)
         let automationItem = {
@@ -132,7 +137,7 @@ const readAutomation = async (argv: Context) => {
                 workflowStates: []
             }
         }
-        automation = await amplience.createAndPublishContentItem(automationItem, argv.repositories.content)
+        automation = await amplience.createAndPublishContentItem(automationItem, argv.repositories.siteComponents)
     }
 
     return automation
@@ -163,26 +168,16 @@ const updateAutomation = async (argv: Context) => {
     }
 }
 
-const readHierarchies = async (argv: Context) => {
-    let { mapping } = argv
-    let taxonomies = contentMap['hierarchy/taxonomies'] as any
-    let configuration = contentMap['hierarchy/configuration'] as any
-    mapping.cms.hierarchies = {
-        taxonomies: taxonomies?._meta.deliveryId,
-        configuration: configuration?._meta.deliveryId
-    }
-}
-
 const readEnvConfig = async (argv: Context) => {
     let { env } = currentEnvironment()
     let { hub, mapping, ariaKey } = argv
     let deliveryKey = `aria/env/${ariaKey}`
 
-    logger.info(`read settings for key ${chalk.blueBright(deliveryKey)} on hub ${chalk.magentaBright(hub.name)} `)
+    logger.info(`environment lookup [ hub ${chalk.magentaBright(hub.name)} ] [ key ${chalk.blueBright(deliveryKey)} ]`)
 
     const stagingApi = await hub.settings?.virtualStagingEnvironment?.hostname || ''
 
-    let envConfig = contentMap[deliveryKey]?.body
+    let envConfig = await getContentItemByKey(deliveryKey)
     if (!envConfig) {
         logger.info(`${deliveryKey} not found, creating...`)
 
@@ -229,9 +224,9 @@ const readEnvConfig = async (argv: Context) => {
         }
 
         // process step 8: npm run automate:webapp:configure
-        envConfig = (await amplience.createAndPublishContentItem(config, argv.repositories.content)).body
+        envConfig = await amplience.createAndPublishContentItem(config, argv.repositories.siteComponents)
     }
-    return envConfig
+    return envConfig.body
 }
 
 export const builder = (yargs: Argv): void => { settingsBuilder(yargs).array('include') }
@@ -254,6 +249,7 @@ export const handler = async (argv: Context): Promise<void> => {
 
         let content = _.find(repositories, repo => repo.name === 'content')
         let siteComponents = _.find(repositories, repo => repo.name === 'sitestructure')
+        let emailMarketing = _.find(repositories, repo => repo.name === 'emailmarketing')
 
         if (!content) {
             throw new Error(`repository 'content' not found, please make sure it exists`)
@@ -263,15 +259,16 @@ export const handler = async (argv: Context): Promise<void> => {
             throw new Error(`repository 'sitestructure' not found, please make sure it exists`)
         }
 
+        if (!emailMarketing) {
+            throw new Error(`repository 'emailmarketing' not found, please make sure it exists`)
+        }
+
         // add the content repository to our context
         argv.repositories = {
             content,
-            siteComponents
+            siteComponents,
+            emailMarketing
         }
-
-        // caching a map of current content items. this appears to obviate the issue of archived items
-        // hanging out on published delivery keys
-        await cacheContentMap(content)
 
         let mapping: any = {
             app: { url: env.url },
@@ -280,6 +277,8 @@ export const handler = async (argv: Context): Promise<void> => {
 
         // set up our mapping template
         argv.mapping = mapping
+        argv.importSourceDir = `${global.tempDir}/content`
+
         copyTemplateFilesToTempDir(argv.automationDir as string, mapping)
 
         // process step 2: npm run automate:schemas
@@ -302,45 +301,49 @@ export const handler = async (argv: Context): Promise<void> => {
         // read the automation content
         await initAutomation(argv)
 
+        // caching a map of current content items. this appears to obviate the issue of archived items
+        // hanging out on published delivery keys
+        await cacheContentMap(argv)
+
         copyTemplateFilesToTempDir(argv.automationDir as string, mapping)
 
         logHeadline(`Phase 2: import/update`)
 
         // process step 1: npm run automate:settings
-        await new SettingsImportHandler().import(argv)
+        await new SettingsHandler().import(argv)
 
         // process step 4: npm run automate:extensions
-        await new ExtensionImportHandler().import(argv)
+        await new ExtensionHandler().import(argv)
 
         // process step 5: npm run automate:indexes
-        await new SearchIndexImportHandler().import(argv)
+        await new SearchIndexHandler().import(argv)
 
         if (!argv.skipContentImport) {
             // process step 6: npm run automate:content-with-republish
             await installContent(argv)
 
-            // recache
-            await cacheContentMap(content)
+            logHeadline(`Phase 3: update automation`)
 
-            logHeadline(`Phase 3: reentrant import`)
+            // update the automation content item with any new mapping content generated
+            await updateAutomation(argv)
+
+            // recache
+            await cacheContentMap(argv)
+
+            logHeadline(`Phase 4: reentrant import`)
 
             // process step 7: npm run automate:schemas
             // now that we've installed the core content, we need to go through again for content types
             // that point to a specific hierarchy node
-            await readHierarchies(argv)
+            mapping.contentMap = _.zipObject(_.map(contentMap, (__, key) => key.replace(/\//g, '-')), _.map(contentMap, 'deliveryId'))
 
             // recopy template files with new mappings
             copyTemplateFilesToTempDir(argv.automationDir as string, mapping)
             await installContentTypes(argv)
-
-            logHeadline(`Phase 4: cleanup`)
-
-            // update the automation content item with any new mapping content generated
-            await updateAutomation(argv)
         }
     } catch (error) {
         logger.error(error.message);
     } finally {
         logRunEnd(argv)
-    }    
+    }
 }

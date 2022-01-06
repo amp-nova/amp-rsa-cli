@@ -14,11 +14,14 @@ export interface Options {
     ariaKey: string
 
     mapping: Mapping
+
+    importSourceDir?: string
 }
 
 export interface RepositoryMapping {
     content: ContentRepository
     siteComponents: ContentRepository
+    emailMarketing: ContentRepository
 }
 
 export interface Mapping {
@@ -34,6 +37,7 @@ export interface AppMapping {
 
 export interface CMSMapping {
     hierarchies: HierarchyMapping
+    brandColors: string
     hub: AmplienceHub
     hubs: any
     repositories: any

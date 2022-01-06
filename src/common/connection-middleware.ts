@@ -1,6 +1,6 @@
 import { Arguments } from "yargs";
 import { currentEnvironment } from "./environment-manager";
-import { DynamicContent, Hub } from "dc-management-sdk-js";
+import { ContentTypeSchema, DynamicContent, Hub } from "dc-management-sdk-js";
 import { DAMService } from "./dam/dam-service";
 import amplienceHelper from "./amplience-helper";
 import _ from 'lodash'

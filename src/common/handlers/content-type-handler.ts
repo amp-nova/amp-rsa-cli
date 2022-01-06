@@ -1,4 +1,4 @@
-import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
+import { CleanableResourceHandler, Context, Cleanable } from "./resource-handler"
 import { ContentType, ContentRepository } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
@@ -36,26 +36,27 @@ export const validateNoDuplicateContentTypeUris = (importedContentTypes: { [file
     }
 };
 
-export class ContentTypeImportHandler extends ImportableResourceHandler {
-    constructor(sourceDir?: string) {
-        super(ContentType, 'content types', sourceDir)
-        this.sortPriority = 0.02
-        this.icon = '🗂'
+export class ContentTypeHandler extends CleanableResourceHandler {
+    sortPriority = 1.1
+    icon = '🗂'
+
+    constructor() {
+        super(ContentType, 'contentTypes')
     }
 
     async import(context: Context): Promise<any> {
-        let { hub } = context
-        let baseDir = this.sourceDir || `${global.tempDir}/content`
-        this.sourceDir = `${baseDir}/content-types`
-        if (!fs.existsSync(this.sourceDir)) {
+        let { hub, importSourceDir } = context
+        let baseDir = importSourceDir || `${global.tempDir}/content`
+        let sourceDir = `${baseDir}/content-types`
+        if (!fs.existsSync(sourceDir)) {
             return
         }
 
-        const jsonTypes = loadJsonFromDirectory<ContentTypeWithRepositoryAssignments>(this.sourceDir, ContentTypeWithRepositoryAssignments
+        const jsonTypes = loadJsonFromDirectory<ContentTypeWithRepositoryAssignments>(sourceDir, ContentTypeWithRepositoryAssignments
         );
 
         if (Object.keys(jsonTypes).length === 0) {
-            throw new Error(`No content types found in ${this.sourceDir}`);
+            throw new Error(`No content types found in ${sourceDir}`);
         }
         validateNoDuplicateContentTypeUris(jsonTypes);
 
@@ -128,16 +129,8 @@ export class ContentTypeImportHandler extends ImportableResourceHandler {
             logUpdate(`${prompts.sync} content type [ ${chalk.gray(type.contentTypeUri)} ]`)
         }))
 
-        logComplete(`${this.resourceTypeDescription}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ] [ ${chalk.green(synchronizedCount)} synced ]`)
-        logger.info(`${chalk.cyan('repositories')}: [ ${chalk.green(assignedCount)} content types assigned ] [ ${chalk.red(unassignedCount)} content types unassigned ]`)
-    }
-}
-
-export class ContentTypeCleanupHandler extends CleanableResourceHandler {
-    constructor() {
-        super(ContentType, 'content types')
-        this.icon = '🗂'
-        this.sortPriority = 1.1
+        logComplete(`${this.getDescription()}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ] [ ${chalk.green(synchronizedCount)} synced ]`)
+        logger.info(`${chalk.cyan('📦  repositories')}: [ ${chalk.green(assignedCount)} content types assigned ] [ ${chalk.red(unassignedCount)} content types unassigned ]`)
     }
 
     async cleanup(argv: Context): Promise<any> {
@@ -157,7 +150,9 @@ export class ContentTypeCleanupHandler extends CleanableResourceHandler {
             }
         }))
 
-        logComplete(`${chalk.cyan(`repositories`)}: [ ${chalk.red(unassignedCount)} content types unassigned ]`)
-        return super.cleanup(argv)
+        logComplete(`${chalk.cyan(`📦  repositories`)}: [ ${chalk.red(unassignedCount)} content types unassigned ]`)
+
+        // now clean up the content types
+        await super.cleanup(argv)
     }
 }

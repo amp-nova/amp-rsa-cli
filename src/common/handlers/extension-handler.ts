@@ -1,4 +1,4 @@
-import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
+import { ResourceHandler, Context, Cleanable } from "./resource-handler"
 import { Extension } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
@@ -11,11 +11,12 @@ import { customAlphabet } from "nanoid"
 import { lowercase } from "nanoid-dictionary"
 const nanoid = customAlphabet(lowercase, 50)
 
-export class ExtensionImportHandler extends ImportableResourceHandler {
+export class ExtensionHandler extends ResourceHandler implements Cleanable {
+    icon = '🔌'
+    sortPriority = 1.1
+
     constructor() {
         super(Extension, 'extensions')
-        this.icon = '⚙️'
-        this.sortPriority = 1.1
     }
 
     async import(argv: Context): Promise<any> {
@@ -41,14 +42,7 @@ export class ExtensionImportHandler extends ImportableResourceHandler {
             }
         }))
 
-        logComplete(`${this.resourceTypeDescription}: [ ${chalk.green(createCount)} created ]`)
-    }
-}
-
-export class ExtensionCleanupHandler extends CleanableResourceHandler {
-    constructor() {
-        super(Extension, 'extensions')
-        this.icon = '⚙️'
+        logComplete(`${this.getDescription()}: [ ${chalk.green(createCount)} created ]`)
     }
 
     async cleanup(argv: Context): Promise<any> {
@@ -63,7 +57,7 @@ export class ExtensionCleanupHandler extends CleanableResourceHandler {
                 await ext.related.delete()
                 logUpdate(`${chalk.red('delete')} extension [ ${oldName} ]`)
             }))
-            logComplete(`${this.resourceTypeDescription}: [ ${chalk.red(deleteCount)} deleted ]`)
+            logComplete(`${this.getDescription()}: [ ${chalk.red(deleteCount)} deleted ]`)
         } catch (error) {
             logger.error(error.message || error)
         }

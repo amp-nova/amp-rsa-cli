@@ -1,4 +1,4 @@
-import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
+import { Cleanable, ResourceHandler, Context } from "./resource-handler"
 import { SearchIndex, Webhook } from "dc-management-sdk-js"
 import { paginator, searchIndexPaginator, replicaPaginator } from "../paginator"
 import _ from 'lodash'
@@ -35,11 +35,12 @@ const retry = (count: number) => async (fn: () => Promise<any>, message: string)
 }
 const retrier = retry(3)
 
-export class SearchIndexImportHandler extends ImportableResourceHandler {
+export class SearchIndexHandler extends ResourceHandler implements Cleanable {
+    icon = '🔍'
+    sortPriority = 1.09
+
     constructor() {
-        super(SearchIndex, 'search indexes')
-        this.icon = '🔍'
-        this.sortPriority = 1.09
+        super(SearchIndex, 'searchIndexes')
     }
 
     async import(argv: Context) {
@@ -121,14 +122,7 @@ export class SearchIndexImportHandler extends ImportableResourceHandler {
         algolia.indexes = _.keyBy(mapping.algolia.indexes, 'key')
         mapping.algolia = algolia
 
-        logComplete(`${this.resourceTypeDescription}: [ ${chalk.green(searchIndexCount)} created ] [ ${chalk.green(replicaCount)} replicas created ] [ ${chalk.green(webhookCount)} webhooks created ]`)
-    }
-}
-
-export class SearchIndexCleanupHandler extends CleanableResourceHandler {
-    constructor() {
-        super(SearchIndex, 'searchIndexes')
-        this.icon = '🔍'
+        logComplete(`${this.getDescription()}: [ ${chalk.green(searchIndexCount)} created ] [ ${chalk.green(replicaCount)} replicas created ] [ ${chalk.green(webhookCount)} webhooks created ]`)
     }
 
     async cleanup(argv: Context): Promise<any> {
@@ -150,6 +144,6 @@ export class SearchIndexCleanupHandler extends CleanableResourceHandler {
             callback()
         }))
 
-        logComplete(`${this.resourceTypeDescription}: [ ${chalk.red(searchIndexCount)} deleted ] [ ${chalk.red(replicaCount)} replicas deleted ]`)
+        logComplete(`${this.getDescription()}: [ ${chalk.red(searchIndexCount)} deleted ] [ ${chalk.red(replicaCount)} replicas deleted ]`)
     }
 }

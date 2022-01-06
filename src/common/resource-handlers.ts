@@ -1,29 +1,24 @@
 // import handlers
 import { Cleanable, Exportable, Importable, ResourceHandler } from './handlers/resource-handler';
-import { EventCleanupHandler } from './handlers/event-handler';
-import { ExtensionCleanupHandler, ExtensionImportHandler } from './handlers/extension-handler';
-import { SearchIndexImportHandler, SearchIndexCleanupHandler } from './handlers/search-index-handler';
-import { ContentItemImportHandler, ContentItemCleanupHandler } from './handlers/content-item-handler';
-import { ContentTypeImportHandler, ContentTypeCleanupHandler } from './handlers/content-type-handler';
-import { ContentTypeSchemaImportHandler, ContentTypeSchemaCleanupHandler } from './handlers/content-type-schema-handler';
-import { SettingsImportHandler } from './handlers/settings-handler';
+import { EventHandler } from './handlers/event-handler';
+import { ExtensionHandler } from './handlers/extension-handler';
+import { SearchIndexHandler } from './handlers/search-index-handler';
+import { ContentItemHandler } from './handlers/content-item-handler';
+import { ContentTypeHandler } from './handlers/content-type-handler';
+import { ContentTypeSchemaHandler } from './handlers/content-type-schema-handler';
+import { SettingsHandler } from './handlers/settings-handler';
+import { WebhookHandler } from './handlers/webhook-handler';
 import _ from 'lodash';
-import { WebhookCleanupHandler } from './handlers/webhook-handler';
 
 export const Handlers: ResourceHandler[] = [
-    new EventCleanupHandler(),
-    new ExtensionCleanupHandler(),
-    new ExtensionImportHandler(),
-    new SearchIndexCleanupHandler(),
-    new SearchIndexImportHandler(),
-    new ContentItemCleanupHandler(),
-    new ContentItemImportHandler(),
-    new ContentTypeCleanupHandler(),
-    new ContentTypeImportHandler(),
-    new ContentTypeSchemaCleanupHandler(),
-    new ContentTypeSchemaImportHandler(),
-    new SettingsImportHandler(),
-    new WebhookCleanupHandler
+    new EventHandler(),
+    new ExtensionHandler(),
+    new SearchIndexHandler(),
+    new ContentItemHandler(),
+    new ContentTypeHandler(),
+    new ContentTypeSchemaHandler(),
+    new SettingsHandler(),
+    new WebhookHandler()
 ]
 
 export const Cleanables: Cleanable[] = _.filter(Handlers, h => 'cleanup' in h) as Cleanable[]

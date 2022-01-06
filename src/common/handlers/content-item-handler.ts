@@ -1,4 +1,4 @@
-import { CleanableResourceHandler, ImportableResourceHandler, Context } from "./resource-handler"
+import { ResourceHandler, Context, Cleanable } from "./resource-handler"
 import { ContentItem, ContentRepository, Folder } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import chalk from 'chalk'
@@ -9,22 +9,23 @@ import { logUpdate, logComplete } from "../logger"
 import { CLIJob } from "../exec-helper"
 import _ from "lodash"
 
-export class ContentItemImportHandler extends ImportableResourceHandler {
-    constructor(sourceDir?: string) {
-        super(ContentItem, 'content items', sourceDir)
-        this.sortPriority = 0.03
-        this.icon = '📁'
+export class ContentItemHandler extends ResourceHandler implements Cleanable {
+    sortPriority = 0.03
+    icon = '📄'
+
+    constructor() {
+        super(ContentItem, 'contentItems')
     }
 
     async import(context: Context) {
-        let baseDir = this.sourceDir || `${global.tempDir}/content`
-        this.sourceDir = `${baseDir}/content-items`
-        if (!fs.existsSync(this.sourceDir)) {
+        let baseDir = context.importSourceDir || `${global.tempDir}/content`
+        let sourceDir = `${baseDir}/content-items`
+        if (!fs.existsSync(sourceDir)) {
             return
         }
 
         let importLogFile = `${global.tempDir}/item-import.log`
-        let importJob = new CLIJob(`npx @amp-nova/dc-cli content-item import ${this.sourceDir} -f --republish --publish --mapFile ${global.tempDir}/mapping.json --logFile ${importLogFile}`)
+        let importJob = new CLIJob(`npx @amp-nova/dc-cli content-item import ${sourceDir} -f --republish --publish --mapFile ${global.tempDir}/mapping.json --logFile ${importLogFile}`)
 
         await importJob.exec()
 
@@ -41,16 +42,9 @@ export class ContentItemImportHandler extends ImportableResourceHandler {
             }
         })
 
-        logComplete(`${this.resourceTypeDescription}: [ ${chalk.green(createdCount)} created ] [ ${chalk.blue(updatedCount)} updated ]`)
+        logComplete(`${this.getDescription()}: [ ${chalk.green(createdCount)} created ] [ ${chalk.blue(updatedCount)} updated ]`)
 
         await publishUnpublished()
-    }
-}
-
-export class ContentItemCleanupHandler extends CleanableResourceHandler {
-    constructor() {
-        super(ContentItem, 'content items')
-        this.icon = '📁'
     }
 
     async cleanup(argv: Context): Promise<any> {
@@ -86,6 +80,6 @@ export class ContentItemCleanupHandler extends CleanableResourceHandler {
             await Promise.all(folders.map(cleanupFolder))
 
         }))
-        logComplete(`${this.resourceTypeDescription}: [ ${chalk.yellow(archiveCount)} items archived ] [ ${chalk.red(folderCount)} folders deleted ]`)
+        logComplete(`${this.getDescription()}: [ ${chalk.yellow(archiveCount)} items archived ] [ ${chalk.red(folderCount)} folders deleted ]`)
     }
 }

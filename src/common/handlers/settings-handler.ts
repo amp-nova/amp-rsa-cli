@@ -1,4 +1,4 @@
-import { ImportableResourceHandler, Context } from "./resource-handler"
+import { ResourceHandler, Context, Importable } from "./resource-handler"
 import fs from 'fs-extra'
 import _ from 'lodash'
 import { paginator } from "../paginator"
@@ -7,7 +7,9 @@ import logger from "../logger"
 import { prompts } from "../prompts"
 import chalk from "chalk"
 
-export class SettingsImportHandler extends ImportableResourceHandler {
+export class SettingsHandler extends ResourceHandler {
+    icon = '🛠'
+    
     constructor() {
         super(undefined, 'settings')
     }

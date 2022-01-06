@@ -47,9 +47,14 @@ const login = async (dc: DynamicContentCredentials) => {
 }
 
 const createAndPublishContentItem = async (item: any, repo: ContentRepository) => {
-    let response = await axios.post(`${dcUrl}/content-repositories/${repo.id}/content-items`, item, dcHeaders)
-    await publishContentItem(response.data)
-    return response.data
+    try {
+        let response = await axios.post(`${dcUrl}/content-repositories/${repo.id}/content-items`, item, dcHeaders)
+        await publishContentItem(response.data)
+        return response.data
+    } catch (error) {
+        logger.error(error)
+        throw error
+    }
 }
 
 const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))

@@ -343,6 +343,7 @@ export const handler = async (argv: Context): Promise<void> => {
         }
     } catch (error) {
         logger.error(error.message);
+        logger.error(error.stack)
     } finally {
         logRunEnd(argv)
     }

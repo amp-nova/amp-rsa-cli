@@ -78,7 +78,7 @@ const retriablePost = (count: number) => async (url: string, data: any, headers:
         } catch (error) {
             if (error.response.status === 429) { // rate limited            
                 retryCount++
-                await sleep(30)
+                await sleep(30000)
             }
             else {
                 throw error

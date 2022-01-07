@@ -9,21 +9,6 @@ import logger from './common/logger';
 import { prompts } from './common/prompts';
 import _ from 'lodash';
 
-const punycode = require('punycode')
-
-//This regex requires Node > 10 (or Babel) as it's ES2018 
-const regexSymbolWithCombiningMarks = /(\P{Mark})(\p{Mark}+)/gu;
-
-const countSymbolsIgnoringCombiningMarks = (string: string) => {
-  // Remove any combining marks, leaving only the symbols they belong to:
-  const stripped = string.replace(regexSymbolWithCombiningMarks, ($0, symbol, combiningMarks) => {
-    return symbol
-  })
-
-  // Account for astral symbols / surrogates, just like we did before:
-  return punycode.ucs2.decode(stripped).length
-}
-
 const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
   return new Promise(
     async (resolve): Promise<void> => {
@@ -57,6 +42,13 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
             argv.startTime = new Date()
           }
         }])
+        .options({
+          logRequests: {
+            alias: 'l',
+            describe: 'log HTTP requests and responses',
+            default: false
+          },
+        })
         .fail(failFn).argv;
       resolve(argv);
     }

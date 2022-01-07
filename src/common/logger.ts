@@ -15,13 +15,13 @@ const logger = winston.createLogger({
     // - Write all logs with level `error` and below to `error.log`
     // - Write all logs with level `info` and below to `combined.log`
     //
-    new winston.transports.File({ 
-      filename: `${global.tempDir}/error.log`, 
+    new winston.transports.File({
+      filename: `${global.tempDir}/error.log`,
       level: 'error',
       format: format.combine(decolorize(), format.simple())
     }),
-    new winston.transports.File({ 
-      filename: `${global.tempDir}/combined.log`, 
+    new winston.transports.File({
+      filename: `${global.tempDir}/combined.log`,
       level: 'debug',
       format: format.combine(decolorize(), format.simple())
     }),
@@ -51,28 +51,32 @@ export const logUpdate = (message: string) => {
   // debug log the string
   logger.debug(message)
 
-  // trim the message in case it is too long
-  message = message.substring(0, lineLength)
+  if (logger.level !== 'debug') {
+    // trim the message in case it is too long
+    message = message.substring(0, lineLength)
 
-  let numSpaces = lineLength - message.length
-  process.stdout.write(`\r\r${chalk.bgWhite.black.bold('exec')}  ${message}${' '.repeat(numSpaces)}`)
+    let numSpaces = lineLength - message.length
+    process.stdout.write(`\r\r${chalk.bgWhite.black.bold('exec')}  ${message}${' '.repeat(numSpaces)}`)
+  }
 }
 
 export const logComplete = (message: string) => {
-  process.stdout.write(`\r\r${' '.repeat(lineLength)}`)
-  process.stdout.write(`\r\r`)
+  if (logger.level !== 'debug') {
+    process.stdout.write(`\r\r${' '.repeat(lineLength)}`)
+    process.stdout.write(`\r\r`)  
+  }
   logger.info(message)
 }
 
 import { Context } from "./handlers/resource-handler";
 
 export const logRunEnd = (argv: Context) => {
-    let duration = new Date().valueOf() - argv.startTime.valueOf()
-    let minutes = Math.floor((duration / 1000) / 60)
-    let seconds = Math.floor((duration / 1000) - (minutes * 60))
-    logger.info(`logs and temp files stored in ${chalk.blueBright(global.tempDir)}`)
-    logger.info(`run completed in [ ${chalk.green(`${minutes}m${seconds}s`)} ]`)
-    process.exit(0)
+  let duration = new Date().valueOf() - argv.startTime.valueOf()
+  let minutes = Math.floor((duration / 1000) / 60)
+  let seconds = Math.floor((duration / 1000) - (minutes * 60))
+  logger.info(`logs and temp files stored in ${chalk.blueBright(global.tempDir)}`)
+  logger.info(`run completed in [ ${chalk.green(`${minutes}m${seconds}s`)} ]`)
+  process.exit(0)
 }
 
 export default logger

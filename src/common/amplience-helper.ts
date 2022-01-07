@@ -1,40 +1,18 @@
-import axios from "axios"
-import { ContentRepository, ContentType, DynamicContent, Folder, Hub } from "dc-management-sdk-js"
+import { ContentRepository, ContentType, DynamicContent, Folder, Hub, HttpMethod, HttpRequest, HttpResponse, ContentItem, WorkflowState } from "dc-management-sdk-js"
 import logger, { logComplete } from "./logger"
 import chalk from "chalk"
 import { paginator } from "./paginator"
 import { logUpdate } from "./logger"
 import async from 'async'
-import _ from 'lodash'
-import fetch from "node-fetch"
+import _, { Dictionary } from 'lodash'
 import { ContentItemHandler } from "./handlers/content-item-handler"
-import stringify from 'json-stringify-safe'
+import { AxiosHttpClient } from "dc-management-sdk-js"
+import { Context } from '../common/handlers/resource-handler';
+import { currentEnvironment } from '../common/environment-manager'
+import fs from 'fs-extra'
+import { DAMService } from "./dam/dam-service"
 
-let request = (method: string = 'get') => async (url: string, data: any = {}, config: any = dcHeaders) => {
-    try {
-        logger.debug(`${method.toUpperCase()} ${url}`)
-        if (method === 'post' || method === 'patch') {
-            logger.debug(JSON.stringify(data))
-        }
-
-        return await (axios as any)[method](url, data, config)
-    } catch (error) {
-        if (error.response?.data?.errors) {
-            logger.error(`${method.toUpperCase()} ${url}`)
-            _.each(error.response?.data?.errors, error => {
-                logger.error(`\t* ${chalk.bold.red(error.code)}: ${error.message}`)
-            })
-        }
-        throw error
-    }
-}
-
-let http = {
-    post: request('post'),
-    patch: request('patch'),
-    get: request('get'),
-    delete: request('delete')
-}
+let dcUrl = `https://api.amplience.net/v2/content`
 
 export class DynamicContentCredentials {
     clientId: string
@@ -42,22 +20,20 @@ export class DynamicContentCredentials {
     hubId: string
 }
 
-let dcUrl = `https://api.amplience.net/v2/content`
-
-let accessToken = undefined
-let dcHeaders = {}
-let loginHeaders = {
-    headers: {
-        'content-type': 'application/x-www-form-urlencoded'
-    }
-}
+let accessToken: any = undefined
+let axiosClient = new AxiosHttpClient({})
 
 let client: DynamicContent
 let hub: Hub
+
 const login = async (dc: DynamicContentCredentials) => {
-    let oauthResponse = await http.post(
-        `https://auth.amplience.net/oauth/token?client_id=${dc.clientId}&client_secret=${dc.clientSecret}&grant_type=client_credentials`,
-        {}, loginHeaders)
+    let oauthResponse = await axiosClient.request({
+        method: HttpMethod.POST,
+        url: `https://auth.amplience.net/oauth/token?client_id=${dc.clientId}&client_secret=${dc.clientSecret}&grant_type=client_credentials`,
+        headers: { 
+            'content-type': 'application/x-www-form-urlencoded' 
+        }
+    })
 
     client = new DynamicContent({
         client_id: dc.clientId,
@@ -66,25 +42,34 @@ const login = async (dc: DynamicContentCredentials) => {
 
     hub = await client.hubs.get(dc.hubId)
 
-    accessToken = oauthResponse.data.access_token
-    dcHeaders = { headers: { authorization: `bearer ${accessToken}`, 'content-type': 'application/json' } }
+    accessToken = (oauthResponse.data as any).access_token
+
+    axiosClient = new AxiosHttpClient({
+        baseURL: dcUrl,
+        headers: { authorization: `bearer ${accessToken}`, 'content-type': 'application/json' }
+    })
 
     logger.debug(`${chalk.green('logged in')} to dynamic content at ${chalk.yellow(new Date().valueOf())}`)
-    setTimeout(() => { login(dc) }, oauthResponse.data.expires_in * 1000)
+    setTimeout(() => { login(dc) }, (oauthResponse.data as any).expires_in * 1000)
 }
 
 const createAndPublishContentItem = async (item: any, repo: ContentRepository) => {
-    let response = await http.post(`${dcUrl}/content-repositories/${repo.id}/content-items`, item, dcHeaders)
+    let response = await axiosClient.request({
+        method: HttpMethod.POST,
+        url: `/content-repositories/${repo.id}/content-items`, 
+        data: item
+    })
     await publishContentItem(response.data)
+    await cacheContentMapForRepository(repo)
     return response.data
 }
 
 const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
-const retriablePost = (count: number) => async (url: string, data: any = {}, headers: any = dcHeaders) => {
+const retriable = (method: HttpMethod = HttpMethod.GET) => (count: number) => async (url: string, data: any = {}) => {
     let retryCount = 0
     while (retryCount < count) {
         try {
-            return await http.post(url, data, headers)
+            return await axiosClient.request({ method, url, data })
         } catch (error) {
             if (error.response.status === 429) { // rate limited            
                 retryCount++
@@ -96,13 +81,20 @@ const retriablePost = (count: number) => async (url: string, data: any = {}, hea
         }
     }
 }
+const retriablePost = retriable(HttpMethod.POST)
 const retrier = retriablePost(3)
 
-const publishContentItem = async (item: any) => await retrier(`${dcUrl}/content-items/${item.id}/publish`)
-const unpublishContentItem = async (item: any) => await http.post(`${dcUrl}/content-items/${item.id}/unpublish`)
+const publishContentItem = async (item: any) => await retrier(`/content-items/${item.id}/publish`)
 
-const synchronizeContentType = async (contentType: ContentType) => await http.patch(`${dcUrl}/content-types/${contentType.id}/schema`)
-export const deleteFolder = async (folder: Folder) => await http.delete(`${dcUrl}/folders/${folder.id}`)
+const synchronizeContentType = async (contentType: ContentType) => await axiosClient.request({
+    method: HttpMethod.PATCH,
+    url: `/content-types/${contentType.id}/schema`
+})
+
+export const deleteFolder = async (folder: Folder) => await axiosClient.request({
+    method: HttpMethod.DELETE,
+    url: `/folders/${folder.id}`
+})
 
 export const publishUnpublished = async () => {
     let publishedItemCount = 0
@@ -177,26 +169,169 @@ const publishAll = async () => {
     logComplete(`${new ContentItemHandler().getDescription()}: [ ${chalk.green(publishedCount)} published ]`)
 }
 
-const unpublishAll = async () => {
-    logger.info(`looking for published items...`)
-    let repositories = await paginator(hub.related.contentRepositories.list)
-    let unpublishedCount = 0
+let contentMap: Dictionary<ContentItem> = {}
+export const cacheContentMap = async (argv: Context) => 
+    await Promise.all((await paginator(argv.hub.related.contentRepositories.list, { status: 'ACTIVE' })).map(cacheContentMapForRepository))
 
-    await async.eachSeries(repositories, async (repo, callback) => {
-        logUpdate(`${chalk.redBright('unpublish')} repo ${repo.label}`)
-        let contentItems: any[] = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
-        await async.eachSeries(contentItems, async (contentItem, cb) => {
-            if (contentItem.lastPublishedDate) {
-                unpublishedCount++
-                logUpdate(`${chalk.redBright('unpublish')} content item ${contentItem.id} ${contentItem.label}`)
-                await unpublishContentItem(contentItem)
-                await sleep(500)
-            }
-            cb()
-        })
-        callback()
+const cacheContentMapForRepository = async (repo: ContentRepository) => {
+    _.each(_.filter(await paginator(repo.related.contentItems.list, { status: 'ACTIVE' }), ci => ci.body._meta?.deliveryKey), (ci: ContentItem) => {
+        contentMap[ci.body._meta.deliveryKey] = ci
     })
-    logComplete(`${new ContentItemHandler().getDescription()}: [ ${chalk.red(unpublishedCount)} unpublished ]`)
+}
+
+export const getContentItemByKey = (key: string) => {
+    return contentMap[key]
+}
+
+export const getContentMap = () => _.zipObject(_.map(contentMap, (__, key) => key.replace(/\//g, '-')), _.map(contentMap, 'deliveryId'))
+
+export const readEnvConfig = async (argv: Context) => {
+    let { env } = currentEnvironment()
+    let { hub, ariaKey } = argv
+    let deliveryKey = `aria/env/${ariaKey}`
+
+    logger.info(`environment lookup [ hub ${chalk.magentaBright(hub.name)} ] [ key ${chalk.blueBright(deliveryKey)} ]`)
+
+    const stagingApi = await hub.settings?.virtualStagingEnvironment?.hostname || ''
+
+    let envConfig = await getContentItemByKey(deliveryKey) as any
+    if (!envConfig) {
+        logger.info(`${deliveryKey} not found, creating...`)
+
+        let config = {
+            label: `${env.name} AMPRSA config`,
+            folderId: null,
+            body: {
+                _meta: {
+                    name: `${env.name} AMPRSA config`,
+                    schema: `https://amprsa.net/amprsa/config`,
+                    deliveryKey
+                },
+                environment: env.name,
+                app: { url: env.url },
+                algolia: {
+                    indexes: [{
+                        key: 'blog',
+                        prod: `${env.name}.blog-production`,
+                        staging: `${env.name}.blog-staging`
+                    }]
+                },
+                cms: {
+                    hub: {
+                        name: env.name,
+                        stagingApi
+                    },
+                    hubs: [{
+                        key: 'productImages',
+                        name: 'willow'
+                    }]
+                }
+            }
+        }
+
+        // process step 8: npm run automate:webapp:configure
+        envConfig = await createAndPublishContentItem(config, await findRepository('sitestructure'))
+    }
+
+    let workflowStates: WorkflowState[] = await paginator(hub.related.workflowStates.list)
+    let repositories: ContentRepository[] = await paginator(hub.related.contentRepositories.list)
+
+    return {
+        ...envConfig.body,
+        dam: await readDAMMapping(argv),
+        cms: {
+            hub: envConfig.body.cms.hub,
+            repositories: _.zipObject(_.map(repositories, r => r.name || ''), _.map(repositories, 'id')),
+            workflowStates: _.zipObject(_.map(workflowStates, ws => _.camelCase(ws.label)), _.map(workflowStates, 'id')),
+            hubs: _.keyBy(envConfig.body.cms.hubs, 'key')
+        }
+    }
+}
+
+export const initAutomation = async (argv: Context) => {
+    let automation = await readAutomation(argv)
+
+    fs.writeJsonSync(`${global.tempDir}/mapping.json`, {
+        contentItems: _.map(automation.contentItems, ci => [ci.from, ci.to]),
+        workflowStates: _.map(automation.workflowStates, ws => [ws.from, ws.to])
+    })
+
+    // copy so we can compare later after we do an import
+    fs.copyFileSync(`${global.tempDir}/mapping.json`, `${global.tempDir}/old_mapping.json`)
+    logger.info(`wrote mapping file at ${global.tempDir}/mapping.json`)
+}
+
+export const readAutomation = async (argv: Context) => {
+    let { env } = currentEnvironment()
+    let deliveryKey = `aria/automation/${argv.ariaKey}`
+
+    let automation = await getContentItemByKey(deliveryKey) as any
+    if (!automation) {
+        logger.info(`${deliveryKey} not found, creating...`)
+        let automationItem = {
+            label: `${env.name} AMPRSA automation`,
+            folderId: null,
+            body: {
+                _meta: {
+                    name: `${env.name} AMPRSA automation`,
+                    schema: `https://amprsa.net/amprsa/automation`,
+                    deliveryKey
+                },
+                contentItems: [],
+                workflowStates: []
+            }
+        }
+        automation = await createAndPublishContentItem(automationItem, await findRepository('sitestructure'))
+    }
+
+    return automation
+}
+
+export const updateAutomation = async (argv: Context) => {
+    // read the mapping file and update if necessary
+    let mappingStats = fs.statSync(`${global.tempDir}/old_mapping.json`)
+    let newMappingStats = fs.statSync(`${global.tempDir}/mapping.json`)
+
+    if (newMappingStats.size !== mappingStats.size) {
+        logger.info(`updating mapping...`)
+
+        // update the object
+        let newMapping = fs.readJsonSync(`${global.tempDir}/mapping.json`)
+
+        logger.info(`saving mapping...`)
+
+        let automation = await readAutomation(argv)
+        automation.body = {
+            ...automation.body,
+            contentItems: _.map(newMapping.contentItems, x => ({ from: x[0], to: x[1] })),
+            workflowStates: _.map(newMapping.workflowStates, x => ({ from: x[0], to: x[1] }))
+        }
+
+        automation = await automation.related.update(automation)
+        await publishContentItem(automation)
+    }
+}
+
+const findRepository = async (name: string) => {
+    let repositories: ContentRepository[] = await paginator(hub.related.contentRepositories.list)
+    let repo = _.find(repositories, repo => repo.name === name)
+    if (!repo) {
+        throw new Error(`repository '${name}' not found, please make sure it exists`)
+    }
+    return repo
+}
+
+const readDAMMapping = async (argv: Context) => {
+    const { dam } = currentEnvironment()
+    let damService = await new DAMService().init(dam)
+
+    let assets = _.filter(await damService.getAssetsListForBucket('Assets'), asset => asset.status === 'active')
+    let endpoints = await damService.getEndpoints()
+    let endpoint: any = _.first(endpoints)!
+    return {
+        mediaEndpoint: endpoint.tag,
+        imagesMap: _.zipObject(_.map(assets, x => _.camelCase(x.name)), _.map(assets, 'id'))
+    }
 }
 
 export default {
@@ -205,6 +340,12 @@ export default {
     publishContentItem,
     synchronizeContentType,
     publishAll,
-    unpublishAll,
-    waitForPublishingQueue
+    waitForPublishingQueue,
+    getContentItemByKey,
+    cacheContentMap,
+    cacheContentMapForRepository,
+    readEnvConfig,
+    getContentMap,
+    initAutomation,
+    updateAutomation
 }

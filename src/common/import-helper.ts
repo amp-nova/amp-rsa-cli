@@ -1,10 +1,11 @@
 import fs from 'fs-extra'
 import { compile as handlebarsCompile } from 'handlebars';
 import logger from './logger';
+import { Context } from './handlers/resource-handler';
 
-export const copyTemplateFilesToTempDir = (automationDir: string, map?: any) => {
+export const copyTemplateFilesToTempDir = (context: Context) => {
     let contentFolder = `${global.tempDir}/content`
-    let folder = `${automationDir}/assets/content`
+    let folder = `${context.automationDir}/assets/content`
 
     // Create repositories folder
     fs.mkdirpSync(contentFolder)
@@ -12,65 +13,56 @@ export const copyTemplateFilesToTempDir = (automationDir: string, map?: any) => 
     // Copy ./assets/content folder in repositories
     fs.copySync(folder, contentFolder)
 
-    if (map) {
-        // Scan all handlebars files in ./assets/content
-        const iterateDirectory = () => {
-            const files: string[] = [];
-            const dirs: string[] = [];
+    // Scan all handlebars files in ./assets/content
+    const iterateDirectory = () => {
+        const files: string[] = [];
+        const dirs: string[] = [];
 
-            return function directoryIterator(directory: string) {
-                try {
-                    let dirContent = fs.readdirSync(directory);
-                    dirContent.forEach((path: string) => {
-                        const fullPath: string = `${directory}/${path}`;
+        return function directoryIterator(directory: string) {
+            try {
+                let dirContent = fs.readdirSync(directory);
+                dirContent.forEach((path: string) => {
+                    const fullPath: string = `${directory}/${path}`;
 
-                        // Add to files list if it's an handlebars template
-                        if (fs.statSync(fullPath).isFile()) {
-                            if (fullPath.endsWith('.hbs')) {
-                                files.push(fullPath);
-                            }
-                        } else {
-
-                            // Add sub-directory to directory list
-                            dirs.push(fullPath);
+                    // Add to files list if it's an handlebars template
+                    if (fs.statSync(fullPath).isFile()) {
+                        if (fullPath.endsWith('.hbs')) {
+                            files.push(fullPath);
                         }
-                    });
-                    const directoryPop = dirs.pop();
+                    } else {
 
-                    // Scan next sub-directory
-                    if (directoryPop) { directoryIterator(directoryPop); }
+                        // Add sub-directory to directory list
+                        dirs.push(fullPath);
+                    }
+                });
+                const directoryPop = dirs.pop();
 
-                    return files;
-                } catch (ex) {
-                    logger.info(ex);
-                    return files;
-                }
-            };
+                // Scan next sub-directory
+                if (directoryPop) { directoryIterator(directoryPop); }
+
+                return files;
+            } catch (ex) {
+                logger.info(ex);
+                return files;
+            }
         };
+    };
 
-        // Finding all templates in content folder
-        const assetsIterator = iterateDirectory();
-        const files = assetsIterator(contentFolder);
+    // Finding all templates in content folder
+    const assetsIterator = iterateDirectory();
+    const files = assetsIterator(contentFolder);
 
-        // Render each template to file
-        files.map((item: string) => {
-            const templateString = fs.readFileSync(item).toString();
-            const template = handlebarsCompile(templateString);
-            const contentJSON = template(map);
+    // Render each template to file
+    files.map((item: string) => {
+        const templateString = fs.readFileSync(item).toString();
+        const template = handlebarsCompile(templateString);
+        const contentJSON = template(context.mapping);
 
-            // Write json to file
-            const file = item.replace('.hbs', '');
-            fs.writeFileSync(file, contentJSON);
+        // Write json to file
+        const file = item.replace('.hbs', '');
+        fs.writeFileSync(file, contentJSON);
 
-            // Remove template
-            fs.unlinkSync(item);
-        });
-
-        // const configFolder = `${map.contentFolder}/config`
-
-        // // Create config folder if needed
-        // fs.mkdirpSync(configFolder)
-        // fs.copySync(`${contentFolder}/content-type-schemas`, `${configFolder}/content-type-schemas`)
-        // fs.copySync(`${contentFolder}/content-types`, `${configFolder}/content-types`)
-    }
+        // Remove template
+        fs.unlinkSync(item);
+    });
 }

@@ -6,6 +6,7 @@ export interface Options {
     client: DynamicContent
     repositories: RepositoryMapping
     damService: DAMService
+    automationDir: string
 
     startTime: Date
 

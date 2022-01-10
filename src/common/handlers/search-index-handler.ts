@@ -45,7 +45,11 @@ export class SearchIndexHandler extends ResourceHandler implements Cleanable {
 
     async import(argv: Context) {
         const { hub, mapping } = argv
-        let indexes = fs.readJsonSync(`${global.tempDir}/content/indexes/indexes.json`)
+        let testIndexes = fs.readJsonSync(`${global.tempDir}/content/indexes/test-index.json`)
+        let importIndexes = fs.readJsonSync(`${global.tempDir}/content/indexes/indexes.json`)
+
+        const indexes = testIndexes.concat(importIndexes)
+
         let publishedIndexes = await paginator(searchIndexPaginator(hub))
         let unpublishedIndexes = _.filter(indexes, idx => !_.includes(_.map(publishedIndexes, 'name'), idx.indexDetails.name))
 
@@ -53,7 +57,7 @@ export class SearchIndexHandler extends ResourceHandler implements Cleanable {
         let replicaCount = 0
         let webhookCount = 0
 
-        await async.each(unpublishedIndexes, async (item, callback) => {
+        await async.eachSeries(unpublishedIndexes, async (item, callback) => {
             // Remove ID and replica count for creation
             delete item.indexDetails.id;
             delete item.indexDetails.replicaCount;

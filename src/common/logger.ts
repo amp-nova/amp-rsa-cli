@@ -2,8 +2,10 @@ import winston from 'winston';
 import { format } from 'winston'
 import chalk from 'chalk';
 
+const decolorizeString = (str: string) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
+
 const decolorize = format((info, opts) => {
-  info.message = info.message && info.message.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
+  info.message = info.message && decolorizeString(info.message)
   return info;
 });
 
@@ -55,7 +57,7 @@ export const logUpdate = (message: string) => {
     // trim the message in case it is too long
     message = message.substring(0, lineLength)
 
-    let numSpaces = lineLength - message.length
+    let numSpaces = lineLength - decolorizeString(message).length
     process.stdout.write(`\r\r${chalk.bgWhite.black.bold('exec')}  ${message}${' '.repeat(numSpaces)}`)
   }
 }

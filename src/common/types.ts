@@ -7,6 +7,7 @@ export interface Options {
     repositories: RepositoryMapping
     damService: DAMService
     automationDir: string
+    publishDelay: number
 
     startTime: Date
 

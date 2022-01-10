@@ -40,7 +40,13 @@ export const builder = (yargs: Argv): Argv =>
             skipContentImport: {
                 describe: 'skip content import',
                 type: 'boolean'
-            }
+            },
+            publishDelay: {
+                alias: 'd',
+                describe: 'milliseconds to wait between consecutive publishes',
+                type: 'number',
+                default: 750
+            },
         })
         .array('include')
         .help();

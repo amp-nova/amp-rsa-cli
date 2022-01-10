@@ -44,7 +44,7 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
 
         logComplete(`${this.getDescription()}: [ ${chalk.green(createdCount)} created ] [ ${chalk.blue(updatedCount)} updated ]`)
 
-        await publishUnpublished()
+        await publishUnpublished(context)
     }
 
     async cleanup(argv: Context): Promise<any> {

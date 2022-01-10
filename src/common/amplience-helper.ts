@@ -96,7 +96,7 @@ export const deleteFolder = async (folder: Folder) => await axiosClient.request(
     url: `/folders/${folder.id}`
 })
 
-export const publishUnpublished = async () => {
+export const publishUnpublished = async (context: Context) => {
     let publishedItemCount = 0
     let unpublishedItemCount = 1
     let oldUnpublishedItemCount = 0
@@ -109,7 +109,7 @@ export const publishUnpublished = async () => {
 
         if (oldUnpublishedItemCount === unpublishedItemCount) {
             logComplete(`${new ContentItemHandler().getDescription()}: [ ${chalk.green(publishedItemCount)} published ]`)
-            return await publishAll()
+            return await publishAll(context)
         }
         else {
             oldUnpublishedItemCount = unpublishedItemCount
@@ -148,7 +148,7 @@ export const waitForPublishingQueue = async () => {
     return count
 }
 
-const publishAll = async () => {
+const publishAll = async (context: Context) => {
     let repositories: ContentRepository[] = await paginator(hub.related.contentRepositories.list)
     let publishedCount = 0
 
@@ -160,7 +160,7 @@ const publishAll = async () => {
                 logUpdate(`${chalk.greenBright('publish')} content item ${contentItem.id}`)
                 publishedCount++
                 await publishContentItem(contentItem)
-                await sleep(500)
+                await sleep(context.publishDelay)
             }
             cb()
         })

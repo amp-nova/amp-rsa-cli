@@ -30,8 +30,8 @@ const login = async (dc: DynamicContentCredentials) => {
     let oauthResponse = await axiosClient.request({
         method: HttpMethod.POST,
         url: `https://auth.amplience.net/oauth/token?client_id=${dc.clientId}&client_secret=${dc.clientSecret}&grant_type=client_credentials`,
-        headers: { 
-            'content-type': 'application/x-www-form-urlencoded' 
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
         }
     })
 
@@ -56,7 +56,7 @@ const login = async (dc: DynamicContentCredentials) => {
 const createAndPublishContentItem = async (item: any, repo: ContentRepository) => {
     let response = await axiosClient.request({
         method: HttpMethod.POST,
-        url: `/content-repositories/${repo.id}/content-items`, 
+        url: `/content-repositories/${repo.id}/content-items`,
         data: item
     })
     await publishContentItem(response.data)
@@ -170,7 +170,7 @@ const publishAll = async (context: Context) => {
 }
 
 let contentMap: Dictionary<ContentItem> = {}
-export const cacheContentMap = async (argv: Context) => 
+export const cacheContentMap = async (argv: Context) =>
     await Promise.all((await paginator(argv.hub.related.contentRepositories.list, { status: 'ACTIVE' })).map(cacheContentMapForRepository))
 
 const cacheContentMapForRepository = async (repo: ContentRepository) => {
@@ -198,6 +198,20 @@ export const readEnvConfig = async (argv: Context) => {
     if (!envConfig) {
         logger.info(`${deliveryKey} not found, creating...`)
 
+        let fileCredsDefault = {
+            label: `File config credentials`,
+            folderId: null,
+            body: {
+                _meta: {
+                    name: `File config credentials`,
+                    schema: `https://amprsa.net/credentials/file`
+                },
+                product_file_path: 'data/all_products.json',
+                category_file_path: 'data/all_categories.json'
+            }
+        }
+        let fileCreds = await createAndPublishContentItem(fileCredsDefault, await findRepository('sitestructure'))
+
         let config = {
             label: `${env.name} AMPRSA config`,
             folderId: null,
@@ -215,6 +229,13 @@ export const readEnvConfig = async (argv: Context) => {
                         prod: `${env.name}.blog-production`,
                         staging: `${env.name}.blog-staging`
                     }]
+                },
+                commerce: {
+                    _meta: {
+                        schema: "http://bigcontent.io/cms/schema/v1/core#/definitions/content-reference"
+                    },
+                    contentType: "https://amprsa.net/credentials/file",
+                    id: (fileCreds as any).id
                 },
                 cms: {
                     hub: {

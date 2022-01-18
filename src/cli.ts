@@ -4,10 +4,9 @@ import { Arguments, Argv } from 'yargs';
 import chalk from 'chalk'
 
 import connectionMiddleware from './common/connection-middleware'
-
 import logger from './common/logger';
-import { prompts } from './common/prompts';
 import _ from 'lodash';
+import { Context } from './common/handlers/resource-handler';
 
 const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
   return new Promise(
@@ -32,14 +31,23 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
         .demandCommand(1, 'Please specify at least one command')
         .exitProcess(false)
         .showHelpOnFail(false)
-        .middleware([async (argv) => {
-          logger.info(`run [ ${chalk.green(argv._)} ]`)
+        .middleware([async (context: Context) => {
+          logger.info(`run [ ${chalk.green(context._)} ]`)
 
+          // monkey patch childProcess to log to the console whenever a shell command is used
+          const childProcess = require('child_process');
+          if (!childProcess._execSync) {
+              let _execSync = childProcess.execSync
+              childProcess.execSync = function (cmd: any) {
+                  logger.info(`${chalk.greenBright(cmd)}`)
+                  return _execSync.call(this, cmd)
+              }
+          }
+      
           // don't run this middleware for 'env' commands
-          if (!_.includes(argv._, 'env')) {
-            logger.info(`${prompts.created} temp dir: ${chalk.blue(global.tempDir)}`)
-            await connectionMiddleware(argv)
-            argv.startTime = new Date()
+          if (!_.includes(context._, 'env')) {
+            await connectionMiddleware(context)
+            context.startTime = new Date()
           }
         }])
         .options({
@@ -48,6 +56,10 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
             describe: 'log HTTP requests and responses',
             default: false
           },
+          tempDir: {
+            alias: 't',
+            describe: 'temporary directory for all run files'
+          }
         })
         .fail(failFn).argv;
       resolve(argv);

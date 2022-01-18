@@ -11,9 +11,7 @@ const getConfigPath = (platform: string = process.platform): string => join(proc
 const CONFIG_PATH = getConfigPath()
 const ENV_FILE_PATH = `${CONFIG_PATH}/environments.json`
 
-const saveConfig = () => {
-    writeJsonSync(ENV_FILE_PATH, envConfig, { encoding: 'utf-8' })
-}
+const saveConfig = () => writeJsonSync(ENV_FILE_PATH, envConfig, { encoding: 'utf-8' })
 
 export const updateEnvironments = () => {
     _.each(envConfig.envs, env => {
@@ -48,22 +46,15 @@ export const deleteEnvironment = (env: any) => {
     saveConfig()
 }
 
-export const getEnvironments = () => {
-    return _.map(envConfig.envs, env => ({
-        ...env,
-        active: envConfig.current === env.name
-    }))
-}
+export const getEnvironments = () => _.map(envConfig.envs, env => ({
+    ...env,
+    active: envConfig.current === env.name
+}))
 
-export const getEnvironment = (name: string) => {
-    return _.find(envConfig.envs, env => name === env.name)
-}
+export const getEnvironment = (name: string) => _.find(envConfig.envs, env => name === env.name)
+export const selectEnvironment = async (argv: Arguments) => argv.env ? getEnvironment(argv.env as string) : await chooseEnvironment()
 
-export const selectEnvironment = async (argv: Arguments) => {
-    return argv.env ? getEnvironment(argv.env as string) : await chooseEnvironment()
-}
-
-export const chooseEnvironment = async(handler?: any) => {
+export const chooseEnvironment = async (handler?: any) => {
     const envs = getEnvironments()
 
     const prompt = new Select({
@@ -95,7 +86,7 @@ export const listEnvironments = () => {
 
 export const useEnvironment = (env: any) => {
     logger.info(`[ ${chalk.greenBright(env.name)} ] configure dc-cli...`);
-    childProcess.execSync(`npx @amp-nova/dc-cli configure --clientId ${env.dc.clientId} --clientSecret ${env.dc.clientSecret} --hubId ${env.dc.hubId}`);
+    childProcess.execSync(`npx @amplience/dc-cli configure --clientId ${env.dc.clientId} --clientSecret ${env.dc.clientSecret} --hubId ${env.dc.hubId}`);
 
     // Configure DAM CLI if needed
     if (env.dam.username) {

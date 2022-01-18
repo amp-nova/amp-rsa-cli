@@ -1,6 +1,6 @@
 import _, { Dictionary } from 'lodash'
 import logger, { logComplete } from './logger'
-import childProcess from "child_process"
+import childProcess, { ChildProcess } from "child_process"
 import { onExit } from '@rauschma/stringio'
 import chalk from 'chalk'
 import { logUpdate } from './logger'
@@ -8,13 +8,13 @@ import { prompts } from './prompts'
 
 export class CLIJob {
     cmd: string
-    reactions: Dictionary<(text: string) => void> = {}
+    reactions: Dictionary<(text: string, process: ChildProcess) => void> = {}
 
     constructor(cmd: string) {
         this.cmd = cmd
     }
 
-    on(text: string, handler: (text: string) => void) {
+    on(text: string, handler: (text: string, process: ChildProcess) => void) {
         this.reactions[text] = handler
     }
 
@@ -29,7 +29,7 @@ export class CLIJob {
                     logUpdate(`${line.trim()}`)
                     _.each(this.reactions, (reaction, trigger) => {
                         if (line.indexOf(trigger) > -1) {
-                            reaction(line)
+                            reaction(line, child)
                         }
                     })
                 }
@@ -46,6 +46,5 @@ export class CLIJob {
     
         let duration = new Date().valueOf() - startTime
         logComplete(`${prompts.done} in ${chalk.green(duration)} ms`)
-    
     }
 }

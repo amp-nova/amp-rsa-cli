@@ -25,7 +25,8 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
         }
 
         let importLogFile = `${global.tempDir}/item-import.log`
-        let importJob = new CLIJob(`npx @amp-nova/dc-cli content-item import ${sourceDir} -f --republish --publish --mapFile ${global.tempDir}/mapping.json --logFile ${importLogFile}`)
+        let importJob = new CLIJob(`npx @amplience/dc-cli content-item import ${sourceDir} --publish --mapFile ${global.tempDir}/mapping.json --logFile ${importLogFile}`)
+        // let importJob = new CLIJob(`ts-node /Users/dave/work/dc-cli/src/index.ts content-item import ${sourceDir} --publish --mapFile ${global.tempDir}/mapping.json --logFile ${importLogFile}`)
 
         await importJob.exec()
 
@@ -47,25 +48,37 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
         await publishUnpublished(context)
     }
 
-    async cleanup(argv: Context): Promise<any> {
-        let repositories = await paginator(argv.hub.related.contentRepositories.list)
+    shouldCleanUpItem(item: ContentItem, context: Context): boolean {
+        if (_.includes(context.deliveryKey, item.body._meta.deliveryKey) || 
+            !_.includes(context.excludeDeliveryKey, item.body._meta.deliveryKey) && _.isEmpty(context.deliveryKey)) {
+            return true
+        }
+        return false
+    }
+
+    async cleanup(context: Context): Promise<any> {
+        let repositories = await paginator(context.hub.related.contentRepositories.list)
         let archiveCount = 0
         let folderCount = 0
         await Promise.all(repositories.map(async (repository: ContentRepository) => {
             logUpdate(`${prompts.archive} content items in repository ${chalk.cyanBright(repository.name)}...`)
             let contentItems: ContentItem[] = await paginator(repository.related.contentItems.list, { status: 'ACTIVE' })
             await Promise.all(contentItems.map(async (contentItem: ContentItem) => {
-                if (contentItem.body._meta.deliveryKey?.length > 0) {
-                    if (contentItem.status === 'ARCHIVED') {
-                        contentItem = await contentItem.related.unarchive()
-                    }
+                if (this.shouldCleanUpItem(contentItem, context)) {
+                    if (contentItem.body._meta.deliveryKey?.length > 0) {
+                        if (contentItem.status === 'ARCHIVED') {
+                            contentItem = await contentItem.related.unarchive()
+                        }
 
-                    contentItem.body._meta.deliveryKey = null
-                    contentItem = await contentItem.related.update(contentItem)
+                        contentItem.body._meta.deliveryKey = null
+                        contentItem = await contentItem.related.update(contentItem)
+                    }
+                    archiveCount++
+                    await contentItem.related.archive()
                 }
-                archiveCount++
-                await contentItem.related.archive()
             }))
+
+            return false
 
             const cleanupFolder = (async (folder: Folder) => {
                 let subfolders = await paginator(folder.related.folders.list)

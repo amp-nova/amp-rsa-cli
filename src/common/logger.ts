@@ -1,43 +1,45 @@
-import winston from 'winston';
-import { format } from 'winston'
+import winston, { format } from 'winston'
 import chalk from 'chalk';
+import { Console } from 'winston/lib/winston/transports';
 
 const decolorizeString = (str: string) => str.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
+const decolorize = format((info, opts) => ({
+  ...info,
+  message: info.message && decolorizeString(info.message)
+}))
 
-const decolorize = format((info, opts) => {
-  info.message = info.message && decolorizeString(info.message)
-  return info;
-});
+let _log = Console.prototype.log
+Console.prototype.log = function (info: any, callback: any) {
+  if (process.env.NODE_ENV !== 'production') {
+    _log.call(this, info, callback)
+  }
+}
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: format.simple(),
-  transports: [
-    //
-    // - Write all logs with level `error` and below to `error.log`
-    // - Write all logs with level `info` and below to `combined.log`
-    //
-    new winston.transports.File({
-      filename: `${global.tempDir}/error.log`,
-      level: 'error',
-      format: format.combine(decolorize(), format.simple())
-    }),
-    new winston.transports.File({
-      filename: `${global.tempDir}/combined.log`,
-      level: 'debug',
-      format: format.combine(decolorize(), format.simple())
-    }),
-  ],
-});
+const getLogger = (dir: string) => {
+  return winston.createLogger({
+    level: 'info',
+    format: format.simple(),
+    transports: [
+      new winston.transports.File({
+        filename: `${dir}/error.log`,
+        level: 'error',
+        format: format.combine(decolorize(), format.simple())
+      }),
+      new winston.transports.File({
+        filename: `${dir}/combined.log`,
+        level: 'debug',
+        format: format.combine(decolorize(), format.simple())
+      }),
+      new winston.transports.Console({
+        format: winston.format.simple(),
+      })
+    ]
+  })
+}
 
-//
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-//
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.simple(),
-  }));
+let logger = getLogger('')
+export const setLogDirectory = (dir: string) => {
+  logger = getLogger(dir)
 }
 
 export const logHeadline = (headline: string) => {
@@ -65,12 +67,13 @@ export const logUpdate = (message: string) => {
 export const logComplete = (message: string) => {
   if (logger.level !== 'debug') {
     process.stdout.write(`\r\r${' '.repeat(lineLength)}`)
-    process.stdout.write(`\r\r`)  
+    process.stdout.write(`\r\r`)
   }
   logger.info(message)
 }
 
 import { Context } from "./handlers/resource-handler";
+import _ from 'lodash';
 
 export const logRunEnd = (argv: Context) => {
   let duration = new Date().valueOf() - argv.startTime.valueOf()

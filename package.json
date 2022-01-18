@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/amp-nova/amp-rsa-cli#readme",
   "dependencies": {
+    "@amp-nova/dc-cli": "^1.0.5",
     "@rauschma/stringio": "^1.4.0",
     "@types/cli-progress": "^3.9.2",
     "@types/cli-table": "^0.3.0",

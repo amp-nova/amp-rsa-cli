@@ -5,15 +5,15 @@ import { Context } from './handlers/resource-handler';
 
 export const copyTemplateFilesToTempDir = (context: Context) => {
     let contentFolder = `${global.tempDir}/content`
-    let folder = `${context.automationDir}/assets/content`
+    let folder = `${context.automationDir}/content`
 
     // Create repositories folder
     fs.mkdirpSync(contentFolder)
 
-    // Copy ./assets/content folder in repositories
+    // Copy ./content folder in repositories
     fs.copySync(folder, contentFolder)
 
-    // Scan all handlebars files in ./assets/content
+    // Scan all handlebars files in ./content
     const iterateDirectory = () => {
         const files: string[] = [];
         const dirs: string[] = [];

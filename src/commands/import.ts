@@ -104,7 +104,11 @@ export const handler = async (argv: Context): Promise<void> => {
         // process step 5: npm run automate:indexes
         await new SearchIndexHandler().import(argv)
 
+        await amplience.updateEnvConfig(argv)
+
         if (!argv.skipContentImport) {
+            logger.debug(JSON.stringify(mapping, null, 4))
+
             // process step 6: npm run automate:content-with-republish
             await new ContentItemHandler().import(argv)
 
@@ -122,6 +126,7 @@ export const handler = async (argv: Context): Promise<void> => {
             // now that we've installed the core content, we need to go through again for content types
             // that point to a specific hierarchy node
             mapping.contentMap = amplience.getContentMap()
+            logger.debug(JSON.stringify(mapping, null, 4))
 
             // recopy template files with new mappings
             copyTemplateFilesToTempDir(argv)
@@ -135,10 +140,7 @@ export const handler = async (argv: Context): Promise<void> => {
             logger.error(error.message);
         }
 
-        _.each(error.response?.data?.errors, error => {
-            logger.error(`\t* ${chalk.bold.red(error.code)}: ${error.message}`)
-        })
-
+        _.each(error.response?.data?.errors, error => logger.error(`\t* ${chalk.bold.red(error.code)}: ${error.message}`))
         logger.error(error.stack)
     } finally {
         logRunEnd(argv)

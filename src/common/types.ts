@@ -18,6 +18,8 @@ export interface Options {
     mapping: Mapping
 
     importSourceDir?: string
+    excludeDeliveryKey: string[]
+    deliveryKey: string[]
 }
 
 export interface RepositoryMapping {

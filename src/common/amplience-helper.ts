@@ -155,9 +155,9 @@ const publishAll = async (context: Context) => {
     await async.eachSeries(repositories, async (repo, callback) => {
         logUpdate(`${chalk.greenBright('publish')} repo ${repo.label}`)
         let contentItems: any[] = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
-        await async.eachSeries(contentItems, async (contentItem, cb) => {
+        await async.eachOfSeries(contentItems, async (contentItem, index, cb) => {
             if (!contentItem.lastPublishedDate) {
-                logUpdate(`${chalk.greenBright('publish')} content item ${contentItem.id}`)
+                logUpdate(`${chalk.greenBright('publish')} content item ${contentItem.id} (${index}/${contentItems.length})`)
                 publishedCount++
                 await publishContentItem(contentItem)
                 await sleep(context.publishDelay)
@@ -185,7 +185,7 @@ export const getContentItemByKey = (key: string) => {
 
 export const getContentMap = () => _.zipObject(_.map(contentMap, (__, key) => key.replace(/\//g, '-')), _.map(contentMap, 'deliveryId'))
 
-export const readEnvConfig = async (argv: Context) => {
+const getEnvConfig = async (argv: Context) => {
     let { env } = currentEnvironment()
     let { hub, ariaKey } = argv
     let deliveryKey = `aria/env/${ariaKey}`
@@ -254,9 +254,13 @@ export const readEnvConfig = async (argv: Context) => {
         envConfig = await createAndPublishContentItem(config, await findRepository('sitestructure'))
     }
 
+    return envConfig
+}
+
+export const readEnvConfig = async (argv: Context) => {
+    let envConfig = await getEnvConfig(argv)
     let workflowStates: WorkflowState[] = await paginator(hub.related.workflowStates.list)
     let repositories: ContentRepository[] = await paginator(hub.related.contentRepositories.list)
-
     return {
         ...envConfig.body,
         dam: await readDAMMapping(argv),
@@ -267,6 +271,22 @@ export const readEnvConfig = async (argv: Context) => {
             hubs: _.keyBy(envConfig.body.cms.hubs, 'key')
         }
     }
+}
+
+export const updateEnvConfig = async (argv: Context) => {
+    let { mapping } = argv
+    let envConfig = await getEnvConfig(argv)
+
+    // undo the transforms on these two values. need to fix
+    mapping.algolia.indexes = _.values(mapping.algolia.indexes)
+    mapping.cms.hubs = _.values(mapping.cms.hubs)
+
+    envConfig.body = {
+        ...envConfig.body,
+        ..._.omit(mapping, 'dam', 'repositories', 'workflowStates')
+    }
+    envConfig = await envConfig.related.update(envConfig)
+    await publishContentItem(envConfig)
 }
 
 export const initAutomation = async (argv: Context) => {
@@ -366,6 +386,7 @@ export default {
     cacheContentMap,
     cacheContentMapForRepository,
     readEnvConfig,
+    updateEnvConfig,
     getContentMap,
     initAutomation,
     updateAutomation

@@ -17,7 +17,8 @@ export const builder = (yargs: Argv): Argv =>
         .options({
             include: {
                 alias: 'i',
-                describe: 'types to include'
+                describe: 'types to include',
+                type: 'array'
             },
             skipConfirmation: {
                 alias: 'c',
@@ -29,8 +30,17 @@ export const builder = (yargs: Argv): Argv =>
                 describe: 'clean up all resource types',
                 type: 'boolean'
             },
+            excludeDeliveryKey: {
+                alias: 'e',
+                describe: 'delivery key(s) to exclude from clean up',
+                type: 'array'
+            },
+            deliveryKey: {
+                alias: 'd',
+                describe: 'delivery key(s) to clean up',
+                type: 'array'
+            }
         })
-        .array('include')
         .help();
 
 export const handler = async (argv: Context): Promise<void> => {

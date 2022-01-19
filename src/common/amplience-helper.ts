@@ -11,6 +11,7 @@ import { Context } from '../common/handlers/resource-handler';
 import { currentEnvironment } from '../common/environment-manager'
 import fs from 'fs-extra'
 import { DAMService } from "./dam/dam-service"
+import { sleep } from "./utils"
 
 let dcUrl = `https://api.amplience.net/v2/content`
 
@@ -24,7 +25,6 @@ let accessToken: any = undefined
 let axiosClient = new AxiosHttpClient({})
 
 let client: DynamicContent
-let hub: Hub
 
 const login = async (dc: DynamicContentCredentials) => {
     let oauthResponse = await axiosClient.request({
@@ -39,8 +39,6 @@ const login = async (dc: DynamicContentCredentials) => {
         client_id: dc.clientId,
         client_secret: dc.clientSecret
     })
-
-    hub = await client.hubs.get(dc.hubId)
 
     accessToken = (oauthResponse.data as any).access_token
 
@@ -64,7 +62,6 @@ const createAndPublishContentItem = async (item: any, repo: ContentRepository) =
     return response.data
 }
 
-const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
 const retriable = (method: HttpMethod = HttpMethod.GET) => (count: number) => async (url: string, data: any = {}) => {
     let retryCount = 0
     while (retryCount < count) {
@@ -102,7 +99,7 @@ export const publishUnpublished = async (context: Context) => {
     let oldUnpublishedItemCount = 0
 
     while (unpublishedItemCount > 0) {
-        let { published, unpublished } = await waitForPublishingQueue()
+        let { published, unpublished } = await waitForPublishingQueue(context)
 
         unpublishedItemCount = unpublished
         publishedItemCount = published
@@ -123,9 +120,9 @@ export const publishUnpublished = async (context: Context) => {
     }
 }
 
-export const waitForPublishingQueue = async () => {
+export const waitForPublishingQueue = async (context: Context) => {
     logUpdate(`wait for publishing queue to complete...`)
-    let repositories = await paginator(hub.related.contentRepositories.list)
+    let repositories = await paginator(context.hub.related.contentRepositories.list)
     let count = {
         published: 0,
         unpublished: 0
@@ -149,7 +146,7 @@ export const waitForPublishingQueue = async () => {
 }
 
 const publishAll = async (context: Context) => {
-    let repositories: ContentRepository[] = await paginator(hub.related.contentRepositories.list)
+    let repositories: ContentRepository[] = await paginator(context.hub.related.contentRepositories.list)
     let publishedCount = 0
 
     await async.eachSeries(repositories, async (repo, callback) => {
@@ -170,8 +167,8 @@ const publishAll = async (context: Context) => {
 }
 
 let contentMap: Dictionary<ContentItem> = {}
-export const cacheContentMap = async (argv: Context) =>
-    await Promise.all((await paginator(argv.hub.related.contentRepositories.list, { status: 'ACTIVE' })).map(cacheContentMapForRepository))
+export const cacheContentMap = async (context: Context) =>
+    await Promise.all((await paginator(context.hub.related.contentRepositories.list, { status: 'ACTIVE' })).map(cacheContentMapForRepository))
 
 const cacheContentMapForRepository = async (repo: ContentRepository) => {
     _.each(_.filter(await paginator(repo.related.contentItems.list, { status: 'ACTIVE' }), ci => ci.body._meta?.deliveryKey), (ci: ContentItem) => {
@@ -185,9 +182,9 @@ export const getContentItemByKey = (key: string) => {
 
 export const getContentMap = () => _.zipObject(_.map(contentMap, (__, key) => key.replace(/\//g, '-')), _.map(contentMap, 'deliveryId'))
 
-const getEnvConfig = async (argv: Context) => {
+const getEnvConfig = async (context: Context) => {
     let { env } = currentEnvironment()
-    let { hub, ariaKey } = argv
+    let { hub, ariaKey } = context
     let deliveryKey = `aria/env/${ariaKey}`
 
     logger.info(`environment lookup [ hub ${chalk.magentaBright(hub.name)} ] [ key ${chalk.blueBright(deliveryKey)} ]`)
@@ -210,7 +207,8 @@ const getEnvConfig = async (argv: Context) => {
                 category_file_path: 'data/all_categories.json'
             }
         }
-        let fileCreds = await createAndPublishContentItem(fileCredsDefault, await findRepository('sitestructure'))
+
+        let fileCreds = await createAndPublishContentItem(fileCredsDefault, context.repositories.siteComponents)
 
         let config = {
             label: `${env.name} AMPRSA config`,
@@ -251,19 +249,19 @@ const getEnvConfig = async (argv: Context) => {
         }
 
         // process step 8: npm run automate:webapp:configure
-        envConfig = await createAndPublishContentItem(config, await findRepository('sitestructure'))
+        envConfig = await createAndPublishContentItem(config, context.repositories.siteComponents)
     }
 
     return envConfig
 }
 
-export const readEnvConfig = async (argv: Context) => {
-    let envConfig = await getEnvConfig(argv)
-    let workflowStates: WorkflowState[] = await paginator(hub.related.workflowStates.list)
-    let repositories: ContentRepository[] = await paginator(hub.related.contentRepositories.list)
+export const readEnvConfig = async (context: Context) => {
+    let envConfig = await getEnvConfig(context)
+    let workflowStates: WorkflowState[] = await paginator(context.hub.related.workflowStates.list)
+    let repositories: ContentRepository[] = await paginator(context.hub.related.contentRepositories.list)
     return {
         ...envConfig.body,
-        dam: await readDAMMapping(argv),
+        dam: await readDAMMapping(context),
         cms: {
             hub: envConfig.body.cms.hub,
             repositories: _.zipObject(_.map(repositories, r => r.name || ''), _.map(repositories, 'id')),
@@ -273,9 +271,9 @@ export const readEnvConfig = async (argv: Context) => {
     }
 }
 
-export const updateEnvConfig = async (argv: Context) => {
-    let { mapping } = argv
-    let envConfig = await getEnvConfig(argv)
+export const updateEnvConfig = async (context: Context) => {
+    let { mapping } = context
+    let envConfig = await getEnvConfig(context)
 
     // undo the transforms on these two values. need to fix
     mapping.algolia.indexes = _.values(mapping.algolia.indexes)
@@ -289,22 +287,22 @@ export const updateEnvConfig = async (argv: Context) => {
     await publishContentItem(envConfig)
 }
 
-export const initAutomation = async (argv: Context) => {
-    let automation = await readAutomation(argv)
+export const initAutomation = async (context: Context) => {
+    let automation = await readAutomation(context)
 
-    fs.writeJsonSync(`${global.tempDir}/mapping.json`, {
+    fs.writeJsonSync(`${context.tempDir}/mapping.json`, {
         contentItems: _.map(automation.contentItems, ci => [ci.from, ci.to]),
         workflowStates: _.map(automation.workflowStates, ws => [ws.from, ws.to])
     })
 
     // copy so we can compare later after we do an import
-    fs.copyFileSync(`${global.tempDir}/mapping.json`, `${global.tempDir}/old_mapping.json`)
-    logger.info(`wrote mapping file at ${global.tempDir}/mapping.json`)
+    fs.copyFileSync(`${context.tempDir}/mapping.json`, `${context.tempDir}/old_mapping.json`)
+    logger.info(`wrote mapping file at ${context.tempDir}/mapping.json`)
 }
 
-export const readAutomation = async (argv: Context) => {
+export const readAutomation = async (context: Context) => {
     let { env } = currentEnvironment()
-    let deliveryKey = `aria/automation/${argv.ariaKey}`
+    let deliveryKey = `aria/automation/${context.ariaKey}`
 
     let automation = await getContentItemByKey(deliveryKey) as any
     if (!automation) {
@@ -322,26 +320,26 @@ export const readAutomation = async (argv: Context) => {
                 workflowStates: []
             }
         }
-        automation = await createAndPublishContentItem(automationItem, await findRepository('sitestructure'))
+        automation = await createAndPublishContentItem(automationItem, context.repositories.siteComponents)
     }
 
     return automation
 }
 
-export const updateAutomation = async (argv: Context) => {
+export const updateAutomation = async (context: Context) => {
     // read the mapping file and update if necessary
-    let mappingStats = fs.statSync(`${global.tempDir}/old_mapping.json`)
-    let newMappingStats = fs.statSync(`${global.tempDir}/mapping.json`)
+    let mappingStats = fs.statSync(`${context.tempDir}/old_mapping.json`)
+    let newMappingStats = fs.statSync(`${context.tempDir}/mapping.json`)
 
     if (newMappingStats.size !== mappingStats.size) {
         logger.info(`updating mapping...`)
 
         // update the object
-        let newMapping = fs.readJsonSync(`${global.tempDir}/mapping.json`)
+        let newMapping = fs.readJsonSync(`${context.tempDir}/mapping.json`)
 
         logger.info(`saving mapping...`)
 
-        let automation = await readAutomation(argv)
+        let automation = await readAutomation(context)
         automation.body = {
             ...automation.body,
             contentItems: _.map(newMapping.contentItems, x => ({ from: x[0], to: x[1] })),
@@ -353,16 +351,7 @@ export const updateAutomation = async (argv: Context) => {
     }
 }
 
-const findRepository = async (name: string) => {
-    let repositories: ContentRepository[] = await paginator(hub.related.contentRepositories.list)
-    let repo = _.find(repositories, repo => repo.name === name)
-    if (!repo) {
-        throw new Error(`repository '${name}' not found, please make sure it exists`)
-    }
-    return repo
-}
-
-const readDAMMapping = async (argv: Context) => {
+const readDAMMapping = async (context: Context) => {
     const { dam } = currentEnvironment()
     let damService = await new DAMService().init(dam)
 

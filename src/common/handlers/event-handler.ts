@@ -13,8 +13,8 @@ export class EventHandler extends ResourceHandler {
         super(Event, 'events')
     }
 
-    async cleanup(argv: Context): Promise<any> {
-        let events: Event[] = await paginator(argv.hub.related.events.list, { status: 'ACTIVE' })
+    async cleanup(context: Context): Promise<any> {
+        let events: Event[] = await paginator(context.hub.related.events.list, { status: 'ACTIVE' })
         await Promise.all(events.map(async event => {
             let editions = await paginator(event.related.editions.list, { status: 'ACTIVE' })
             let publishedEditions = _.filter(editions, e => e.publishingStatus === PublishingStatus.PUBLISHED)

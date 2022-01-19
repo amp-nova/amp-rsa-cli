@@ -14,6 +14,7 @@ import { SettingsHandler } from '../common/handlers/settings-handler';
 import amplience from '../common/amplience-helper';
 import { Context } from '../common/handlers/resource-handler';
 import { copyTemplateFilesToTempDir } from '../common/import-helper';
+import { withTempDir } from '../common/connection-middleware';
 
 export const builder = (yargs: Argv): Argv =>
     yargs
@@ -54,95 +55,84 @@ export const builder = (yargs: Argv): Argv =>
 export const command = 'import';
 export const desc = "Import hub data";
 
-export const handler = async (argv: Context): Promise<void> => {
-    try {
-        logger.info(`${chalk.green(command)}: ${desc} started at ${chalk.magentaBright(argv.startTime)}`)
+export const handler = withTempDir(async (context: Context): Promise<void> => {
+    logger.info(`${chalk.green(command)}: ${desc} started at ${chalk.magentaBright(context.startTime)}`)
 
-        // get DC & DAM configuration
-        let { env } = currentEnvironment()
+    // get DC & DAM configuration
+    let { env } = currentEnvironment()
 
-        logHeadline(`Phase 1: preparation`)
+    logHeadline(`Phase 1: preparation`)
 
-        // we need the URL for viz
-        let mapping: any = { app: { url: env.url } }
+    // we need the URL for viz
+    let mapping: any = { app: { url: env.url } }
 
-        // set up our mapping template
-        argv.mapping = mapping
-        argv.importSourceDir = `${global.tempDir}/content`
+    // set up our mapping template
+    context.mapping = mapping
+    context.importSourceDir = `${context.tempDir}/content`
 
-        copyTemplateFilesToTempDir(argv)
+    copyTemplateFilesToTempDir(context)
 
-        // process step 2: npm run automate:schemas
-        await new ContentTypeSchemaHandler().import(argv)
-        await new ContentTypeHandler().import(argv)
-    
-        // caching a map of current content items. this appears to obviate the issue of archived items
-        // hanging out on published delivery keys
-        await amplience.cacheContentMap(argv)
+    // process step 2: npm run automate:schemas
+    await new ContentTypeSchemaHandler().import(context)
+    await new ContentTypeHandler().import(context)
 
-        // read the configuration content
-        let envConfig = await amplience.readEnvConfig(argv)
+    // caching a map of current content items. this appears to obviate the issue of archived items
+    // hanging out on published delivery keys
+    await amplience.cacheContentMap(context)
 
-        argv.mapping = mapping = {
-            ...mapping,
-            ...envConfig
-        }
+    // read the configuration content
+    let envConfig = await amplience.readEnvConfig(context)
 
-        // read the automation content
-        await amplience.initAutomation(argv)
-
-        copyTemplateFilesToTempDir(argv)
-
-        logHeadline(`Phase 2: import/update`)
-
-        // process step 1: npm run automate:settings
-        await new SettingsHandler().import(argv)
-
-        // process step 4: npm run automate:extensions
-        await new ExtensionHandler().import(argv)
-
-        // process step 5: npm run automate:indexes
-        await new SearchIndexHandler().import(argv)
-
-        await amplience.updateEnvConfig(argv)
-
-        if (!argv.skipContentImport) {
-            logger.debug(JSON.stringify(mapping, null, 4))
-
-            // process step 6: npm run automate:content-with-republish
-            await new ContentItemHandler().import(argv)
-
-            // recache
-            await amplience.cacheContentMap(argv)
-
-            logHeadline(`Phase 3: update automation`)
-
-            // update the automation content item with any new mapping content generated
-            await amplience.updateAutomation(argv)
-
-            logHeadline(`Phase 4: reentrant import`)
-
-            // process step 7: npm run automate:schemas
-            // now that we've installed the core content, we need to go through again for content types
-            // that point to a specific hierarchy node
-            mapping.contentMap = amplience.getContentMap()
-            logger.debug(JSON.stringify(mapping, null, 4))
-
-            // recopy template files with new mappings
-            copyTemplateFilesToTempDir(argv)
-
-            // reimport content types that have been updated
-            await new ContentTypeSchemaHandler().import(argv)
-            await new ContentTypeHandler().import(argv)
-        }
-    } catch (error) {
-        if (error.message) {
-            logger.error(error.message);
-        }
-
-        _.each(error.response?.data?.errors, error => logger.error(`\t* ${chalk.bold.red(error.code)}: ${error.message}`))
-        logger.error(error.stack)
-    } finally {
-        logRunEnd(argv)
+    context.mapping = mapping = {
+        ...mapping,
+        ...envConfig
     }
-}
+
+    // read the automation content
+    await amplience.initAutomation(context)
+
+    copyTemplateFilesToTempDir(context)
+
+    logHeadline(`Phase 2: import/update`)
+
+    // process step 1: npm run automate:settings
+    await new SettingsHandler().import(context)
+
+    // process step 4: npm run automate:extensions
+    await new ExtensionHandler().import(context)
+
+    // process step 5: npm run automate:indexes
+    await new SearchIndexHandler().import(context)
+
+    await amplience.updateEnvConfig(context)
+
+    if (!context.skipContentImport) {
+        logger.debug(JSON.stringify(mapping, null, 4))
+
+        // process step 6: npm run automate:content-with-republish
+        await new ContentItemHandler().import(context)
+
+        // recache
+        await amplience.cacheContentMap(context)
+
+        logHeadline(`Phase 3: update automation`)
+
+        // update the automation content item with any new mapping content generated
+        await amplience.updateAutomation(context)
+
+        logHeadline(`Phase 4: reentrant import`)
+
+        // process step 7: npm run automate:schemas
+        // now that we've installed the core content, we need to go through again for content types
+        // that point to a specific hierarchy node
+        mapping.contentMap = amplience.getContentMap()
+        logger.debug(JSON.stringify(mapping, null, 4))
+
+        // recopy template files with new mappings
+        copyTemplateFilesToTempDir(context)
+
+        // reimport content types that have been updated
+        await new ContentTypeSchemaHandler().import(context)
+        await new ContentTypeHandler().import(context)
+    }
+})

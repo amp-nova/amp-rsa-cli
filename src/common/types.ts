@@ -15,6 +15,7 @@ export interface Options {
     skipConfirmation: boolean
     ariaKey: string
 
+    tempDir: string
     mapping: Mapping
 
     importSourceDir?: string

@@ -3,7 +3,6 @@ import YargsCommandBuilderOptions from './common/yargs/yargs-command-builder-opt
 import { Arguments, Argv } from 'yargs';
 import chalk from 'chalk'
 
-import connectionMiddleware from './common/connection-middleware'
 import logger from './common/logger';
 import _ from 'lodash';
 import { Context } from './common/handlers/resource-handler';
@@ -44,11 +43,7 @@ const configureYargs = (yargInstance: Argv): Promise<Arguments> => {
               }
           }
       
-          // don't run this middleware for 'env' commands
-          if (!_.includes(context._, 'env')) {
-            await connectionMiddleware(context)
-            context.startTime = new Date()
-          }
+          context.startTime = new Date()
         }])
         .options({
           logRequests: {

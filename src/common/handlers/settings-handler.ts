@@ -14,8 +14,8 @@ export class SettingsHandler extends ResourceHandler {
         super(undefined, 'settings')
     }
 
-    async import(argv: Context) {
-        let { hub } = argv
+    async import(context: Context) {
+        let { hub } = context
 
         let settings = hub.settings
         let workflowStates = await paginator(hub.related.workflowStates.list)
@@ -23,7 +23,7 @@ export class SettingsHandler extends ResourceHandler {
         let { 
             settings: fileSettings, 
             workflowStates: fileWorkflowStates 
-        } = fs.readJsonSync(`${global.tempDir}/content/settings/settings.json`)
+        } = fs.readJsonSync(`${context.tempDir}/content/settings/settings.json`)
 
         if (!settings ||
             !_.isEqual(settings.devices, fileSettings.devices) ||

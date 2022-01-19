@@ -74,16 +74,6 @@ export const chooseEnvironment = async (handler?: any) => {
     }
 }
 
-export const listEnvironments = () => {
-    _.each(getEnvironments(), env => {
-        let str = `  ${env.name}`
-        if (env.active) {
-            str = chalk.greenBright(`* ${env.name}`)
-        }
-        console.log(str)
-    })
-}
-
 export const useEnvironment = (env: any) => {
     logger.info(`[ ${chalk.greenBright(env.name)} ] configure dc-cli...`);
     childProcess.execSync(`npx @amplience/dc-cli configure --clientId ${env.dc.clientId} --clientSecret ${env.dc.clientSecret} --hubId ${env.dc.hubId}`);

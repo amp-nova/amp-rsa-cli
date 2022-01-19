@@ -2,8 +2,7 @@ import { Argv } from 'yargs';
 import YargsCommandBuilderOptions from '../common/yargs/yargs-command-builder-options';
 
 export const command = 'env';
-
-export const desc = 'env';
+export const desc = 'Manage environments';
 
 export const builder = (yargs: Argv): Argv =>
   yargs

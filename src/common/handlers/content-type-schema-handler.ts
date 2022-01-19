@@ -18,7 +18,7 @@ export class ContentTypeSchemaHandler extends CleanableResourceHandler {
 
     async import(context: Context): Promise<any> {
         let { hub, importSourceDir } = context
-        let baseDir = importSourceDir || `${global.tempDir}/content/core`
+        let baseDir = importSourceDir || `${context.tempDir}/content/core`
         let sourceDir = `${baseDir}/content-type-schemas`
 
         if (!fs.existsSync(sourceDir)) {

@@ -4,7 +4,7 @@ import logger from './logger';
 import { Context } from './handlers/resource-handler';
 
 export const copyTemplateFilesToTempDir = (context: Context) => {
-    let contentFolder = `${global.tempDir}/content`
+    let contentFolder = `${context.tempDir}/content`
     let folder = `${context.automationDir}/content`
 
     // Create repositories folder

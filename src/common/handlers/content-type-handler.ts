@@ -46,7 +46,7 @@ export class ContentTypeHandler extends CleanableResourceHandler {
 
     async import(context: Context): Promise<any> {
         let { hub, importSourceDir } = context
-        let baseDir = importSourceDir || `${global.tempDir}/content`
+        let baseDir = importSourceDir || `${context.tempDir}/content`
         let sourceDir = `${baseDir}/content-types`
         if (!fs.existsSync(sourceDir)) {
             return
@@ -133,9 +133,8 @@ export class ContentTypeHandler extends CleanableResourceHandler {
         logger.info(`${chalk.cyan('📦  repositories')}: [ ${chalk.green(assignedCount)} content types assigned ] [ ${chalk.red(unassignedCount)} content types unassigned ]`)
     }
 
-    async cleanup(argv: Context): Promise<any> {
-        let { hub } = argv
-        let repos: ContentRepository[] = await paginator(hub.related.contentRepositories.list)
+    async cleanup(context: Context): Promise<any> {
+        let repos: ContentRepository[] = await paginator(context.hub.related.contentRepositories.list)
 
         let unassignedCount = 0
         await Promise.all(repos.map(async repo => {
@@ -153,6 +152,6 @@ export class ContentTypeHandler extends CleanableResourceHandler {
         logComplete(`${chalk.cyan(`📦  repositories`)}: [ ${chalk.red(unassignedCount)} content types unassigned ]`)
 
         // now clean up the content types
-        await super.cleanup(argv)
+        await super.cleanup(context)
     }
 }

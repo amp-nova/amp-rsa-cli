@@ -43,10 +43,10 @@ export class SearchIndexHandler extends ResourceHandler implements Cleanable {
         super(SearchIndex, 'searchIndexes')
     }
 
-    async import(argv: Context) {
-        const { hub, mapping } = argv
-        let testIndexes = fs.readJsonSync(`${global.tempDir}/content/indexes/test-index.json`)
-        let importIndexes = fs.readJsonSync(`${global.tempDir}/content/indexes/indexes.json`)
+    async import(context: Context) {
+        const { hub, mapping } = context
+        let testIndexes = fs.readJsonSync(`${context.tempDir}/content/indexes/test-index.json`)
+        let importIndexes = fs.readJsonSync(`${context.tempDir}/content/indexes/indexes.json`)
 
         const indexes = testIndexes.concat(importIndexes)
 
@@ -129,8 +129,8 @@ export class SearchIndexHandler extends ResourceHandler implements Cleanable {
         logComplete(`${this.getDescription()}: [ ${chalk.green(searchIndexCount)} created ] [ ${chalk.green(replicaCount)} replicas created ] [ ${chalk.green(webhookCount)} webhooks created ]`)
     }
 
-    async cleanup(argv: Context): Promise<any> {
-        let searchIndexes: SearchIndex[] = await paginator(searchIndexPaginator(argv.hub))
+    async cleanup(context: Context): Promise<any> {
+        let searchIndexes: SearchIndex[] = await paginator(searchIndexPaginator(context.hub))
 
         let searchIndexCount = 0
         let replicaCount = 0

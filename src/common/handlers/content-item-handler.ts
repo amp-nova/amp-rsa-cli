@@ -18,33 +18,22 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
     }
 
     async import(context: Context) {
-        let baseDir = context.importSourceDir || `${global.tempDir}/content`
+        let baseDir = context.importSourceDir || `${context.tempDir}/content`
         let sourceDir = `${baseDir}/content-items`
         if (!fs.existsSync(sourceDir)) {
-            return
+            throw new Error(`source dir not found: ${sourceDir}`)
         }
 
-        let importLogFile = `${global.tempDir}/item-import.log`
-        let importJob = new CLIJob(`npx @amplience/dc-cli content-item import ${sourceDir} --publish --mapFile ${global.tempDir}/mapping.json --logFile ${importLogFile}`)
-        // let importJob = new CLIJob(`ts-node /Users/dave/work/dc-cli/src/index.ts content-item import ${sourceDir} --publish --mapFile ${global.tempDir}/mapping.json --logFile ${importLogFile}`)
-
+        let importLogFile = `${context.tempDir}/item-import.log`
+        let importJob = new CLIJob(`npx @amplience/dc-cli content-item import ${sourceDir} --publish --mapFile ${context.tempDir}/mapping.json --logFile ${importLogFile}`)
         await importJob.exec()
 
         // read the log file
-        let createdCount = 0
-        let updatedCount = 0
         let logFile = fs.readFileSync(importLogFile, { encoding: "utf-8" })
-        _.each(logFile.split('\n'), line => {
-            if (line.startsWith('CREATE ')) {
-                createdCount++
-            }
-            else if (line.startsWith('UPDATE ')) {
-                updatedCount++
-            }
-        })
+        let createdCount = _.filter(logFile.split('\n'), l => l.startsWith('CREATE ')).length
+        let updatedCount = _.filter(logFile.split('\n'), l => l.startsWith('UPDATE ')).length
 
         logComplete(`${this.getDescription()}: [ ${chalk.green(createdCount)} created ] [ ${chalk.blue(updatedCount)} updated ]`)
-
         await publishUnpublished(context)
     }
 
@@ -77,8 +66,6 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
                     await contentItem.related.archive()
                 }
             }))
-
-            return false
 
             const cleanupFolder = (async (folder: Folder) => {
                 let subfolders = await paginator(folder.related.folders.list)

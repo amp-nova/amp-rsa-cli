@@ -19,9 +19,9 @@ export class ExtensionHandler extends ResourceHandler implements Cleanable {
         super(Extension, 'extensions')
     }
 
-    async import(argv: Context): Promise<any> {
-        const { hub } = argv
-        let extensions = fs.readJsonSync(`${global.tempDir}/content/extensions/extensions.json`)
+    async import(context: Context): Promise<any> {
+        const { hub } = context
+        let extensions = fs.readJsonSync(`${context.tempDir}/content/extensions/extensions.json`)
 
         const existingExtensions = await paginator(hub.related.extensions.list)
         let createCount = 0
@@ -45,10 +45,10 @@ export class ExtensionHandler extends ResourceHandler implements Cleanable {
         logComplete(`${this.getDescription()}: [ ${chalk.green(createCount)} created ]`)
     }
 
-    async cleanup(argv: Context): Promise<any> {
+    async cleanup(context: Context): Promise<any> {
         try {
             let deleteCount = 0
-            let extensions: Extension[] = await paginator(argv.hub.related.extensions.list)
+            let extensions: Extension[] = await paginator(context.hub.related.extensions.list)
             await Promise.all(extensions.map(async ext => {
                 let oldName = ext.name
                 ext.name = nanoid()

@@ -9,7 +9,7 @@ import { Options } from "../types"
 export type Context = Arguments<Options>
 
 export interface Importable extends ResourceHandler {
-    import(argv: Context): Promise<any>
+    import(context: Context): Promise<any>
 }
 
 export interface Exportable extends ResourceHandler {
@@ -17,7 +17,7 @@ export interface Exportable extends ResourceHandler {
 }
 
 export interface Cleanable extends ResourceHandler {
-    cleanup(argv: Context): Promise<any>
+    cleanup(context: Context): Promise<any>
 }
 
 export class ResourceHandler {
@@ -51,8 +51,8 @@ export class ResourceHandler {
 }
 
 export class CleanableResourceHandler extends ResourceHandler implements Cleanable {
-    async cleanup(argv: Context): Promise<any> {
-        let type = (argv.hub.related as any)[this.resourceTypeDescription]
+    async cleanup(context: Context): Promise<any> {
+        let type = (context.hub.related as any)[this.resourceTypeDescription]
         let pagableFn = type && type.list
         if (!pagableFn) {
             console.log(`not cleaning up for ${this.resourceTypeDescription}`)

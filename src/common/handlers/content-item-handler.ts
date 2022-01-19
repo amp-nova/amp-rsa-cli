@@ -25,7 +25,7 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
         }
 
         let importLogFile = `${context.tempDir}/item-import.log`
-        let importJob = new CLIJob(`npx @amplience/dc-cli content-item import ${sourceDir} --publish --mapFile ${context.tempDir}/mapping.json --logFile ${importLogFile}`)
+        let importJob = new CLIJob(`npx @dlillyatx/dc-cli@latest content-item import ${sourceDir} --mapFile ${context.tempDir}/mapping.json --logFile ${importLogFile}`)
         await importJob.exec()
 
         // read the log file

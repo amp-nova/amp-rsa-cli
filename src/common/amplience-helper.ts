@@ -208,7 +208,7 @@ const getEnvConfig = async (context: Context) => {
             }
         }
 
-        let fileCreds = await createAndPublishContentItem(fileCredsDefault, context.repositories.siteComponents)
+        let fileCreds = await createAndPublishContentItem(fileCredsDefault, await findRepository(context, 'sitestructure'))
 
         let config = {
             label: `${env.name} AMPRSA config`,
@@ -249,7 +249,7 @@ const getEnvConfig = async (context: Context) => {
         }
 
         // process step 8: npm run automate:webapp:configure
-        envConfig = await createAndPublishContentItem(config, context.repositories.siteComponents)
+        envConfig = await createAndPublishContentItem(config, await findRepository(context, 'sitestructure'))
     }
 
     return envConfig
@@ -320,7 +320,7 @@ export const readAutomation = async (context: Context) => {
                 workflowStates: []
             }
         }
-        automation = await createAndPublishContentItem(automationItem, context.repositories.siteComponents)
+        automation = await createAndPublishContentItem(automationItem, await findRepository(context, 'sitestructure'))
     }
 
     return automation
@@ -349,6 +349,15 @@ export const updateAutomation = async (context: Context) => {
         automation = await automation.related.update(automation)
         await publishContentItem(automation)
     }
+}
+
+const findRepository = async (context: Context, name: string) => {
+    let repositories: ContentRepository[] = await paginator(context.hub.related.contentRepositories.list)
+    let repo = _.find(repositories, repo => repo.name === name)
+    if (!repo) {
+        throw new Error(`repository '${name}' not found, please make sure it exists`)
+    }
+    return repo
 }
 
 const readDAMMapping = async (context: Context) => {

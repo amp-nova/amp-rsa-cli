@@ -48,7 +48,7 @@ const useTempDir = (context: Context): Context => {
 
 const dcLogIn = async (context: Context) => {
     // get DC & DAM configuration
-    let { dc } = currentEnvironment()
+    let { dc } = await currentEnvironment()
 
     // log in to DC
     let client = new DynamicContent({
@@ -69,7 +69,7 @@ const dcLogIn = async (context: Context) => {
 }
 
 const damLogIn = async (context: Context) => {
-    let { dam } = currentEnvironment()
+    let { dam } = await currentEnvironment()
     let damService = new DAMService()
     await damService.init(dam)
     logger.info(`connected to dam with user ${chalk.cyanBright(`[ ${dam.username} ]`)}`)
@@ -77,16 +77,14 @@ const damLogIn = async (context: Context) => {
 }
 
 const amplienceLogIn = async () => {
-    let { dc } = currentEnvironment()
+    let { dc } = await currentEnvironment()
     await amplienceHelper.login(dc)
 }
 
 const useEnv = async (context: Context): Promise<Context> => {
-    await Promise.all([
-        dcLogIn(context),
-        damLogIn(context),
-        amplienceLogIn()
-    ])
+    await dcLogIn(context)
+    await damLogIn(context)
+    await amplienceLogIn()
     return context
 }
 

@@ -183,7 +183,7 @@ export const getContentItemByKey = (key: string) => {
 export const getContentMap = () => _.zipObject(_.map(contentMap, (__, key) => key.replace(/\//g, '-')), _.map(contentMap, 'deliveryId'))
 
 const getEnvConfig = async (context: Context) => {
-    let { env } = currentEnvironment()
+    let { env } = await currentEnvironment()
     let { hub, ariaKey } = context
     let deliveryKey = `aria/env/${ariaKey}`
 
@@ -203,8 +203,7 @@ const getEnvConfig = async (context: Context) => {
                     name: `File config credentials`,
                     schema: `https://amprsa.net/credentials/file`
                 },
-                product_file_path: 'data/all_products.json',
-                category_file_path: 'data/all_categories.json'
+                use_local_file: true
             }
         }
 
@@ -301,7 +300,7 @@ export const initAutomation = async (context: Context) => {
 }
 
 export const readAutomation = async (context: Context) => {
-    let { env } = currentEnvironment()
+    let { env } = await currentEnvironment()
     let deliveryKey = `aria/automation/${context.ariaKey}`
 
     let automation = await getContentItemByKey(deliveryKey) as any
@@ -361,7 +360,7 @@ const findRepository = async (context: Context, name: string) => {
 }
 
 const readDAMMapping = async (context: Context) => {
-    const { dam } = currentEnvironment()
+    const { dam } = await currentEnvironment()
     let damService = await new DAMService().init(dam)
 
     let assets = _.filter(await damService.getAssetsListForBucket('Assets'), asset => asset.status === 'active')

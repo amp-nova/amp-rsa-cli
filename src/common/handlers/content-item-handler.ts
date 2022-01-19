@@ -38,11 +38,8 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
     }
 
     shouldCleanUpItem(item: ContentItem, context: Context): boolean {
-        if (_.includes(context.deliveryKey, item.body._meta.deliveryKey) || 
-            !_.includes(context.excludeDeliveryKey, item.body._meta.deliveryKey) && _.isEmpty(context.deliveryKey)) {
-            return true
-        }
-        return false
+        return _.includes(context.deliveryKey, item.body._meta.deliveryKey) || 
+            !_.includes(context.excludeDeliveryKey, item.body._meta.deliveryKey) && _.isEmpty(context.deliveryKey)
     }
 
     async cleanup(context: Context): Promise<any> {
@@ -78,7 +75,6 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
             // also clean up folders
             let folders = await paginator(repository.related.folders.list)
             await Promise.all(folders.map(cleanupFolder))
-
         }))
         logComplete(`${this.getDescription()}: [ ${chalk.yellow(archiveCount)} items archived ] [ ${chalk.red(folderCount)} folders deleted ]`)
     }

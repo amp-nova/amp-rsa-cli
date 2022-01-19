@@ -31,11 +31,6 @@ export const updateEnvironments = () => {
     saveConfig()
 }
 
-// make sure config directory exists
-mkdirpSync(CONFIG_PATH)
-let envConfig = existsSync(ENV_FILE_PATH) ? readJsonSync(ENV_FILE_PATH) : { envs: [], current: null }
-updateEnvironments()
-
 export const addEnvironment = (env: any) => {
     envConfig.envs.push(env)
     useEnvironment(env)
@@ -57,15 +52,13 @@ export const selectEnvironment = async (argv: Arguments) => argv.env ? getEnviro
 export const chooseEnvironment = async (handler?: any) => {
     const envs = getEnvironments()
 
-    const prompt = new Select({
+    const name = await (new Select({
         name: 'env',
         message: 'choose an environment',
         choices: _.map(envs, 'name')
-    });
+    })).run()
 
-    let name = await prompt.run()
     let env = _.find(envs, e => e.name === name)
-
     if (handler) {
         await handler(env)
     }
@@ -89,13 +82,23 @@ export const useEnvironment = (env: any) => {
     saveConfig()
 }
 
-export const currentEnvironment = () => {
+export const currentEnvironment = async () => {
     if (envConfig.envs.length === 0) {
         throw new Error(`no envs found, use 'amprsa env init'`)
     }
 
     let env = getEnvironment(envConfig.current)
+    if (!env) {
+        env = await chooseEnvironment()
+        useEnvironment(env)
+    }
+
     let dc = readJsonSync(`${CONFIG_PATH}/dc-cli-config.json`)
     let dam = readJsonSync(`${CONFIG_PATH}/dam-cli-config.json`)
     return { dc, dam, env }
 }
+
+// make sure config directory exists
+mkdirpSync(CONFIG_PATH)
+let envConfig = existsSync(ENV_FILE_PATH) ? readJsonSync(ENV_FILE_PATH) : { envs: [], current: null }
+updateEnvironments()

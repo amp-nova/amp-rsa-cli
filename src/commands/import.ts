@@ -59,7 +59,7 @@ export const handler = withTempDir(async (context: Context): Promise<void> => {
     logger.info(`${chalk.green(command)}: ${desc} started at ${chalk.magentaBright(context.startTime)}`)
 
     // get DC & DAM configuration
-    let { env } = currentEnvironment()
+    let { env } = await currentEnvironment()
 
     logHeadline(`Phase 1: preparation`)
 

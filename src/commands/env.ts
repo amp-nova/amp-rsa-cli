@@ -16,7 +16,7 @@ export const builder = (yargs: Argv): Argv =>
   yargs
     .demandCommand()
     .command("add", "Add an amprsa environment", createEnvironment)
-    .command("delete [env]", "Delete an amprsa environment configuration", envBuilder, deleteEnvironment)
+    .command("delete [env]", "Delete an amprsa environment", envBuilder, deleteEnvironment)
     .command("list", "List amprsa environments", listEnvironments)
     .command("use [env]", "Use amprsa environment", envBuilder, useEnvironmentFromArgs)
     .help();

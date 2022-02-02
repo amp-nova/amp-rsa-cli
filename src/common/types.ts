@@ -1,5 +1,5 @@
 import { ContentRepository, Hub } from 'dc-management-sdk-js';
-import { DAMService } from './dam/dam-service';
+import { DAMService } from '../dam/dam-service';
 import _, { Dictionary } from 'lodash';
 import { InstrumentedHub } from './middleware';
 

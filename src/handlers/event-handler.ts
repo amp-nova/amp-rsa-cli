@@ -1,10 +1,10 @@
 import { CleanupContext, ResourceHandler } from "./resource-handler"
 import { Event, PublishingStatus } from "dc-management-sdk-js"
-import { paginator } from "../paginator"
+import { paginator } from "../helpers/paginator"
 import _ from 'lodash'
-import logger from "../logger"
+import logger from "../common/logger"
 import chalk from 'chalk'
-import { prompts } from "../prompts"
+import { prompts } from "../common/prompts"
 
 export class EventHandler extends ResourceHandler {
     icon = '📅'

@@ -1,13 +1,12 @@
-import { Cleanable, CleanupContext, Context } from '../common/handlers/resource-handler';
+import { Cleanable, CleanupContext, ResourceHandler } from '../handlers/resource-handler';
 import _ from 'lodash'
-import { Cleanables } from '../common/resource-handlers';
+import { Cleanables } from '../handlers';
 import chalk from "chalk";
 import async from 'async'
-import { ResourceHandler } from '../common/handlers/resource-handler';
 import { Argv } from 'yargs';
 import { contextHandler } from '../common/middleware';
-import amplienceBuilder from './amplience-builder';
-import { timed } from "../common/handlers/typed-result";
+import amplienceBuilder from '../common/amplience-builder';
+import { timed } from "../handlers/typed-result";
 import { getContentItemByKey } from '../common/amplience-helper';
 
 const { Confirm, MultiSelect } = require('enquirer');

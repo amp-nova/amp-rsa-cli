@@ -1,16 +1,16 @@
 import logger, { logRunEnd, setLogDirectory } from './logger'
 import { AxiosHttpClient, ContentItem, DynamicContent, HalResource, HttpRequest, HttpResponse, Hub, Page, Pageable, Sortable, Status } from "dc-management-sdk-js";
-import { DAMService } from "./dam/dam-service";
+import { DAMService } from "../dam/dam-service";
 import amplienceHelper from "./amplience-helper";
 import _, { Dictionary } from 'lodash'
 
 import fs from 'fs-extra'
 import chalk from 'chalk'
 import { prompts } from './prompts';
-import { ImportContext, LoggableContext } from './handlers/resource-handler';
-import { paginator, StatusQuery } from './paginator';
+import { ImportContext, LoggableContext } from '../handlers/resource-handler';
+import { paginator, StatusQuery } from '../helpers/paginator';
 import { AugmentedHub } from './types';
-import { timed } from "./handlers/typed-result";
+import { timed } from "../handlers/typed-result";
 import { nanoid } from 'nanoid';
 import { StatusCodes } from 'http-status-codes';
 

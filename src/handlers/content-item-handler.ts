@@ -1,14 +1,14 @@
 import { ResourceHandler, Cleanable, ImportContext, CleanupContext } from "./resource-handler"
 import { ContentItem, ContentRepository, Folder } from "dc-management-sdk-js"
-import { paginator } from "../paginator"
+import { paginator } from "../helpers/paginator"
 import chalk from 'chalk'
-import { prompts } from "../prompts"
+import { prompts } from "../common/prompts"
 import fs from 'fs-extra'
-import amplienceHelper, { get, deleteFolder, publishAll, updateAutomationContentItems, PublishingQueue } from '../amplience-helper'
-import { logUpdate, logComplete } from "../logger"
-import { CLIJob } from "../exec-helper"
+import amplienceHelper, { get, deleteFolder, publishAll, updateAutomationContentItems, PublishingQueue } from '../common/amplience-helper'
+import { logUpdate, logComplete } from "../common/logger"
+import { CLIJob } from "../helpers/exec-helper"
 import _ from "lodash"
-import { fileIterator } from "../utils"
+import { fileIterator } from "../common/utils"
 
 export class ContentItemHandler extends ResourceHandler implements Cleanable {
     sortPriority = 0.03

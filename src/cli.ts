@@ -5,7 +5,7 @@ import chalk from 'chalk'
 
 import logger from './common/logger';
 import _ from 'lodash';
-import { Context } from './common/handlers/resource-handler';
+import { Context } from './handlers/resource-handler';
 import { currentEnvironment } from './common/environment-manager';
 import { setupLogging } from './common/middleware';
 

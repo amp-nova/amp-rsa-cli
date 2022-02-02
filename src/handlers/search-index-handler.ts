@@ -1,10 +1,10 @@
 import { Cleanable, ResourceHandler, Context, ImportContext, CleanupContext } from "./resource-handler"
 import { SearchIndex, Webhook } from "dc-management-sdk-js"
-import { paginator, searchIndexPaginator, replicaPaginator } from "../paginator"
+import { paginator, searchIndexPaginator, replicaPaginator } from "../helpers/paginator"
 import _ from 'lodash'
-import logger, { logComplete, logUpdate } from "../logger"
+import logger, { logComplete, logUpdate } from "../common/logger"
 import chalk from 'chalk'
-import { prompts } from "../prompts"
+import { prompts } from "../common/prompts"
 import fs from 'fs-extra'
 import async from 'async'
 

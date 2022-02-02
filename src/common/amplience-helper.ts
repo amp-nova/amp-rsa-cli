@@ -1,18 +1,18 @@
 import { ContentRepository, ContentType, DynamicContent, Folder, Hub, HttpMethod, HttpRequest, FacetQuery, HttpResponse, ContentItem, WorkflowState, HalResource, ContentTypeSchema, Status } from "dc-management-sdk-js"
 import logger, { logComplete } from "./logger"
 import chalk from "chalk"
-import { facetPaginator, paginator, StatusQuery } from "./paginator"
+import { facetPaginator, paginator, StatusQuery } from "../helpers/paginator"
 import { logUpdate } from "./logger"
 import async from 'async'
 import _, { Dictionary } from 'lodash'
-import { ContentItemHandler } from "./handlers/content-item-handler"
+import { ContentItemHandler } from "../handlers/content-item-handler"
 import { AxiosHttpClient } from "dc-management-sdk-js"
-import { AmplienceContext, ImportContext, LoggableContext } from '../common/handlers/resource-handler';
+import { AmplienceContext, ImportContext, LoggableContext } from '../handlers/resource-handler';
 import fs from 'fs-extra'
 import { sleep } from "./utils"
 import { AMPRSAConfig } from './types'
-import { ContentTypeHandler } from "./handlers/content-type-handler"
-import { ContentTypeSchemaHandler } from "./handlers/content-type-schema-handler"
+import { ContentTypeHandler } from "../handlers/content-type-handler"
+import { ContentTypeSchemaHandler } from "../handlers/content-type-schema-handler"
 import { currentEnvironment } from "./environment-manager"
 
 let dcUrl = `https://api.amplience.net/v2/content`

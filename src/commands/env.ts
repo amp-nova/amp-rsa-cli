@@ -1,15 +1,19 @@
+import { createEnvironment, deleteEnvironment, listEnvironments, useEnvironmentFromArgs } from '../common/environment-manager';
 import { Argv } from 'yargs';
-import YargsCommandBuilderOptions from '../common/yargs/yargs-command-builder-options';
+import _ from 'lodash';
 
-export const command = 'env';
-export const desc = 'Manage environments';
+export const envBuilder = (yargs: Argv): Argv =>
+  yargs.positional('env', {
+    describe: 'env name',
+    type: 'string',
+    demandOption: false
+  })
 
 export const builder = (yargs: Argv): Argv =>
   yargs
-    .commandDir('env', YargsCommandBuilderOptions)
     .demandCommand()
+    .command("add", "Add an amprsa environment", createEnvironment)
+    .command("delete [env]", "Delete an amprsa environment configuration", envBuilder, deleteEnvironment)
+    .command("list", "List amprsa environments", listEnvironments)
+    .command("use [env]", "Use amprsa environment", envBuilder, useEnvironmentFromArgs)
     .help();
-
-export const handler = (): void => {
-  /* do nothing */
-};

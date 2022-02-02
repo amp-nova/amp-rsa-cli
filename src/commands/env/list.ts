@@ -1,14 +1,15 @@
-import { Arguments } from 'yargs';
-import { settingsBuilder } from '../../common/settings-handler';
-import { listEnvironments } from '../../common/environment-manager';
-import _ from 'lodash'
+import { getEnvironments } from '../../common/environment-manager';
+import _ from 'lodash';
+import chalk from 'chalk';
 
 export const command = 'list';
-export const desc = "List aria environments";
-export const builder = settingsBuilder
-
-export const handler = async (
-  argv: Arguments
-): Promise<void> => {
-  listEnvironments()
-};
+export const desc = "List amprsa environments";
+export const handler = () => {
+    _.each(getEnvironments(), env => {
+        let str = `  ${env.name}`
+        if (env.active) {
+            str = chalk.greenBright(`* ${env.name}`)
+        }
+        console.log(str)
+    })
+}

@@ -1,4 +1,5 @@
 import { Arguments } from 'yargs';
+import fetch from 'isomorphic-unfetch';
 
 export type ConfigurationParameters = {
     username: string;
@@ -15,7 +16,7 @@ export class DAMClient {
     PAGE_SIZE = 1000;
     accessToken: string;
 
-    async init(argv: Arguments<ConfigurationParameters>) {
+    async init(argv: ConfigurationParameters) {
         this.accessToken = await this.getAccessToken(argv.username, argv.password);
     }
 

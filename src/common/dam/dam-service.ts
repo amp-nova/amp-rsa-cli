@@ -13,8 +13,9 @@ export class DAMService {
     }
 
     // Initialise FetchUtilities (retrieve and set access token)
-    async init(argv: Arguments<ConfigurationParameters>) {
+    async init(argv: ConfigurationParameters) {
         await this.client.init(argv);
+        return this
     }
 
     /**
@@ -61,7 +62,6 @@ export class DAMService {
         const bucketsList = await this.getBucketsList();
         const bucket = bucketsList.filter((item: any) => item.label === bucketName);
         if (bucket.length > 0) {
-            console.log(`...Found bucket: ${bucket[0].id}`);
             return bucket[0];
         } else {
             console.log(`...No extension found for name ${bucketName}`);
@@ -73,6 +73,11 @@ export class DAMService {
         let bucket = await this.getBucketByName(bucketName)
         const assetsList = await this.client.fetchPaginatedResourcesList(`/assets?filter=bucketID:${bucket.id}`);
         return assetsList;
+    }
+
+    async getEndpoints(): Promise<any> {
+        const endpoints = await this.client.fetchPaginatedResourcesList(`/endpoints`);
+        return endpoints
     }
 
     /**

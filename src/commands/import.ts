@@ -1,13 +1,147 @@
+import _ from 'lodash'
 import { Argv } from 'yargs';
-import { Importables } from '../common/resource-handlers';
-import { Importable, Context } from '../common/handlers/resource-handler';
+import chalk from 'chalk'
+import logger, { logHeadline, logUpdate } from '../common/logger';
 
-import { settingsBuilder, settingsHandler } from '../common/settings-handler';
-export const builder = (yargs: Argv): void => { settingsBuilder(yargs).array('include') }
-export const handler = async (argv: Context): Promise<void> => settingsHandler(argv, desc, command, handle)
-import choicesHelper from '../common/choices-helper'
+import { ContentTypeSchemaHandler } from '../common/handlers/content-type-schema-handler';
+import { ContentTypeHandler } from '../common/handlers/content-type-handler';
+import { timed } from "../common/handlers/typed-result";
+import { ContentItemHandler } from '../common/handlers/content-item-handler';
+import { ExtensionHandler } from '../common/handlers/extension-handler';
+import { SearchIndexHandler } from '../common/handlers/search-index-handler';
+import { SettingsHandler } from '../common/handlers/settings-handler';
+
+import amplience, { getConfigObject, initAutomation, readDAMMapping, readEnvConfig } from '../common/amplience-helper';
+import { ImportContext } from '../common/handlers/resource-handler';
+import { copyTemplateFilesToTempDir } from '../common/import-helper';
+import { contextHandler, loginDAM } from '../common/middleware';
+import amplienceBuilder from './amplience-builder';
+import { AMPRSAConfig } from '../common/types';
+import { WorkflowState } from 'dc-management-sdk-js';
+import { paginator } from '../common/paginator';
+import fs from 'fs-extra'
+import { CONFIG_PATH } from '../common/environment-manager';
+import simpleGit from 'simple-git'
 
 export const command = 'import';
 export const desc = "Import hub data";
 
-export const handle = choicesHelper<Importable>(Importables, 'select what to import')
+const automationDirPath = `${CONFIG_PATH}/amp-rsa-automation`
+export const builder = (yargs: Argv): Argv => {
+    return amplienceBuilder(yargs).options({
+        automationDir: {
+            alias: 'a',
+            describe: 'path to automation directory',
+            default: automationDirPath
+        },
+        skipContentImport: {
+            alias: 's',
+            describe: 'skip content import',
+            type: 'boolean'
+        },
+        latest: {
+            alias: 'l',
+            describe: 'use latest automation files',
+            type: 'boolean'
+        }
+    }).middleware([
+        async (c: ImportContext) => await loginDAM(c),
+        async (context: ImportContext) => {
+            // delete the cached automation files if --latest was used
+            if (context.latest) {
+                await fs.rm(automationDirPath, { recursive: true })
+            }
+
+            // set up the automation dir if it does not exist and download the latest automation files
+            if (!fs.existsSync(automationDirPath)) {
+                logger.info(`downloading latest automation files...`)
+                await simpleGit().clone('https://github.com/amp-nova/amp-rsa-automation', automationDirPath)
+            }
+
+            if (!_.isEmpty(context.matchingSchema)) {
+                context.matchingSchema.push('https://amprsa.net/amprsa/config')                    
+                context.matchingSchema.push('https://amprsa.net/amprsa/automation')                    
+            }
+
+            let workflowStates: WorkflowState[] = await paginator(context.hub.related.workflowStates.list)
+
+            // create mapping
+            let mapping = {
+                url: context.environment.url,
+                cms: {
+                    hub: context.config.cms.hub,
+                    hubs: context.config.cms.hubs,
+                    repositories: _.zipObject(_.map(Object.keys(context.hub.repositories)), _.map(Object.values(context.hub.repositories), 'id')),
+                    workflowStates: _.zipObject(_.map(workflowStates, ws => _.camelCase(ws.label)), _.map(workflowStates, 'id'))
+                },
+                algolia: context.config.algolia,
+                dam: await readDAMMapping(context)
+            }
+            context.mapping = mapping
+        }
+    ])
+}
+
+export const handler = contextHandler(async (context: ImportContext): Promise<void> => {
+    logger.info(`${chalk.green(command)}: ${desc} started at ${chalk.magentaBright(context.startTime)}`)
+
+    logHeadline(`Phase 1: preparation`)
+
+    await copyTemplateFilesToTempDir(context)
+    
+    await timed('content-type-schema import', async () => { await new ContentTypeSchemaHandler().import(context) })
+    await timed('content-type import', async () => { await new ContentTypeHandler().import(context) })
+    
+    // await timed('content-type-schema import', async () => { await new CLIContentTypeSchemaHandler().import(context) })
+    // await timed('content-type import', async () => { await new CLIContentTypeHandler().import(context) })
+
+    logHeadline(`Phase 2: import/update`)
+
+    // process step 1: npm run automate:settings
+    await new SettingsHandler().import(context)
+
+    // process step 4: npm run automate:extensions
+    await new ExtensionHandler().import(context)
+
+    // process step 5: npm run automate:indexes
+    let algolia = await new SearchIndexHandler().import(context)
+
+    if (algolia) {
+        context.config.algolia.appId = algolia.appId
+        context.config.algolia.apiKey = algolia.apiKey
+        context.mapping.algolia = algolia
+    }
+
+    // save the env config here, since we've just gotten the app id and api key from algolia
+    await amplience.updateEnvConfig(context)
+
+    if (!context.skipContentImport) {
+        await initAutomation(context)
+        logger.debug(JSON.stringify(context.mapping, null, 4))
+
+        // process step 6: npm run automate:content-with-republish
+        await new ContentItemHandler().import(context)
+
+        // recache
+        await amplience.cacheContentMap(context)
+
+        logHeadline(`Phase 3: update automation`)
+
+        // update the automation content item with any new mapping content generated
+        await amplience.updateAutomation(context)
+        
+        logHeadline(`Phase 4: reentrant import`)
+
+        // process step 7: npm run automate:schemas
+        // now that we've installed the core content, we need to go through again for content types
+        // that point to a specific hierarchy node
+        logger.debug(JSON.stringify(context.mapping, null, 4))
+
+        // recopy template files with new mappings
+        await copyTemplateFilesToTempDir(context)
+
+        // reimport content types that have been updated
+        await new ContentTypeSchemaHandler().import(context)
+        await new ContentTypeHandler().import(context)
+    }
+})

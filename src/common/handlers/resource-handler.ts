@@ -1,23 +1,20 @@
-import { Hub } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
-import logger from "../logger"
 import chalk from 'chalk'
-import { HubOptions, IncludeOptions, RunOptions, MappingOptions } from "../interfaces"
 import { Arguments } from "yargs"
 import { prompts } from "../prompts"
-import { HubSettingsOptions } from "../settings-handler"
+import { logComplete } from "../logger"
+import { CleanupArgs, ImportArgs, CommonArgs, AmplienceArgs, LoggableArgs } from "../types"
 
-export type Context = Arguments<HubOptions & MappingOptions & IncludeOptions & RunOptions>
-
-const takeAction = async (related: any, key: string, action: string) => {
-    let pageables = await paginator(related[key].list, { status: 'ACTIVE' })
-    logger.info(`${prompts[action]} [ ${pageables.length} ] ${chalk.cyan(key)}...`)
-    await Promise.all(pageables.map(async (y: any) => await y.related[action]()))
-}
+export type Context = Arguments<CommonArgs>
+export type CommonContext = Arguments<CommonArgs>
+export type AmplienceContext = Arguments<AmplienceArgs>
+export type LoggableContext = Arguments<LoggableArgs>
+export type ImportContext = Arguments<ImportArgs>
+export type CleanupContext = Arguments<CleanupArgs>
 
 export interface Importable extends ResourceHandler {
-    import(argv: HubSettingsOptions): Promise<any>
+    import(context: ImportContext): Promise<any>
 }
 
 export interface Exportable extends ResourceHandler {
@@ -25,10 +22,10 @@ export interface Exportable extends ResourceHandler {
 }
 
 export interface Cleanable extends ResourceHandler {
-    cleanup(argv: Context): Promise<any>
+    cleanup(context: CleanupContext): Promise<any>
 }
 
-export abstract class ResourceHandler {
+export class ResourceHandler {
     resourceType: any
     resourceAction: string
     resourceTypeDescription: string
@@ -41,6 +38,7 @@ export abstract class ResourceHandler {
         this.sortPriority = 1
         this.icon = '🧩'
         this.resourceType = resourceType
+        this.resourceAction = 'delete'
 
         if (resourceType) {
             let x = new resourceType()
@@ -49,41 +47,30 @@ export abstract class ResourceHandler {
     }
 
     getDescription() {
-        return `${this.icon} ${chalk.cyanBright(this.resourceTypeDescription)}`
+        return `${this.icon}  ${chalk.cyan(this.resourceTypeDescription)}`
     }
 
-    abstract action(argv: Context): Promise<any>
-    abstract getLongDescription(): string
+    getLongDescription() {
+        return `${prompts[this.resourceAction]} all ${this.getDescription()}`
+    }
 }
 
 export class CleanableResourceHandler extends ResourceHandler implements Cleanable {
-    async cleanup(argv: Context): Promise<any> {
-        await takeAction(argv.hub.related, this.resourceTypeDescription, this.resourceAction)
-    }
+    async cleanup(context: CleanupContext): Promise<any> {
+        let type = (context.hub.related as any)[this.resourceTypeDescription]
+        let pagableFn = type && type.list
+        if (!pagableFn) {
+            console.log(`not cleaning up for ${this.resourceTypeDescription}`)
+            return
+        }
 
-    async action(argv: Context): Promise<any> {
-        return await this.cleanup(argv)
-    }
-
-    getLongDescription(): string {
-        return `${this.icon} ${prompts[this.resourceAction]} all ${chalk.cyanBright(this.resourceTypeDescription)}`
-    }
-}
-
-export abstract class ImportableResourceHandler extends ResourceHandler implements Importable {
-    sourceDir?: string
-    abstract import(argv: HubSettingsOptions): Promise<any>
-
-    async action(argv: Context): Promise<any> {
-        return await this.import(argv)
-    }
-
-    constructor(resourceType: any, resourceTypeDescription: any, sourceDir?: string) {
-        super(resourceType, resourceTypeDescription)
-        this.sourceDir = sourceDir
-    }
-
-    getLongDescription(): string {
-        return `${this.icon} ${chalk.green('import')} all ${chalk.cyanBright(this.resourceTypeDescription)}`
+        let pageables = await paginator(pagableFn, { status: 'ACTIVE' })
+        let actionCount = 0
+        await Promise.all(pageables.map(async (y: any) => {
+            actionCount++
+            await y.related[this.resourceAction]()
+        }))
+        let color = this.resourceAction === 'delete' ? chalk.red : chalk.yellow
+        logComplete(`${this.getDescription()}: [ ${color(actionCount)} ${this.resourceAction}d ]`)
     }
 }

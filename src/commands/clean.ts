@@ -1,22 +1,47 @@
-import { settingsBuilder } from '../common/settings-handler';
-import { Cleanable, Context } from '../common/handlers/resource-handler';
+import { Cleanable, CleanupContext, Context } from '../common/handlers/resource-handler';
 import _ from 'lodash'
 import { Cleanables } from '../common/resource-handlers';
 import chalk from "chalk";
 import async from 'async'
-import logger from '../common/logger';
 import { ResourceHandler } from '../common/handlers/resource-handler';
+import { Argv } from 'yargs';
+import { contextHandler } from '../common/middleware';
+import amplienceBuilder from './amplience-builder';
+import { timed } from "../common/handlers/typed-result";
+import { getContentItemByKey } from '../common/amplience-helper';
 
 const { Confirm, MultiSelect } = require('enquirer');
 
 export const command = 'cleanup';
 export const desc = "Clean up hub";
 
-export const builder = settingsBuilder
-export const handler = async (argv: Context): Promise<void> => {
+export const builder = (yargs: Argv): Argv =>
+    amplienceBuilder(yargs)
+        .options({
+            include: {
+                alias: 'i',
+                describe: 'types to include',
+                type: 'array'
+            },
+            skipConfirmation: {
+                alias: 'c',
+                describe: 'skip confirmation prompt',
+                type: 'boolean'
+            },
+            all: {
+                alias: 'a',
+                describe: 'clean up all resource types',
+                type: 'boolean'
+            }
+        })
+
+export const handler = contextHandler(async (context: CleanupContext): Promise<void> => {
     let choices: Cleanable[] = []
-    if (argv.include) {
-        choices = _.compact(_.map(argv.include, inc => _.find(Cleanables, handler => handler.resourceTypeDescription === inc)))
+    if (context.all) {
+        choices = Cleanables
+    }
+    else if (context.include) {
+        choices = _.compact(_.map(context.include, inc => _.find(Cleanables, handler => handler.resourceTypeDescription === inc)))
     }
     else {
         choices = await new MultiSelect({
@@ -29,19 +54,18 @@ export const handler = async (argv: Context): Promise<void> => {
     // sort by import priority
     choices = _.sortBy(choices, 'sortPriority')
 
-    if (!argv.skipConfirmation) {
-        console.log(`${chalk.redBright('warning:')} this will perform the following actions on hub [ ${chalk.cyanBright(argv.hub.name)} ]`)
+    if (!context.skipConfirmation) {
+        console.log(`${chalk.redBright('warning:')} this will perform the following actions on hub [ ${chalk.cyanBright(context.hub.name)} ]`)
         _.each(choices, (choice: Cleanable) => { console.log(`\t* ${choice.getLongDescription()}`) })
     }
 
-    if (argv.skipConfirmation || await new Confirm({ message: `${chalk.bold(chalk.greenBright('proceed?'))}` }).run()) {
-        await async.eachSeries(choices, async choice => { await choice.action(argv) })
+    context.automation = await getContentItemByKey(`aria/automation/default`)?.body
+    if (context.skipConfirmation || await new Confirm({ message: `${chalk.bold(chalk.greenBright('proceed?'))}` }).run()) {
+        await async.eachSeries(choices, async (choice, callback) => {
+            timed(`[ cleanup ] ${choice.resourceTypeDescription}`, async() => {
+                await choice.cleanup(context)
+                callback()
+            })
+        })
     }
-
-    let duration = new Date().valueOf() - argv.startTime.valueOf()
-    let minutes = Math.floor((duration / 1000) / 60)
-    let seconds = Math.floor((duration / 1000) - (minutes * 60))
-    logger.info(`logs and temp files stored in ${chalk.blueBright(global.tempDir)}`)
-    logger.info(`run completed in [ ${chalk.green(`${minutes}m${seconds}s`)} ]`)
-    process.exit(0)
-}
+})

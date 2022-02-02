@@ -1,14 +1,9 @@
 import { Arguments } from 'yargs';
-import { settingsBuilder } from '../../common/settings-handler';
-import { chooseEnvironment, useEnvironment } from '../../common/environment-manager';
-import _ from 'lodash'
+import { builder as commonBuilder } from './common';
+import { selectEnvironment, useEnvironment } from '../../common/environment-manager';
 
-export const command = 'use';
-export const desc = "Use aria environments";
-export const builder = settingsBuilder
+export const command = 'use [env]';
+export const desc = "Use amprsa environment";
 
-export const handler = async (
-  argv: Arguments
-): Promise<void> => {
-  await chooseEnvironment(useEnvironment)
-};
+export const builder = commonBuilder
+export const handler = async (argv: Arguments): Promise<void> => await useEnvironment(await selectEnvironment(argv))

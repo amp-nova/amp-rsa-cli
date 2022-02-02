@@ -1,4 +1,4 @@
-import { CleanableResourceHandler, Context } from "./resource-handler"
+import { CleanupContext, ResourceHandler } from "./resource-handler"
 import { Event, PublishingStatus } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
@@ -6,17 +6,17 @@ import logger from "../logger"
 import chalk from 'chalk'
 import { prompts } from "../prompts"
 
-export class EventCleanupHandler extends CleanableResourceHandler {
+export class EventHandler extends ResourceHandler {
+    icon = '📅'
+
     constructor() {
         super(Event, 'events')
-        this.icon = ''
     }
 
-    async cleanup(argv: Context): Promise<any> {
-        let events = await paginator(argv.hub.related.events.list)
-
+    async cleanup(context: CleanupContext): Promise<any> {
+        let events: Event[] = await paginator(context.hub.related.events.list, { status: 'ACTIVE' })
         await Promise.all(events.map(async event => {
-            let editions = await paginator(event.related.editions.list)
+            let editions = await paginator(event.related.editions.list, { status: 'ACTIVE' })
             let publishedEditions = _.filter(editions, e => e.publishingStatus === PublishingStatus.PUBLISHED)
 
             await Promise.all(editions.map(async edition => {

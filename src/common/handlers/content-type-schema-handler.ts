@@ -1,36 +1,52 @@
-import { CleanableResourceHandler, Importable, ImportableResourceHandler, Context, ResourceHandler } from "./resource-handler"
+import { CleanableResourceHandler, CleanupContext, ImportContext } from "./resource-handler"
 import { ContentTypeSchema } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
-import logger from "../logger"
 import chalk from 'chalk'
-import { HubOptions, MappingOptions } from "../interfaces"
-import { Arguments } from "yargs"
 import { loadJsonFromDirectory } from "../importer"
 import { resolveSchemaBody } from "../schema-helper"
-import { HubSettingsOptions } from "../settings-handler"
 import fs from 'fs-extra'
+import { logUpdate, logComplete, logHeadline, logSubheading } from '../logger'
+import { CLIJob } from "../exec-helper"
+import { AnnotatedFile, fileIterator } from "../utils"
+import { ContentTypeSchemaDescriptor, ContentTypeSchemaPointer } from "../types"
 
-export class ContentTypeSchemaImportHandler extends ImportableResourceHandler {
-    sourceDir?: string
+export class ContentTypeSchemaHandler extends CleanableResourceHandler {
+    sortPriority = 1.09
+    icon = '🗄'
 
-    constructor(sourceDir?: string) {
-        super(ContentTypeSchema, 'contentTypeSchema', sourceDir)
-        this.sortPriority = 0.01
-        this.icon = '🗄'
+    constructor() {
+        super(ContentTypeSchema, 'contentTypeSchema')
     }
 
-    async import(argv: HubSettingsOptions): Promise<any> {
-        let { hub } = argv
-        let baseDir = this.sourceDir || `${global.tempDir}/content/core`
-        this.sourceDir = `${baseDir}/content-type-schemas`
+    async import(context: ImportContext): Promise<any> {
+        logSubheading(`[ import ] content-type-schemas`)
 
-        if (!fs.existsSync(this.sourceDir)) {
+        let { hub } = context
+        let baseDir = `${context.tempDir}/content`
+        let sourceDir = `${baseDir}/content-type-schemas`
+        let schemaDir = `${sourceDir}/schemas`
+
+        if (!fs.existsSync(sourceDir)) {
             return
         }
 
-        const schemas = loadJsonFromDirectory<ContentTypeSchema>(this.sourceDir, ContentTypeSchema);
-        const [resolvedSchemas, resolveSchemaErrors] = await resolveSchemaBody(schemas, this.sourceDir);
+        // // preprocess
+        // await fileIterator<ContentTypeSchemaPointer>({ dir: sourceDir, deep: false }, context).iterate(async file => {
+        //     if (!_.isEmpty(context.matchingSchema) && !_.includes(context.matchingSchema, file.object?.schemaId)) {
+        //         fs.unlinkSync(file.path)
+        //     }
+        // })
+
+        // // preprocess
+        // await fileIterator<ContentTypeSchemaDescriptor>({ dir: schemaDir, deep: false }, context).iterate(async file => {
+        //     if (!_.isEmpty(context.matchingSchema) && !_.includes(context.matchingSchema, file.object?.['$id'])) {
+        //         fs.unlinkSync(file.path)
+        //     }
+        // })
+        
+        const schemas = loadJsonFromDirectory<ContentTypeSchema>(sourceDir, ContentTypeSchema);
+        const [resolvedSchemas, resolveSchemaErrors] = await resolveSchemaBody(schemas, sourceDir);
 
         if (Object.keys(resolveSchemaErrors).length > 0) {
             const errors = Object.entries(resolveSchemaErrors)
@@ -42,31 +58,51 @@ export class ContentTypeSchemaImportHandler extends ImportableResourceHandler {
             throw new Error(`Unable to resolve the body for the following files:\n${errors}`);
         }
 
-        const storedSchemas = await paginator(hub.related.contentTypeSchema.list);
+        let archiveCount = 0
+        let updateCount = 0
+        let createCount = 0
+
+        const storedSchemas: ContentTypeSchema[] = await paginator(hub.related.contentTypeSchema.list);
         await Promise.all(Object.values(resolvedSchemas).map(async schema => {
             let stored = _.find(storedSchemas, s => s.schemaId === schema.schemaId)
             if (stored) {
                 if (stored.status === 'ARCHIVED') {
+                    archiveCount++
                     stored = await stored.related.unarchive()
-                    logger.info(`${chalk.green('unarch')} schema [ ${chalk.gray(schema.schemaId)} ]`)
+                    logUpdate(`${chalk.green('unarch')} schema [ ${chalk.gray(schema.schemaId)} ]`)
                 }
 
                 if (!_.isEqual(stored.body, schema.body)) {
+                    updateCount++
                     stored = await stored.related.update(schema)
-                    logger.info(`${chalk.green('update')} schema [ ${chalk.gray(schema.schemaId)} ]`)
+                    logUpdate(`${chalk.green('update')} schema [ ${chalk.gray(schema.schemaId)} ]`)
                 }
             }
             else {
+                createCount++
                 stored = await hub.related.contentTypeSchema.create(schema)
-                logger.info(`${chalk.green('create')} schema [ ${chalk.gray(schema.schemaId)} ]`)
+                logUpdate(`${chalk.green('create')} schema [ ${chalk.gray(schema.schemaId)} ]`)
             }
         }))
+
+        logComplete(`${this.getDescription()}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ]`)
     }
 }
 
-export class ContentTypeSchemaCleanupHandler extends CleanableResourceHandler {
-    constructor() {
-        super(ContentTypeSchema, 'contentTypeSchema')
-        this.icon = '🗄'
+export class CLIContentTypeSchemaHandler extends ContentTypeSchemaHandler {
+    command: string = `npx @dlillyatx/dc-cli`
+    async import(context: ImportContext): Promise<any> {
+        logSubheading(`[ import ] content-type-schemas`)
+        let sourceDir = `${context.tempDir}/content/content-type-schemas`
+        await new CLIJob(`${this.command} content-type-schema import ${sourceDir}`).exec()
     }
+
+    async cleanup(context: CleanupContext): Promise<any> {
+        logSubheading(`[ cleanup ] content-type-schemas`)
+        await new CLIJob(`${this.command} hub clean --force --step schema`).exec()
+    }
+}
+
+export class LocalCLIContentTypeSchemaHandler extends CLIContentTypeSchemaHandler {
+    command: string = `dc-cli`
 }

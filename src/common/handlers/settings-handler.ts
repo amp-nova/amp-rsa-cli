@@ -1,47 +1,50 @@
-import { ImportableResourceHandler } from "./resource-handler"
-import { execWithOutput } from "../exec-helper"
-import { HubSettingsOptions } from "../settings-handler"
+import { ResourceHandler, ImportContext } from "./resource-handler"
 import fs from 'fs-extra'
 import _ from 'lodash'
 import { paginator } from "../paginator"
-import { WorkflowState } from "dc-management-sdk-js"
-import logger from "../logger"
-import { prompts } from "../prompts"
+import { CLIJob } from "../exec-helper"
+import logger, { logSubheading } from "../logger"
 import chalk from "chalk"
 
-export class SettingsImportHandler extends ImportableResourceHandler {
+export class SettingsHandler extends ResourceHandler {
+    icon = '🛠'
+    
     constructor() {
         super(undefined, 'settings')
     }
 
-    async import(argv: HubSettingsOptions) {
-        let { hub } = argv
+    async import(context: ImportContext) {
+        let { hub } = context
 
-        let settings = hub.settings
-        let workflowStates = await paginator(hub.related.workflowStates.list)
+        logSubheading(`[ import ] settings`)
+        let settingsJSONFile = `${context.tempDir}/content/settings/settings.json`
 
-        let { 
-            settings: fileSettings, 
-            workflowStates: fileWorkflowStates 
-        } = fs.readJsonSync(`${global.tempDir}/content/settings/settings.json`)
+        if (!fs.existsSync(settingsJSONFile)) {
+            logger.info(`skipped, no settings.json found`)
+            return
+        }
 
-        if (!settings ||
-            !_.isEqual(settings.devices, fileSettings.devices) ||
-            !_.isEqual(settings.applications, fileSettings.applications) ||
-            !_.isEqual(settings.localization, fileSettings.localization)) {
-            logger.info(`${prompts.update} hub settings`)
-            await hub.related.settings.update(fileSettings)
-        }    
+        let hubWorkflowStates = await paginator(hub.related.workflowStates.list)
+        let { settings, workflowStates } = fs.readJsonSync(settingsJSONFile)
+        
+        // if the values in the settings object from the file match those that are on the hub, we don't need to update
+        settings = _.isEqualWith(_.pick(hub.settings, Object.keys(settings)), settings, (a: any, b: any) => {
+            return Array.isArray(a) && Array.isArray(b) ? _.isEqual(_.sortBy(a), _.sortBy(b)) : undefined
+        }) ? {} : settings
 
         // enforcing a uniqueness check in the importer since the platform doesn't.
         // it's really easy to run this a bunch of times and then end up with too many
         // workflow states.
-        let uniqueWorkflowStates = _.uniqBy(workflowStates, 'label')
-        await Promise.all(fileWorkflowStates.map(async (fws: WorkflowState) => {
-            if (!_.includes(_.map(uniqueWorkflowStates, 'label'), fws.label)) {
-                logger.info(`${prompts.create} workflow state ${chalk.cyan(fws.label)}`)
-                await hub.related.workflowStates.create(fws)
-            }
-        }))
+
+        // TODO: should also factor color of the workflow state in
+        workflowStates = _.reject(workflowStates, fws => _.includes(_.map(_.uniqBy(hubWorkflowStates, 'label'), 'label'), fws.label))
+
+        if (!_.isEmpty(settings) || !_.isEmpty(workflowStates)) {
+            fs.writeJsonSync(settingsJSONFile, { settings, workflowStates })
+            await new CLIJob(`npx @amplience/dc-cli@latest settings import ${settingsJSONFile}`).exec()
+        }
+        else {
+            logger.info(`settings are ${chalk.green('up-to-date')}`)
+        }
     }
 }

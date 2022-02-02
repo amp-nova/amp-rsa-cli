@@ -32,16 +32,6 @@ export const builder = (yargs: Argv): Argv =>
                 alias: 'a',
                 describe: 'clean up all resource types',
                 type: 'boolean'
-            },
-            excludeDeliveryKey: {
-                alias: 'e',
-                describe: 'delivery key(s) to exclude from clean up',
-                type: 'array'
-            },
-            deliveryKey: {
-                alias: 'd',
-                describe: 'delivery key(s) to clean up',
-                type: 'array'
             }
         })
 

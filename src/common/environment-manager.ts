@@ -98,11 +98,11 @@ export const currentEnvironment = async () => {
 }
 
 const { Input, Password } = require('enquirer');
-export const createEnvironment = async(argv?: Arguments) => {
+export const createEnvironment = async() => {
     try {    
         // get loaded environments
         let environments = getEnvironments()
-        let name = await (new Input({ message: 'env name:', initial: argv?.env }).run())
+        let name = await (new Input({ message: 'env name:' }).run())
     
         if (_.find(environments, env => name === env.name)) {
           throw new Error(`environment already exists: ${name}`)

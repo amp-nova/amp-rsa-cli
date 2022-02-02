@@ -3,7 +3,7 @@ import _ from 'lodash';
 import chalk from 'chalk';
 
 export const command = 'list';
-export const desc = "List aria environments";
+export const desc = "List amprsa environments";
 export const handler = () => {
     _.each(getEnvironments(), env => {
         let str = `  ${env.name}`

@@ -56,8 +56,6 @@ export class ImportArgs extends LoggableArgs {
 
 export class CleanupArgs extends LoggableArgs {
     skipConfirmation: boolean
-    excludeDeliveryKey: string[]
-    deliveryKey: string[]
     include: string[]
 }
 

@@ -50,6 +50,12 @@ export const logHeadline = (headline: string) => {
   logger.info('')
 }
 
+export const logSubheading = (headline: string) => {
+  logger.info('')
+  logger.info(chalk.cyan.bold(headline))
+  logger.info('')
+}
+
 let lineLength = process.stdout.columns - 6 // -6 for the 'exec  ' piece
 export const logUpdate = (message: string) => {
   // debug log the string
@@ -65,17 +71,17 @@ export const logUpdate = (message: string) => {
 }
 
 export const logComplete = (message: string) => {
-  if (logger.level !== 'debug') {
-    process.stdout.write(`\r\r${' '.repeat(lineLength)}`)
-    process.stdout.write(`\r\r`)
-  }
+  // if (logger.level !== 'debug') {
+  //   process.stdout.write(`\r\r${' '.repeat(lineLength)}`)
+  //   process.stdout.write(`\r\r`)
+  // }
   logger.info(message)
 }
 
-import { Context } from "./handlers/resource-handler";
+import { LoggableContext } from "./handlers/resource-handler";
 import _ from 'lodash';
 
-export const logRunEnd = (context: Context) => {
+export const logRunEnd = (context: LoggableContext) => {
   let duration = new Date().valueOf() - context.startTime.valueOf()
   let minutes = Math.floor((duration / 1000) / 60)
   let seconds = Math.floor((duration / 1000) - (minutes * 60))

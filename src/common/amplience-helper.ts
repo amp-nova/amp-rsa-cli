@@ -1,43 +1,32 @@
-import { ContentRepository, ContentType, DynamicContent, Folder, Hub, HttpMethod, HttpRequest, HttpResponse, ContentItem, WorkflowState } from "dc-management-sdk-js"
+import { ContentRepository, ContentType, DynamicContent, Folder, Hub, HttpMethod, HttpRequest, FacetQuery, HttpResponse, ContentItem, WorkflowState, HalResource, ContentTypeSchema, Status } from "dc-management-sdk-js"
 import logger, { logComplete } from "./logger"
 import chalk from "chalk"
-import { paginator } from "./paginator"
+import { facetPaginator, paginator, StatusQuery } from "./paginator"
 import { logUpdate } from "./logger"
 import async from 'async'
 import _, { Dictionary } from 'lodash'
 import { ContentItemHandler } from "./handlers/content-item-handler"
 import { AxiosHttpClient } from "dc-management-sdk-js"
-import { Context } from '../common/handlers/resource-handler';
-import { currentEnvironment } from '../common/environment-manager'
+import { AmplienceContext, ImportContext, LoggableContext } from '../common/handlers/resource-handler';
 import fs from 'fs-extra'
-import { DAMService } from "./dam/dam-service"
 import { sleep } from "./utils"
+import { AMPRSAConfig } from './types'
+import { ContentTypeHandler } from "./handlers/content-type-handler"
+import { ContentTypeSchemaHandler } from "./handlers/content-type-schema-handler"
+import { currentEnvironment } from "./environment-manager"
 
 let dcUrl = `https://api.amplience.net/v2/content`
-
-export class DynamicContentCredentials {
-    clientId: string
-    clientSecret: string
-    hubId: string
-}
 
 let accessToken: any = undefined
 let axiosClient = new AxiosHttpClient({})
 
-let client: DynamicContent
-
-const login = async (dc: DynamicContentCredentials) => {
+const login = async (context: LoggableContext) => {
     let oauthResponse = await axiosClient.request({
         method: HttpMethod.POST,
-        url: `https://auth.amplience.net/oauth/token?client_id=${dc.clientId}&client_secret=${dc.clientSecret}&grant_type=client_credentials`,
+        url: `https://auth.amplience.net/oauth/token?client_id=${context.environment.dc.clientId}&client_secret=${context.environment.dc.clientSecret}&grant_type=client_credentials`,
         headers: {
             'content-type': 'application/x-www-form-urlencoded'
         }
-    })
-
-    client = new DynamicContent({
-        client_id: dc.clientId,
-        client_secret: dc.clientSecret
     })
 
     accessToken = (oauthResponse.data as any).access_token
@@ -48,284 +37,217 @@ const login = async (dc: DynamicContentCredentials) => {
     })
 
     logger.debug(`${chalk.green('logged in')} to dynamic content at ${chalk.yellow(new Date().valueOf())}`)
-    setTimeout(() => { login(dc) }, (oauthResponse.data as any).expires_in * 1000)
+    setTimeout(() => { accessToken = undefined }, (oauthResponse.data as any).expires_in * 1000)
 }
 
-const createAndPublishContentItem = async (item: any, repo: ContentRepository) => {
-    let response = await axiosClient.request({
-        method: HttpMethod.POST,
-        url: `/content-repositories/${repo.id}/content-items`,
-        data: item
-    })
-    await publishContentItem(response.data)
-    await cacheContentMapForRepository(repo)
-    return response.data
+
+let ax = {
+    get: async (url: string) => await axiosClient.request({ method: HttpMethod.GET, url }),
+    post: async (url: string) => await axiosClient.request({ method: HttpMethod.POST, url }),
+    patch: async (url: string) => await axiosClient.request({ method: HttpMethod.PATCH, url }),
+    delete: async (url: string) => await axiosClient.request({ method: HttpMethod.DELETE, url })
+}
+const synchronizeContentType = async (contentType: ContentType) => await ax.patch(`/content-types/${contentType.id}/schema`)
+export const deleteFolder = async (folder: Folder) => await ax.delete(`/folders/${folder.id}`)
+export const get = ax.get
+
+const publishContentItem = async (item: any) => {
+    await ax.post(`/content-items/${item.id}/publish`)
+    updateCache(item)
+    return item
 }
 
-const retriable = (method: HttpMethod = HttpMethod.GET) => (count: number) => async (url: string, data: any = {}) => {
-    let retryCount = 0
-    while (retryCount < count) {
-        try {
-            return await axiosClient.request({ method, url, data })
-        } catch (error) {
-            if (error.response.status === 429) { // rate limited            
-                retryCount++
-                await sleep(30000)
-            }
-            else {
-                throw error
-            }
-        }
-    }
+export const getContentItemFromCDN = async (id: string): Promise<any> => {
+    const environment = await currentEnvironment()
+    return await (await ax.get(`https://${environment.name}.cdn.content.amplience.net/content/id/${id}`)).data
 }
-const retriablePost = retriable(HttpMethod.POST)
-const retrier = retriablePost(3)
 
-const publishContentItem = async (item: any) => await retrier(`/content-items/${item.id}/publish`)
+export const PublishingQueue = (postProcess: (item: ContentItem) => Promise<void> = async x => {}) => {
+    let queue: ContentItem[] = []
 
-const synchronizeContentType = async (contentType: ContentType) => await axiosClient.request({
-    method: HttpMethod.PATCH,
-    url: `/content-types/${contentType.id}/schema`
-})
+    return {
+        add: (item: ContentItem) => queue.push(item),
+        length: () => queue.length,
+        publish: async (): Promise<number> => {
+            let count = 0
 
-export const deleteFolder = async (folder: Folder) => await axiosClient.request({
-    method: HttpMethod.DELETE,
-    url: `/folders/${folder.id}`
-})
+            // we are rate limited to 100 publish requests per minute. so once we've flushed through all of the publishes for each
+            // 100-item chunk, we'll have to wait to publish more
+            let chunks = _.reverse(_.chunk(queue, 100))
+            while (chunks.length > 0) {
+                let chunk = chunks.pop()
+                if (chunk) {
+                    // set timer for one minute
+                    const start = new Date().valueOf()
 
-export const publishUnpublished = async (context: Context) => {
-    let publishedItemCount = 0
-    let unpublishedItemCount = 1
-    let oldUnpublishedItemCount = 0
+                    logUpdate(`publishing ${chalk.blueBright(chunk.length)} items...`)
+                    await Promise.all(chunk.map(async item => {
+                        await publishContentItem(item)
+                        await postProcess(item)
+                        count++
+                    }))
 
-    while (unpublishedItemCount > 0) {
-        let { published, unpublished } = await waitForPublishingQueue(context)
-
-        unpublishedItemCount = unpublished
-        publishedItemCount = published
-
-        if (oldUnpublishedItemCount === unpublishedItemCount) {
-            logComplete(`${new ContentItemHandler().getDescription()}: [ ${chalk.green(publishedItemCount)} published ]`)
-            return await publishAll(context)
-        }
-        else {
-            oldUnpublishedItemCount = unpublishedItemCount
-            if (unpublishedItemCount > 0) {
-                for (let index = 5; index > 0; index--) {
-                    logUpdate(`${chalk.red(unpublishedItemCount)} unpublished items remain, waiting ${chalk.blueBright(index)} seconds...`)
-                    await sleep(1000)
+                    if (chunks.length > 0) {
+                        const current = new Date().valueOf()
+                        const remainder = Math.ceil((60000 - (current - start)) / 1000)
+                        for (let index = remainder; index > 0; index--) {
+                            logUpdate(`sleeping ${chalk.blueBright(index)} seconds before next chunk...`)
+                            await sleep(1000)
+                        }
+                    }
                 }
             }
+
+            return count
         }
     }
 }
 
-export const waitForPublishingQueue = async (context: Context) => {
-    logUpdate(`wait for publishing queue to complete...`)
-    let repositories = await paginator(context.hub.related.contentRepositories.list)
-    let count = {
-        published: 0,
-        unpublished: 0
-    }
-
-    await async.eachSeries(repositories, async (repo, callback) => {
-        let contentItems = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
-        await async.eachSeries(contentItems, async (contentItem, cb) => {
-            if (!(contentItem as any).lastPublishedDate) {
-                count.unpublished++
-            }
-            else {
-                count.published++
-            }
-            cb()
-        })
-        callback()
+export const publishAll = async (context: ImportContext) => {
+    const publishingQueue = PublishingQueue()
+    await context.hub.contentItemIterator(contentItem => {
+        if (contentItem.version !== (contentItem as any).lastPublishedVersion) {
+            publishingQueue.add(contentItem)
+        }
     })
 
-    return count
-}
-
-const publishAll = async (context: Context) => {
-    let repositories: ContentRepository[] = await paginator(context.hub.related.contentRepositories.list)
-    let publishedCount = 0
-
-    await async.eachSeries(repositories, async (repo, callback) => {
-        logUpdate(`${chalk.greenBright('publish')} repo ${repo.label}`)
-        let contentItems: any[] = await paginator(repo.related.contentItems.list, { status: 'ACTIVE' })
-        await async.eachOfSeries(contentItems, async (contentItem, index, cb) => {
-            if (!contentItem.lastPublishedDate) {
-                logUpdate(`${chalk.greenBright('publish')} content item ${contentItem.id} (${index}/${contentItems.length})`)
-                publishedCount++
-                await publishContentItem(contentItem)
-                await sleep(context.publishDelay)
-            }
-            cb()
-        })
-        callback()
-    })
+    const publishedCount = await publishingQueue.publish()
     logComplete(`${new ContentItemHandler().getDescription()}: [ ${chalk.green(publishedCount)} published ]`)
 }
 
 let contentMap: Dictionary<ContentItem> = {}
-export const cacheContentMap = async (context: Context) =>
-    await Promise.all((await paginator(context.hub.related.contentRepositories.list, { status: 'ACTIVE' })).map(cacheContentMapForRepository))
+export const cacheContentMap = async (context: AmplienceContext) => await context.hub.contentItemIterator(updateCache)
 
-const cacheContentMapForRepository = async (repo: ContentRepository) => {
-    _.each(_.filter(await paginator(repo.related.contentItems.list, { status: 'ACTIVE' }), ci => ci.body._meta?.deliveryKey), (ci: ContentItem) => {
-        contentMap[ci.body._meta.deliveryKey] = ci
-    })
+const updateCache = (item: ContentItem) => {
+    contentMap[item.body._meta.deliveryKey] = item
+    contentMap[item.id] = item
 }
 
-export const getContentItemByKey = (key: string) => {
-    return contentMap[key]
-}
-
+export const getContentItemByKey = (key: string): ContentItem => contentMap[key]
+export const getContentItemById = (id: string): ContentItem => contentMap[id]
 export const getContentMap = () => _.zipObject(_.map(contentMap, (__, key) => key.replace(/\//g, '-')), _.map(contentMap, 'deliveryId'))
 
-const getEnvConfig = async (context: Context) => {
-    let { env } = await currentEnvironment()
-    let { hub, ariaKey } = context
-    let deliveryKey = `aria/env/${ariaKey}`
+export const getConfigObject = async (context: AmplienceContext) => {
+    let { hub, environment } = context
+    let deliveryKey = `aria/env/default`
+    let schema = `https://amprsa.net/amprsa/config`
+
+    return {
+        _meta: {
+            name: `${environment.name} AMPRSA config`,
+            schema,
+            deliveryKey
+        },
+        environment: environment.name,
+        url: environment.url,
+        algolia: {
+            indexes: [{
+                key: 'blog',
+                prod: `${environment.name}.blog-production`,
+                staging: `${environment.name}.blog-staging`
+            }],
+            appId: '',
+            apiKey: ''
+        },
+        cms: {
+            hub: {
+                name: environment.name,
+                stagingApi: await hub.settings?.virtualStagingEnvironment?.hostname || ''
+            },
+            hubs: [{
+                key: 'productImages',
+                name: 'willow'
+            }]
+        }
+    }
+}
+
+const getEnvConfig = async (context: ImportContext) => {
+    let { hub, environment } = context
+    let deliveryKey = `aria/env/default`
 
     logger.info(`environment lookup [ hub ${chalk.magentaBright(hub.name)} ] [ key ${chalk.blueBright(deliveryKey)} ]`)
 
-    const stagingApi = await hub.settings?.virtualStagingEnvironment?.hostname || ''
-
-    let envConfig = await getContentItemByKey(deliveryKey) as any
-    if (!envConfig) {
+    let config = await getContentItemByKey(deliveryKey)
+    if (!config) {
         logger.info(`${deliveryKey} not found, creating...`)
 
-        let fileCredsDefault = {
-            label: `File config credentials`,
-            folderId: null,
-            body: {
-                _meta: {
-                    name: `File config credentials`,
-                    schema: `https://amprsa.net/credentials/file`
-                },
-                use_local_file: true
-            }
-        }
+        config = new ContentItem()
+        config.label = `${environment.name} AMPRSA config`
+        config.body = await getConfigObject(context)
 
-        let fileCreds = await createAndPublishContentItem(fileCredsDefault, await findRepository(context, 'sitestructure'))
-
-        let config = {
-            label: `${env.name} AMPRSA config`,
-            folderId: null,
-            body: {
-                _meta: {
-                    name: `${env.name} AMPRSA config`,
-                    schema: `https://amprsa.net/amprsa/config`,
-                    deliveryKey
-                },
-                environment: env.name,
-                app: { url: env.url },
-                algolia: {
-                    indexes: [{
-                        key: 'blog',
-                        prod: `${env.name}.blog-production`,
-                        staging: `${env.name}.blog-staging`
-                    }]
-                },
-                commerce: {
-                    _meta: {
-                        schema: "http://bigcontent.io/cms/schema/v1/core#/definitions/content-reference"
-                    },
-                    contentType: "https://amprsa.net/credentials/file",
-                    id: (fileCreds as any).id
-                },
-                cms: {
-                    hub: {
-                        name: env.name,
-                        stagingApi
-                    },
-                    hubs: [{
-                        key: 'productImages',
-                        name: 'willow'
-                    }]
-                }
-            }
-        }
-
-        // process step 8: npm run automate:webapp:configure
-        envConfig = await createAndPublishContentItem(config, await findRepository(context, 'sitestructure'))
+        config = await context.hub.repositories.sitestructure.related.contentItems.create(config)
+        await publishContentItem(config)
     }
-
-    return envConfig
+    return config
 }
 
-export const readEnvConfig = async (context: Context) => {
-    let envConfig = await getEnvConfig(context)
-    let workflowStates: WorkflowState[] = await paginator(context.hub.related.workflowStates.list)
-    let repositories: ContentRepository[] = await paginator(context.hub.related.contentRepositories.list)
-    return {
-        ...envConfig.body,
-        dam: await readDAMMapping(context),
-        cms: {
-            hub: envConfig.body.cms.hub,
-            repositories: _.zipObject(_.map(repositories, r => r.name || ''), _.map(repositories, 'id')),
-            workflowStates: _.zipObject(_.map(workflowStates, ws => _.camelCase(ws.label)), _.map(workflowStates, 'id')),
-            hubs: _.keyBy(envConfig.body.cms.hubs, 'key')
-        }
-    }
+export const readEnvConfig = async (context: ImportContext): Promise<AMPRSAConfig> => {
+    return await (await getEnvConfig(context)).body
 }
 
-export const updateEnvConfig = async (context: Context) => {
-    let { mapping } = context
+export const updateEnvConfig = async (context: ImportContext) => {
+    let { config } = context
     let envConfig = await getEnvConfig(context)
-
-    // undo the transforms on these two values. need to fix
-    mapping.algolia.indexes = _.values(mapping.algolia.indexes)
-    mapping.cms.hubs = _.values(mapping.cms.hubs)
-
-    envConfig.body = {
-        ...envConfig.body,
-        ..._.omit(mapping, 'dam', 'repositories', 'workflowStates')
-    }
+    envConfig.body = config
     envConfig = await envConfig.related.update(envConfig)
     await publishContentItem(envConfig)
 }
 
-export const initAutomation = async (context: Context) => {
+export const initAutomation = async (context: AmplienceContext) => {
     let automation = await readAutomation(context)
-
     fs.writeJsonSync(`${context.tempDir}/mapping.json`, {
-        contentItems: _.map(automation.contentItems, ci => [ci.from, ci.to]),
-        workflowStates: _.map(automation.workflowStates, ws => [ws.from, ws.to])
+        contentItems: _.map(automation.body.contentItems, ci => [ci.from, ci.to]),
+        workflowStates: _.map(automation.body.workflowStates, ws => [ws.from, ws.to])
     })
+
+    context.automation = {
+        contentItems: automation.body.contentItems,
+        workflowStates: automation.body.workflowStates
+    }
 
     // copy so we can compare later after we do an import
     fs.copyFileSync(`${context.tempDir}/mapping.json`, `${context.tempDir}/old_mapping.json`)
     logger.info(`wrote mapping file at ${context.tempDir}/mapping.json`)
 }
 
-export const readAutomation = async (context: Context) => {
-    let { env } = await currentEnvironment()
-    let deliveryKey = `aria/automation/${context.ariaKey}`
+export const readAutomation = async (context: AmplienceContext) => {
+    let { environment } = context
+    let deliveryKey = `aria/automation/default`
+    let schema = `https://amprsa.net/amprsa/automation`
 
-    let automation = await getContentItemByKey(deliveryKey) as any
+    let automation = await getContentItemByKey(deliveryKey)
     if (!automation) {
         logger.info(`${deliveryKey} not found, creating...`)
-        let automationItem = {
-            label: `${env.name} AMPRSA automation`,
-            folderId: null,
-            body: {
-                _meta: {
-                    name: `${env.name} AMPRSA automation`,
-                    schema: `https://amprsa.net/amprsa/automation`,
-                    deliveryKey
-                },
-                contentItems: [],
-                workflowStates: []
-            }
+        automation = new ContentItem()
+        automation.label = `${environment.name} AMPRSA automation`
+        automation.body = {
+            _meta: {
+                name: `${environment.name} AMPRSA automation`,
+                schema,
+                deliveryKey
+            },
+            contentItems: [],
+            workflowStates: []
         }
-        automation = await createAndPublishContentItem(automationItem, await findRepository(context, 'sitestructure'))
-    }
 
+        automation = await context.hub.repositories.sitestructure.related.contentItems.create(automation)
+        await publishContentItem(automation)
+    }
     return automation
 }
 
-export const updateAutomation = async (context: Context) => {
+export const updateAutomationContentItems = async (context: AmplienceContext) => {
+    let automation = await readAutomation(context)
+    automation.body = {
+        ...automation.body,
+        contentItems: context.automation.contentItems
+    }
+    automation = await automation.related.update(automation)
+    await publishContentItem(automation)
+}
+
+export const updateAutomation = async (context: ImportContext) => {
     // read the mapping file and update if necessary
     let mappingStats = fs.statSync(`${context.tempDir}/old_mapping.json`)
     let newMappingStats = fs.statSync(`${context.tempDir}/mapping.json`)
@@ -350,21 +272,9 @@ export const updateAutomation = async (context: Context) => {
     }
 }
 
-const findRepository = async (context: Context, name: string) => {
-    let repositories: ContentRepository[] = await paginator(context.hub.related.contentRepositories.list)
-    let repo = _.find(repositories, repo => repo.name === name)
-    if (!repo) {
-        throw new Error(`repository '${name}' not found, please make sure it exists`)
-    }
-    return repo
-}
-
-const readDAMMapping = async (context: Context) => {
-    const { dam } = await currentEnvironment()
-    let damService = await new DAMService().init(dam)
-
-    let assets = _.filter(await damService.getAssetsListForBucket('Assets'), asset => asset.status === 'active')
-    let endpoints = await damService.getEndpoints()
+export const readDAMMapping = async (context: ImportContext) => {
+    let assets = _.filter(await context.damService.getAssetsListForBucket('Assets'), asset => asset.status === 'active')
+    let endpoints = await context.damService.getEndpoints()
     let endpoint: any = _.first(endpoints)!
     return {
         mediaEndpoint: endpoint.tag,
@@ -372,16 +282,45 @@ const readDAMMapping = async (context: Context) => {
     }
 }
 
+export const purgeDeliveryKeys = async (context: AmplienceContext) => {
+    let publishingQueue = PublishingQueue(async item => {
+        await item.related.archive()
+    })
+
+    const purge = async (status: StatusQuery) => await context.hub.contentItemIterator(async item => {
+        // logUpdate(`checking item '${chalk.blueBright(item.label)}'...`)
+
+        if (item.body._meta?.deliveryKey) {
+            console.log(item.body._meta?.deliveryKey)
+        }
+
+        // let cached: any = await getContentItemFromCDN(item.id)
+        // let key = item.body._meta?.deliveryKey || cached?.content?._meta?.deliveryKey
+        // if (key) {
+        //     item = await item.related.unarchive()
+        //     item.body._meta.deliveryKey = null
+        //     item = await item.related.update(item)
+        //     publishingQueue.add(item)
+        // }
+    }, status)
+
+    logger.info(`purging archived items...`)
+    await purge({ status: Status.ARCHIVED })
+
+    console.log(`queue: ${publishingQueue.length()}`)
+
+    let count = await publishingQueue.publish()
+    logComplete(`purged ${count} items`)
+}
+
 export default {
     login,
-    createAndPublishContentItem,
     publishContentItem,
     synchronizeContentType,
     publishAll,
-    waitForPublishingQueue,
     getContentItemByKey,
+    getContentItemById,
     cacheContentMap,
-    cacheContentMapForRepository,
     readEnvConfig,
     updateEnvConfig,
     getContentMap,

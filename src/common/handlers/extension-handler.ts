@@ -1,8 +1,8 @@
-import { ResourceHandler, Context, Cleanable } from "./resource-handler"
+import { ResourceHandler, Context, Cleanable, ImportContext, CleanupContext } from "./resource-handler"
 import { Extension } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
-import logger, { logComplete, logUpdate } from "../logger"
+import logger, { logComplete, logSubheading, logUpdate } from "../logger"
 import chalk from 'chalk'
 import fs from 'fs-extra'
 import { prompts } from "../prompts"
@@ -19,13 +19,22 @@ export class ExtensionHandler extends ResourceHandler implements Cleanable {
         super(Extension, 'extensions')
     }
 
-    async import(context: Context): Promise<any> {
+    async import(context: ImportContext): Promise<any> {
         const { hub } = context
-        let extensions = fs.readJsonSync(`${context.tempDir}/content/extensions/extensions.json`)
+        logSubheading(`[ import ] extensions`)
+
+        let extensionsFile = `${context.tempDir}/content/extensions/extensions.json`
+        if (!fs.existsSync(extensionsFile)) {
+            logger.info(`skipped, content/extensions/extensions.json not found`)
+            return
+        }
+
+        let extensions = fs.readJsonSync(extensionsFile)
 
         const existingExtensions = await paginator(hub.related.extensions.list)
         let createCount = 0
-        await Promise.all(extensions.map(async (ext: any) => {
+
+        await Promise.all(extensions.map(async (ext: Extension) => {
             try {
                 if (!_.includes(_.map(existingExtensions, 'name'), ext.name)) {
                     logUpdate(`${prompts.import} extension [ ${ext.name} ]`)
@@ -45,7 +54,8 @@ export class ExtensionHandler extends ResourceHandler implements Cleanable {
         logComplete(`${this.getDescription()}: [ ${chalk.green(createCount)} created ]`)
     }
 
-    async cleanup(context: Context): Promise<any> {
+    async cleanup(context: CleanupContext): Promise<any> {
+        logSubheading(`[ cleanup ] extensions`)
         try {
             let deleteCount = 0
             let extensions: Extension[] = await paginator(context.hub.related.extensions.list)

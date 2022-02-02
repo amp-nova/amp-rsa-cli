@@ -7,8 +7,8 @@ import childProcess from 'child_process'
 const { Select } = require('enquirer');
 import logger from '../common/logger'
 
-const getConfigPath = (platform: string = process.platform): string => join(process.env[platform == 'win32' ? 'USERPROFILE' : 'HOME'] || __dirname, '.amplience');
-const CONFIG_PATH = getConfigPath()
+export const getConfigPath = (platform: string = process.platform): string => join(process.env[platform == 'win32' ? 'USERPROFILE' : 'HOME'] || __dirname, '.amplience');
+export const CONFIG_PATH = getConfigPath()
 const ENV_FILE_PATH = `${CONFIG_PATH}/environments.json`
 
 const saveConfig = () => writeJsonSync(ENV_FILE_PATH, envConfig, { encoding: 'utf-8' })
@@ -84,7 +84,9 @@ export const useEnvironment = (env: any) => {
 
 export const currentEnvironment = async () => {
     if (envConfig.envs.length === 0) {
-        throw new Error(`no envs found, use 'amprsa env init'`)
+        logger.info(`no amprsa environments found, let's create one!`)
+        logger.info('')
+        await createEnvironment()
     }
 
     let env = getEnvironment(envConfig.current)
@@ -92,10 +94,36 @@ export const currentEnvironment = async () => {
         env = await chooseEnvironment()
         useEnvironment(env)
     }
+    return env
+}
 
-    let dc = readJsonSync(`${CONFIG_PATH}/dc-cli-config.json`)
-    let dam = readJsonSync(`${CONFIG_PATH}/dam-cli-config.json`)
-    return { dc, dam, env }
+const { Input, Password } = require('enquirer');
+export const createEnvironment = async(argv?: Arguments) => {
+    try {    
+        // get loaded environments
+        let environments = getEnvironments()
+        let name = await (new Input({ message: 'env name:', initial: argv?.env }).run())
+    
+        if (_.find(environments, env => name === env.name)) {
+          throw new Error(`environment already exists: ${name}`)
+        }
+    
+        addEnvironment({
+          name,
+          url: await (new Input({ message: `${chalk.blueBright('app')} deployment url:` }).run()),
+          dc: {
+            clientId: await (new Input({ message: `${chalk.cyanBright('cms')} client id:` }).run()),
+            clientSecret: await (new Password({ message: `${chalk.cyanBright('cms')} client secret:` }).run()),
+            hubId: await (new Input({ message: `${chalk.cyanBright('cms')} hub id:` }).run())        
+          },
+          dam: {
+            username: await (new Input({ message: `${chalk.magentaBright('dam')} username:` }).run()),
+            password: await (new Password({ message: `${chalk.magentaBright('dam')} password:` }).run())
+          }
+        })
+      } catch(error) {
+        console.log(chalk.red(error));
+      }    
 }
 
 // make sure config directory exists

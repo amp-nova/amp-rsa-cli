@@ -1,4 +1,4 @@
-import { CleanableResourceHandler, Context } from "./resource-handler"
+import { CleanableResourceHandler, CleanupContext, ImportContext } from "./resource-handler"
 import { ContentTypeSchema } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
@@ -6,7 +6,10 @@ import chalk from 'chalk'
 import { loadJsonFromDirectory } from "../importer"
 import { resolveSchemaBody } from "../schema-helper"
 import fs from 'fs-extra'
-import { logUpdate, logComplete } from '../logger'
+import { logUpdate, logComplete, logHeadline, logSubheading } from '../logger'
+import { CLIJob } from "../exec-helper"
+import { AnnotatedFile, fileIterator } from "../utils"
+import { ContentTypeSchemaDescriptor, ContentTypeSchemaPointer } from "../types"
 
 export class ContentTypeSchemaHandler extends CleanableResourceHandler {
     sortPriority = 1.09
@@ -16,15 +19,32 @@ export class ContentTypeSchemaHandler extends CleanableResourceHandler {
         super(ContentTypeSchema, 'contentTypeSchema')
     }
 
-    async import(context: Context): Promise<any> {
-        let { hub, importSourceDir } = context
-        let baseDir = importSourceDir || `${context.tempDir}/content/core`
+    async import(context: ImportContext): Promise<any> {
+        logSubheading(`[ import ] content-type-schemas`)
+
+        let { hub } = context
+        let baseDir = `${context.tempDir}/content`
         let sourceDir = `${baseDir}/content-type-schemas`
+        let schemaDir = `${sourceDir}/schemas`
 
         if (!fs.existsSync(sourceDir)) {
             return
         }
 
+        // // preprocess
+        // await fileIterator<ContentTypeSchemaPointer>({ dir: sourceDir, deep: false }, context).iterate(async file => {
+        //     if (!_.isEmpty(context.matchingSchema) && !_.includes(context.matchingSchema, file.object?.schemaId)) {
+        //         fs.unlinkSync(file.path)
+        //     }
+        // })
+
+        // // preprocess
+        // await fileIterator<ContentTypeSchemaDescriptor>({ dir: schemaDir, deep: false }, context).iterate(async file => {
+        //     if (!_.isEmpty(context.matchingSchema) && !_.includes(context.matchingSchema, file.object?.['$id'])) {
+        //         fs.unlinkSync(file.path)
+        //     }
+        // })
+        
         const schemas = loadJsonFromDirectory<ContentTypeSchema>(sourceDir, ContentTypeSchema);
         const [resolvedSchemas, resolveSchemaErrors] = await resolveSchemaBody(schemas, sourceDir);
 
@@ -67,4 +87,22 @@ export class ContentTypeSchemaHandler extends CleanableResourceHandler {
 
         logComplete(`${this.getDescription()}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ]`)
     }
+}
+
+export class CLIContentTypeSchemaHandler extends ContentTypeSchemaHandler {
+    command: string = `npx @dlillyatx/dc-cli`
+    async import(context: ImportContext): Promise<any> {
+        logSubheading(`[ import ] content-type-schemas`)
+        let sourceDir = `${context.tempDir}/content/content-type-schemas`
+        await new CLIJob(`${this.command} content-type-schema import ${sourceDir}`).exec()
+    }
+
+    async cleanup(context: CleanupContext): Promise<any> {
+        logSubheading(`[ cleanup ] content-type-schemas`)
+        await new CLIJob(`${this.command} hub clean --force --step schema`).exec()
+    }
+}
+
+export class LocalCLIContentTypeSchemaHandler extends CLIContentTypeSchemaHandler {
+    command: string = `dc-cli`
 }

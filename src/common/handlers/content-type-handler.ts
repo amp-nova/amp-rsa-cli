@@ -1,14 +1,17 @@
-import { CleanableResourceHandler, Context, Cleanable } from "./resource-handler"
-import { ContentType, ContentRepository } from "dc-management-sdk-js"
+import { CleanableResourceHandler, Context, CleanupContext, ImportContext, Cleanable } from "./resource-handler"
+import { ContentType, ContentRepository, HalResource } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
-import logger from "../logger"
+import logger, { logHeadline, logSubheading } from "../logger"
 import chalk from 'chalk'
 import { loadJsonFromDirectory } from "../importer"
 import { ContentTypeWithRepositoryAssignments } from '../schema-helper'
 import fs from 'fs-extra'
 import { logUpdate, logComplete } from '../logger'
 import { prompts } from '../prompts'
+import { ContentTypeSchemaHandler } from "./content-type-schema-handler"
+import { CLIJob } from "../exec-helper"
+import { AnnotatedFile, fileIterator } from "../utils"
 
 export const validateNoDuplicateContentTypeUris = (importedContentTypes: { [filename: string]: ContentType }): void | never => {
     const uriToFilenameMap = new Map<string, string[]>(); // map: uri x filenames
@@ -44,16 +47,16 @@ export class ContentTypeHandler extends CleanableResourceHandler {
         super(ContentType, 'contentTypes')
     }
 
-    async import(context: Context): Promise<any> {
-        let { hub, importSourceDir } = context
-        let baseDir = importSourceDir || `${context.tempDir}/content`
-        let sourceDir = `${baseDir}/content-types`
+    async import(context: ImportContext): Promise<any> {
+        logSubheading(`[ import ] content-types`)
+
+        let { hub } = context
+        let sourceDir = `${context.tempDir}/content/content-types`
         if (!fs.existsSync(sourceDir)) {
             return
         }
 
-        const jsonTypes = loadJsonFromDirectory<ContentTypeWithRepositoryAssignments>(sourceDir, ContentTypeWithRepositoryAssignments
-        );
+        const jsonTypes = loadJsonFromDirectory<ContentTypeWithRepositoryAssignments>(sourceDir, ContentTypeWithRepositoryAssignments);
 
         if (Object.keys(jsonTypes).length === 0) {
             throw new Error(`No content types found in ${sourceDir}`);
@@ -81,9 +84,14 @@ export class ContentTypeHandler extends CleanableResourceHandler {
 
                 if (!_.isEqual(stored.settings, fileContentType.settings)) {
                     stored.settings = fileContentType.settings
-                    stored = await stored.related.update(stored)
-                    updateCount++
-                    logUpdate(`${prompts.update} content type [ ${chalk.gray(fileContentType.contentTypeUri)} ]`)
+
+                    try {
+                        stored = await stored.related.update(stored)                        
+                        updateCount++
+                        logUpdate(`${prompts.update} content type [ ${chalk.gray(fileContentType.contentTypeUri)} ]`)
+                    } catch (error) {
+                        // don't update this one for now, we'll catch it on the next content type import
+                    }
                 }
             }
             else {
@@ -123,7 +131,7 @@ export class ContentTypeHandler extends CleanableResourceHandler {
         }))
 
         // sync the content type
-        await Promise.all(activeTypes.map(async type => {
+        await Promise.all(_.filter(activeTypes, t => _.includes(_.map(fileContentTypes, 'contentTypeUri'), t.contentTypeUri)).map(async type => {
             synchronizedCount++
             await type.related.contentTypeSchema.update()
             logUpdate(`${prompts.sync} content type [ ${chalk.gray(type.contentTypeUri)} ]`)
@@ -133,7 +141,8 @@ export class ContentTypeHandler extends CleanableResourceHandler {
         logger.info(`${chalk.cyan('📦  repositories')}: [ ${chalk.green(assignedCount)} content types assigned ] [ ${chalk.red(unassignedCount)} content types unassigned ]`)
     }
 
-    async cleanup(context: Context): Promise<any> {
+    async cleanup(context: CleanupContext): Promise<any> {
+        logSubheading(`[ cleanup ] content-types`)
         let repos: ContentRepository[] = await paginator(context.hub.related.contentRepositories.list)
 
         let unassignedCount = 0

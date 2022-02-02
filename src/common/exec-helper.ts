@@ -45,6 +45,6 @@ export class CLIJob {
         await onExit(child)
     
         let duration = new Date().valueOf() - startTime
-        logComplete(`${prompts.done} in ${chalk.green(duration)} ms`)
+        logComplete(`${prompts.done} in ${chalk.green(duration)} ms\n`)
     }
 }

@@ -1,4 +1,4 @@
-import { Context, ResourceHandler } from "./resource-handler"
+import { CleanupContext, ResourceHandler } from "./resource-handler"
 import { Event, PublishingStatus } from "dc-management-sdk-js"
 import { paginator } from "../paginator"
 import _ from 'lodash'
@@ -13,7 +13,7 @@ export class EventHandler extends ResourceHandler {
         super(Event, 'events')
     }
 
-    async cleanup(context: Context): Promise<any> {
+    async cleanup(context: CleanupContext): Promise<any> {
         let events: Event[] = await paginator(context.hub.related.events.list, { status: 'ACTIVE' })
         await Promise.all(events.map(async event => {
             let editions = await paginator(event.related.editions.list, { status: 'ACTIVE' })

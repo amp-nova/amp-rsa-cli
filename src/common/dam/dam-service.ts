@@ -13,7 +13,7 @@ export class DAMService {
     }
 
     // Initialise FetchUtilities (retrieve and set access token)
-    async init(argv: Arguments<ConfigurationParameters>) {
+    async init(argv: ConfigurationParameters) {
         await this.client.init(argv);
         return this
     }

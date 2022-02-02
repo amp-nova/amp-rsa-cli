@@ -1,78 +1,78 @@
-import { ContentRepository, DynamicContent, Hub } from 'dc-management-sdk-js';
+import { ContentRepository, Hub } from 'dc-management-sdk-js';
 import { DAMService } from './dam/dam-service';
+import _, { Dictionary } from 'lodash';
+import { InstrumentedHub } from './middleware';
 
-export interface Options {
-    hub: Hub
-    client: DynamicContent
-    repositories: RepositoryMapping
-    damService: DAMService
-    automationDir: string
-    publishDelay: number
-
-    startTime: Date
-
-    include: string[]
-    skipConfirmation: boolean
-    ariaKey: string
-
-    tempDir: string
-    mapping: Mapping
-
-    importSourceDir?: string
-    excludeDeliveryKey: string[]
-    deliveryKey: string[]
+export interface CommonArgs {
 }
 
-export interface RepositoryMapping {
-    content: ContentRepository
-    siteComponents: ContentRepository
-    emailMarketing: ContentRepository
+export class AugmentedHub extends Hub {
+    repositories: Dictionary<ContentRepository>
+    repositoryIdMap: Dictionary<string | undefined>
+    workflowStatesMap: Dictionary<string | undefined>
+}
+
+export class EnvironmentConfig {
+    name: string
+    url: string
+    dc: DynamicContentCredentials
+    dam: {
+        username: string
+        password: string
+    }
+}
+
+export class DynamicContentCredentials {
+    clientId: string
+    clientSecret: string
+    hubId: string
+}
+
+export class AmplienceArgs {
+    environment: EnvironmentConfig
+    automation: {
+        contentItems: AMPRSAMapping[]
+        workflowStates: AMPRSAMapping[]
+    }
+    hub: InstrumentedHub
+    matchingSchema: string[]
+}
+
+export class LoggableArgs extends AmplienceArgs {
+    startTime: Date
+    logRequests: boolean
+    tempDir: string
+}
+
+export class ImportArgs extends LoggableArgs {
+    skipContentImport: boolean
+    automationDir: string
+    latest: boolean
+
+    damService: DAMService
+    config: AMPRSAConfig
+    mapping: Mapping
+}
+
+export class CleanupArgs extends LoggableArgs {
+    skipConfirmation: boolean
+    excludeDeliveryKey: string[]
+    deliveryKey: string[]
+    include: string[]
 }
 
 export interface Mapping {
-    app: AppMapping
-    cms: CMSMapping
-    dam: DAMMapping
-    algolia: AlgoliaConfig
-}
-
-export interface AppMapping {
     url: string
-}
-
-export interface CMSMapping {
-    hierarchies: HierarchyMapping
-    brandColors: string
-    hub: AmplienceHub
-    hubs: any
-    repositories: any
-    workflowStates: any
-}
-
-export interface HierarchyMapping {
-    taxonomies: any
-    configuration: any
-}
-
-export interface DAMMapping {
-    mediaEndpoint: string
-    imagesMap: any
-}
-
-export class AMPRSAMapping {
-    from: string
-    to: string
+    cms: CMSMapping
+    algolia: AlgoliaConfig
+    dam: DAMMapping
 }
 
 export class AMPRSAConfig {
-    environment: string // env name
-    app: AppConfig
-    algolia: AlgoliaConfig
-    cms: AmplienceConfig
-}
-
-export class AppConfig {
     url: string
+    cms: AmplienceConfig
+    algolia: AlgoliaConfig
+    environment: string // env name
 }
 
 export class AlgoliaConfig {
@@ -81,24 +81,52 @@ export class AlgoliaConfig {
     indexes: AlgoliaIndexSet[]
 }
 
+export class AmplienceConfig {
+    hub: AmplienceHub
+    hubs: AmplienceHubPointer[]
+}
+
+export interface CMSMapping extends AmplienceConfig {
+    repositories: Dictionary<string | undefined>
+    workflowStates: Dictionary<string | undefined>
+}
+
+export interface DAMMapping {
+    mediaEndpoint: string
+    imagesMap: Dictionary<string>
+}
+
+export class AMPRSAMapping {
+    from: string
+    to: string
+}
+
+export class AppConfig {
+    url: string
+}
+
 export class AlgoliaIndexSet {
     key: string
     prod: string
     staging: string
 }
 
-export class AmplienceConfig {
-    hub: AmplienceHub
-    hubs: AmplienceHubPointer[]
-}
-
 export class AmplienceHub {
     name: string
     stagingApi: string
-    socketIoServer: string
 }
 
 export class AmplienceHubPointer {
     key: string
     name: string
+}
+
+export type ContentTypeSchemaPointer = {
+    body: string
+    schemaId: string
+    validationLevel: string
+}
+
+export type ContentTypeSchemaDescriptor = {
+    ['$id']: string
 }

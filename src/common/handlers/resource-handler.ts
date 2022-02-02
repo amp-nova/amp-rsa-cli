@@ -4,12 +4,17 @@ import chalk from 'chalk'
 import { Arguments } from "yargs"
 import { prompts } from "../prompts"
 import { logComplete } from "../logger"
-import { Options } from "../types"
+import { CleanupArgs, ImportArgs, CommonArgs, AmplienceArgs, LoggableArgs } from "../types"
 
-export type Context = Arguments<Options>
+export type Context = Arguments<CommonArgs>
+export type CommonContext = Arguments<CommonArgs>
+export type AmplienceContext = Arguments<AmplienceArgs>
+export type LoggableContext = Arguments<LoggableArgs>
+export type ImportContext = Arguments<ImportArgs>
+export type CleanupContext = Arguments<CleanupArgs>
 
 export interface Importable extends ResourceHandler {
-    import(context: Context): Promise<any>
+    import(context: ImportContext): Promise<any>
 }
 
 export interface Exportable extends ResourceHandler {
@@ -17,7 +22,7 @@ export interface Exportable extends ResourceHandler {
 }
 
 export interface Cleanable extends ResourceHandler {
-    cleanup(context: Context): Promise<any>
+    cleanup(context: CleanupContext): Promise<any>
 }
 
 export class ResourceHandler {
@@ -51,7 +56,7 @@ export class ResourceHandler {
 }
 
 export class CleanableResourceHandler extends ResourceHandler implements Cleanable {
-    async cleanup(context: Context): Promise<any> {
+    async cleanup(context: CleanupContext): Promise<any> {
         let type = (context.hub.related as any)[this.resourceTypeDescription]
         let pagableFn = type && type.list
         if (!pagableFn) {

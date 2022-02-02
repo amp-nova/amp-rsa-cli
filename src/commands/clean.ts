@@ -1,11 +1,14 @@
-import { Cleanable, Context } from '../common/handlers/resource-handler';
+import { Cleanable, CleanupContext, Context } from '../common/handlers/resource-handler';
 import _ from 'lodash'
 import { Cleanables } from '../common/resource-handlers';
 import chalk from "chalk";
 import async from 'async'
 import { ResourceHandler } from '../common/handlers/resource-handler';
 import { Argv } from 'yargs';
-import { withTempDir } from '../common/connection-middleware';
+import { contextHandler } from '../common/middleware';
+import amplienceBuilder from './amplience-builder';
+import { timed } from "../common/handlers/typed-result";
+import { getContentItemByKey } from '../common/amplience-helper';
 
 const { Confirm, MultiSelect } = require('enquirer');
 
@@ -13,7 +16,7 @@ export const command = 'cleanup';
 export const desc = "Clean up hub";
 
 export const builder = (yargs: Argv): Argv =>
-    yargs
+    amplienceBuilder(yargs)
         .options({
             include: {
                 alias: 'i',
@@ -41,9 +44,8 @@ export const builder = (yargs: Argv): Argv =>
                 type: 'array'
             }
         })
-        .help();
 
-export const handler = withTempDir(async (context: Context): Promise<void> => {
+export const handler = contextHandler(async (context: CleanupContext): Promise<void> => {
     let choices: Cleanable[] = []
     if (context.all) {
         choices = Cleanables
@@ -67,10 +69,13 @@ export const handler = withTempDir(async (context: Context): Promise<void> => {
         _.each(choices, (choice: Cleanable) => { console.log(`\t* ${choice.getLongDescription()}`) })
     }
 
+    context.automation = await getContentItemByKey(`aria/automation/default`)?.body
     if (context.skipConfirmation || await new Confirm({ message: `${chalk.bold(chalk.greenBright('proceed?'))}` }).run()) {
         await async.eachSeries(choices, async (choice, callback) => {
-            await choice.cleanup(context)
-            callback()
+            timed(`[ cleanup ] ${choice.resourceTypeDescription}`, async() => {
+                await choice.cleanup(context)
+                callback()
+            })
         })
     }
 })

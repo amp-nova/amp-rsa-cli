@@ -2,6 +2,9 @@ import { createEnvironment, deleteEnvironment, listEnvironments, useEnvironmentF
 import { Argv } from 'yargs';
 import _ from 'lodash';
 
+export const command = 'env'
+export const description = 'Manage amprsa environments'
+
 export const envBuilder = (yargs: Argv): Argv =>
   yargs.positional('env', {
     describe: 'env name',

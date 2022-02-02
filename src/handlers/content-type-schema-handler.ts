@@ -1,15 +1,15 @@
 import { CleanableResourceHandler, CleanupContext, ImportContext } from "./resource-handler"
 import { ContentTypeSchema } from "dc-management-sdk-js"
-import { paginator } from "../paginator"
+import { paginator } from "../helpers/paginator"
 import _ from 'lodash'
 import chalk from 'chalk'
-import { loadJsonFromDirectory } from "../importer"
-import { resolveSchemaBody } from "../schema-helper"
+import { loadJsonFromDirectory } from "../helpers/importer"
+import { resolveSchemaBody } from "../helpers/schema-helper"
 import fs from 'fs-extra'
-import { logUpdate, logComplete, logHeadline, logSubheading } from '../logger'
-import { CLIJob } from "../exec-helper"
-import { AnnotatedFile, fileIterator } from "../utils"
-import { ContentTypeSchemaDescriptor, ContentTypeSchemaPointer } from "../types"
+import { logUpdate, logComplete, logHeadline, logSubheading } from '../common/logger'
+import { CLIJob } from "../helpers/exec-helper"
+import { AnnotatedFile, fileIterator } from "../common/utils"
+import { ContentTypeSchemaDescriptor, ContentTypeSchemaPointer } from "../common/types"
 
 export class ContentTypeSchemaHandler extends CleanableResourceHandler {
     sortPriority = 1.09

@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
-import { ImportContext } from './handlers/resource-handler';
-import { AnnotatedFile, fileIterator } from './utils';
+import { ImportContext } from '../handlers/resource-handler';
+import { fileIterator } from '../common/utils';
 
 export const copyTemplateFilesToTempDir = async (context: ImportContext) => {
     let contentFolder = `${context.tempDir}/content`

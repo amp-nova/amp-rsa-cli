@@ -71,14 +71,14 @@ export const logUpdate = (message: string) => {
 }
 
 export const logComplete = (message: string) => {
-  // if (logger.level !== 'debug') {
-  //   process.stdout.write(`\r\r${' '.repeat(lineLength)}`)
-  //   process.stdout.write(`\r\r`)
-  // }
+  if (logger.level !== 'debug') {
+    process.stdout.write(`\r\r${' '.repeat(lineLength)}`)
+    process.stdout.write(`\r\r`)
+  }
   logger.info(message)
 }
 
-import { LoggableContext } from "./handlers/resource-handler";
+import { LoggableContext } from "../handlers/resource-handler";
 import _ from 'lodash';
 
 export const logRunEnd = (context: LoggableContext) => {

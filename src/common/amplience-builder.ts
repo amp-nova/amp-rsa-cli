@@ -1,11 +1,11 @@
 import { Argv } from "yargs";
-import { LoggableContext } from "../common/handlers/resource-handler";
+import { LoggableContext } from "../handlers/resource-handler";
 
-import { loginDC, setupLogging } from '../common/middleware';
+import { loginDC, setupLogging } from './middleware';
 import _ from "lodash";
 
 import { nanoid } from 'nanoid'
-import { cacheContentMap, getConfigObject, initAutomation } from "../common/amplience-helper";
+import { cacheContentMap, getConfigObject, initAutomation } from "./amplience-helper";
 
 export default (yargs: Argv): Argv =>
     yargs

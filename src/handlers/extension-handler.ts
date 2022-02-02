@@ -1,11 +1,11 @@
 import { ResourceHandler, Context, Cleanable, ImportContext, CleanupContext } from "./resource-handler"
 import { Extension } from "dc-management-sdk-js"
-import { paginator } from "../paginator"
+import { paginator } from "../helpers/paginator"
 import _ from 'lodash'
-import logger, { logComplete, logSubheading, logUpdate } from "../logger"
+import logger, { logComplete, logSubheading, logUpdate } from "../common/logger"
 import chalk from 'chalk'
 import fs from 'fs-extra'
-import { prompts } from "../prompts"
+import { prompts } from "../common/prompts"
 
 import { customAlphabet } from "nanoid"
 import { lowercase } from "nanoid-dictionary"

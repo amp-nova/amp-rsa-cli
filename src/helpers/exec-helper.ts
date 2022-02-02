@@ -1,10 +1,10 @@
 import _, { Dictionary } from 'lodash'
-import logger, { logComplete } from './logger'
+import logger, { logComplete } from '../common/logger'
 import childProcess, { ChildProcess } from "child_process"
 import { onExit } from '@rauschma/stringio'
 import chalk from 'chalk'
-import { logUpdate } from './logger'
-import { prompts } from './prompts'
+import { logUpdate } from '../common/logger'
+import { prompts } from '../common/prompts'
 
 export class CLIJob {
     cmd: string

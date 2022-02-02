@@ -6,6 +6,7 @@ import { Arguments, Argv, env } from 'yargs';
 import childProcess from 'child_process'
 const { Select } = require('enquirer');
 import logger from '../common/logger'
+import { select } from 'async';
 
 export const getConfigPath = (platform: string = process.platform): string => join(process.env[platform == 'win32' ? 'USERPROFILE' : 'HOME'] || __dirname, '.amplience');
 export const CONFIG_PATH = getConfigPath()
@@ -36,7 +37,8 @@ export const addEnvironment = (env: any) => {
     useEnvironment(env)
 }
 
-export const deleteEnvironment = (env: any) => {
+export const deleteEnvironment = async (argv: Arguments) => {
+    let env = await selectEnvironment(argv)
     _.remove(envConfig.envs, (e: any) => e.name === env.name)
     saveConfig()
 }
@@ -51,7 +53,6 @@ export const selectEnvironment = async (argv: Arguments) => argv.env ? getEnviro
 
 export const chooseEnvironment = async (handler?: any) => {
     const envs = getEnvironments()
-
     const name = await (new Select({
         name: 'env',
         message: 'choose an environment',
@@ -67,7 +68,12 @@ export const chooseEnvironment = async (handler?: any) => {
     }
 }
 
-export const useEnvironment = (env: any) => {
+export const useEnvironmentFromArgs = async (argv: any) => {
+    let env = await selectEnvironment(argv)
+    await useEnvironment(env)
+}
+
+export const useEnvironment = async (env: any) => {
     logger.info(`[ ${chalk.greenBright(env.name)} ] configure dc-cli...`);
     childProcess.execSync(`npx @amplience/dc-cli configure --clientId ${env.dc.clientId} --clientSecret ${env.dc.clientSecret} --hubId ${env.dc.hubId}`);
 
@@ -98,32 +104,42 @@ export const currentEnvironment = async () => {
 }
 
 const { Input, Password } = require('enquirer');
-export const createEnvironment = async() => {
-    try {    
+export const createEnvironment = async () => {
+    try {
         // get loaded environments
         let environments = getEnvironments()
         let name = await (new Input({ message: 'env name:' }).run())
-    
+
         if (_.find(environments, env => name === env.name)) {
-          throw new Error(`environment already exists: ${name}`)
+            throw new Error(`environment already exists: ${name}`)
         }
-    
+
         addEnvironment({
-          name,
-          url: await (new Input({ message: `${chalk.blueBright('app')} deployment url:` }).run()),
-          dc: {
-            clientId: await (new Input({ message: `${chalk.cyanBright('cms')} client id:` }).run()),
-            clientSecret: await (new Password({ message: `${chalk.cyanBright('cms')} client secret:` }).run()),
-            hubId: await (new Input({ message: `${chalk.cyanBright('cms')} hub id:` }).run())        
-          },
-          dam: {
-            username: await (new Input({ message: `${chalk.magentaBright('dam')} username:` }).run()),
-            password: await (new Password({ message: `${chalk.magentaBright('dam')} password:` }).run())
-          }
+            name,
+            url: await (new Input({ message: `${chalk.blueBright('app')} deployment url:` }).run()),
+            dc: {
+                clientId: await (new Input({ message: `${chalk.cyanBright('cms')} client id:` }).run()),
+                clientSecret: await (new Password({ message: `${chalk.cyanBright('cms')} client secret:` }).run()),
+                hubId: await (new Input({ message: `${chalk.cyanBright('cms')} hub id:` }).run())
+            },
+            dam: {
+                username: await (new Input({ message: `${chalk.magentaBright('dam')} username:` }).run()),
+                password: await (new Password({ message: `${chalk.magentaBright('dam')} password:` }).run())
+            }
         })
-      } catch(error) {
+    } catch (error) {
         console.log(chalk.red(error));
-      }    
+    }
+}
+
+export const listEnvironments = () => {
+    _.each(getEnvironments(), env => {
+        let str = `  ${env.name}`
+        if (env.active) {
+            str = chalk.greenBright(`* ${env.name}`)
+        }
+        console.log(str)
+    })
 }
 
 // make sure config directory exists

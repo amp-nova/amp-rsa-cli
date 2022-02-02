@@ -1,10 +1,10 @@
-import { paginator } from "../paginator"
+import { paginator } from "../helpers/paginator"
 import _ from 'lodash'
 import chalk from 'chalk'
 import { Arguments } from "yargs"
-import { prompts } from "../prompts"
-import { logComplete } from "../logger"
-import { CleanupArgs, ImportArgs, CommonArgs, AmplienceArgs, LoggableArgs } from "../types"
+import { prompts } from "../common/prompts"
+import { logComplete } from "../common/logger"
+import { CleanupArgs, ImportArgs, CommonArgs, AmplienceArgs, LoggableArgs } from "../common/types"
 
 export type Context = Arguments<CommonArgs>
 export type CommonContext = Arguments<CommonArgs>

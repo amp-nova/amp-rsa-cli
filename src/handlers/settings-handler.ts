@@ -1,9 +1,9 @@
 import { ResourceHandler, ImportContext } from "./resource-handler"
 import fs from 'fs-extra'
 import _ from 'lodash'
-import { paginator } from "../paginator"
-import { CLIJob } from "../exec-helper"
-import logger, { logSubheading } from "../logger"
+import { paginator } from "../helpers/paginator"
+import { CLIJob } from "../helpers/exec-helper"
+import logger, { logSubheading } from "../common/logger"
 import chalk from "chalk"
 
 export class SettingsHandler extends ResourceHandler {

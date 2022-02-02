@@ -3,22 +3,22 @@ import { Argv } from 'yargs';
 import chalk from 'chalk'
 import logger, { logHeadline, logUpdate } from '../common/logger';
 
-import { ContentTypeSchemaHandler } from '../common/handlers/content-type-schema-handler';
-import { ContentTypeHandler } from '../common/handlers/content-type-handler';
-import { timed } from "../common/handlers/typed-result";
-import { ContentItemHandler } from '../common/handlers/content-item-handler';
-import { ExtensionHandler } from '../common/handlers/extension-handler';
-import { SearchIndexHandler } from '../common/handlers/search-index-handler';
-import { SettingsHandler } from '../common/handlers/settings-handler';
+import { ContentTypeSchemaHandler } from '../handlers/content-type-schema-handler';
+import { ContentTypeHandler } from '../handlers/content-type-handler';
+import { timed } from "../handlers/typed-result";
+import { ContentItemHandler } from '../handlers/content-item-handler';
+import { ExtensionHandler } from '../handlers/extension-handler';
+import { SearchIndexHandler } from '../handlers/search-index-handler';
+import { SettingsHandler } from '../handlers/settings-handler';
 
 import amplience, { getConfigObject, initAutomation, readDAMMapping, readEnvConfig } from '../common/amplience-helper';
-import { ImportContext } from '../common/handlers/resource-handler';
-import { copyTemplateFilesToTempDir } from '../common/import-helper';
+import { ImportContext } from '../handlers/resource-handler';
+import { copyTemplateFilesToTempDir } from '../helpers/import-helper';
 import { contextHandler, loginDAM } from '../common/middleware';
-import amplienceBuilder from './amplience-builder';
+import amplienceBuilder from '../common/amplience-builder';
 import { AMPRSAConfig } from '../common/types';
 import { WorkflowState } from 'dc-management-sdk-js';
-import { paginator } from '../common/paginator';
+import { paginator } from '../helpers/paginator';
 import fs from 'fs-extra'
 import { CONFIG_PATH } from '../common/environment-manager';
 import simpleGit from 'simple-git'

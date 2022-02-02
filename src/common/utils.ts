@@ -1,6 +1,6 @@
 import _ from "lodash"
 import fs from 'fs-extra'
-import { ImportContext } from "./handlers/resource-handler"
+import { ImportContext } from "../handlers/resource-handler"
 import { compile as handlebarsCompile } from 'handlebars';
 
 export const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))

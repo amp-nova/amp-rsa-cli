@@ -8,6 +8,7 @@
   "bin": {
     "amprsa": "./dist/index.js"
   },
+  "type": "commonjs",
   "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -40,7 +41,7 @@
     "@rauschma/stringio": "^1.4.0",
     "async": "^3.2.2",
     "axios": "^0.25.0",
-    "chalk": "^4.1.0",
+    "chalk": "^4.1.2",
     "cli-table": "^0.3.11",
     "dc-management-sdk-js": "^1.14.0",
     "enquirer": "^2.3.6",
@@ -53,7 +54,7 @@
     "nanoid-dictionary": "^4.3.0",
     "rimraf": "^3.0.2",
     "simple-git": "^3.1.1",
-    "winston": "^3.5.0",
+    "winston": "^3.5.1",
     "yargs": "^17.3.1"
   },
   "devDependencies": {
@@ -62,12 +63,11 @@
     "@types/fs-extra": "^9.0.13",
     "@types/lodash": "^4.14.176",
     "@types/nanoid-dictionary": "^4.2.0",
-    "@types/node": "^17.0.13",
+    "@types/node": "^17.0.14",
     "@types/node-fetch": "^3.0.3",
     "@types/readline-sync": "^1.4.4",
     "@types/rimraf": "^3.0.0",
     "@types/yargs": "^17.0.8",
-    "dam-cli": "github:amp-nova/dam-cli",
     "ts-node": "^10.4.0",
     "typescript": "^4.1.3"
   }

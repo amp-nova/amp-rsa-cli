@@ -91,7 +91,6 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
 
                 archiveCount++
                 await contentItem.related.archive()
-                publishingQueue.add(contentItem)
                 _.remove(context.automation.contentItems, ci => contentItem.id === ci.to)
             }))
 

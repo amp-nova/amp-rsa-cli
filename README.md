@@ -40,16 +40,6 @@ By default the configuration is saved to a file in the directory `<HOME_DIR>/.am
 | --config       | [string]<br />[default: "~/.amplience/dc-cli-config.json"] | Path to JSON config file                                     |
 | --help         | [boolean]                                                  | Show help                                                    |
 
-#### Examples
-
-##### Import the latest automation files
-
-`dc-cli configure --clientId foo --clientId bar --hubId baz`
-
-##### Create/Update configuration file for two-hub usage (copy/move/clone)
-
-`dc-cli configure --clientId foo --clientId bar --hubId baz --dstClientId qux --dstSecret quux --dstHubId quuz`
-
 ## Command categories
 
 ### using an amprsa environment

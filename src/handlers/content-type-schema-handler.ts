@@ -72,14 +72,16 @@ export class ContentTypeSchemaHandler extends CleanableResourceHandler {
                     logUpdate(`${chalk.green('unarch')} schema [ ${chalk.gray(schema.schemaId)} ]`)
                 }
 
-                if (!_.isEqual(stored.body, schema.body)) {
+                if (schema.body && stored.body !== schema.body) {
                     updateCount++
+                    schema.body = JSON.stringify(JSON.parse(schema.body), undefined, 4)
                     stored = await stored.related.update(schema)
                     logUpdate(`${chalk.green('update')} schema [ ${chalk.gray(schema.schemaId)} ]`)
                 }
             }
-            else {
+            else if (schema.body) {
                 createCount++
+                schema.body = JSON.stringify(JSON.parse(schema.body), undefined, 4)
                 stored = await hub.related.contentTypeSchema.create(schema)
                 logUpdate(`${chalk.green('create')} schema [ ${chalk.gray(schema.schemaId)} ]`)
             }

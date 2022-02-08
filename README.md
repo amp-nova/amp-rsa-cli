@@ -30,6 +30,8 @@ npm install -g @amp-nova/amp-rsa-cli
 
 **amprsa** requires an AMPRSA environment configuration to run.  On your first invocation of any `amprsa` command, the CLI will prompt you to create an environment.
 
+TODO: What do you need and where do you get it
+
 By default the configuration is saved to a file in the directory `<HOME_DIR>/.amplience/`, this can be overridden using the `--config` option.
 
 ### Options

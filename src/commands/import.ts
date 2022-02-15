@@ -59,8 +59,8 @@ export const builder = (yargs: Argv): Argv => {
             }
 
             if (!_.isEmpty(context.matchingSchema)) {
-                context.matchingSchema.push('https://amprsa.net/amprsa/config')                    
-                context.matchingSchema.push('https://amprsa.net/amprsa/automation')                    
+                context.matchingSchema.push('https://amprsa.net/site/config')                    
+                context.matchingSchema.push('https://amprsa.net/site/automation')                    
             }
 
             let workflowStates: WorkflowState[] = await paginator(context.hub.related.workflowStates.list)

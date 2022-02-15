@@ -25,7 +25,7 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
         }
 
         await fileIterator(sourceDir, context).iterate(async file => {
-            let mapping = _.find(context.automation.contentItems, map => map.from === file.object.id)
+            let mapping = _.find(context.automation?.contentItems, map => map.from === file.object.id)
             if (mapping) {
                 let contentItem = await amplienceHelper.getContentItemById(mapping.to)
                 if (_.isEqual(contentItem.body, file.object.body)) {
@@ -48,7 +48,7 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
     }
 
     shouldCleanUpItem(item: ContentItem, context: CleanupContext): boolean {
-        return (!_.isEmpty(context.matchingSchema) && !item.body._meta.schema.startsWith('https://amprsa.net/amprsa')) ||
+        return (!_.isEmpty(context.matchingSchema) && !item.body._meta.schema.startsWith('https://amprsa.net/site')) ||
             _.includes(context.matchingSchema, item.body._meta.schema) || _.isEmpty(context.matchingSchema)
     }
 
@@ -91,7 +91,7 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
 
                 archiveCount++
                 await contentItem.related.archive()
-                _.remove(context.automation.contentItems, ci => contentItem.id === ci.to)
+                _.remove(context.automation?.contentItems, ci => contentItem.id === ci.to)
             }))
 
             await publishingQueue.publish()

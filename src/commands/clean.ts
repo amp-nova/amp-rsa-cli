@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Cleanables } from '../handlers';
 import chalk from "chalk";
 import async from 'async'
-import { Argv } from 'yargs';
+import { Arguments, Argv } from 'yargs';
 import { contextHandler } from '../common/middleware';
 import amplienceBuilder from '../common/amplience-builder';
 import { timed } from "../handlers/typed-result";
@@ -31,8 +31,18 @@ export const builder = (yargs: Argv): Argv =>
                 alias: 'a',
                 describe: 'clean up all resource types',
                 type: 'boolean'
+            },
+            content: {
+                describe: 'cleans up contentTypes, contentTypeSchema, contentItems with no confirmation',
+                type: 'boolean'
             }
-        })
+        }).middleware([(args: Arguments) => {
+            if (!!args.content) {
+                args.skipConfirmation = true
+                args.include = ['contentTypes', 'contentTypeSchema', 'contentItems']
+            }
+            return args
+        }])
 
 export const handler = contextHandler(async (context: CleanupContext): Promise<void> => {
     let choices: Cleanable[] = []

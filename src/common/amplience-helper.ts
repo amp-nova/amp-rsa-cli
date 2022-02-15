@@ -130,7 +130,7 @@ export const getContentMap = () => _.zipObject(_.map(contentMap, (__, key) => ke
 export const getConfigObject = async (context: AmplienceContext) => {
     let { hub, environment } = context
     let deliveryKey = `aria/env/default`
-    let schema = `https://amprsa.net/amprsa/config`
+    let schema = `https://amprsa.net/site/amprsa`
 
     return {
         _meta: {
@@ -214,7 +214,7 @@ export const initAutomation = async (context: AmplienceContext) => {
 export const readAutomation = async (context: AmplienceContext) => {
     let { environment } = context
     let deliveryKey = `aria/automation/default`
-    let schema = `https://amprsa.net/amprsa/automation`
+    let schema = `https://amprsa.net/site/automation`
 
     let automation = await getContentItemByKey(deliveryKey)
     if (!automation) {

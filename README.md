@@ -28,9 +28,23 @@ npm install -g @amp-nova/amp-rsa-cli
 
 ## Configuration
 
-**amprsa** requires an AMPRSA environment configuration to run.  On your first invocation of any `amprsa` command, the CLI will prompt you to create an environment.
+**amprsa** requires an AMPRSA environment configuration to run.  On your first invocation of any `amprsa` command, the CLI will prompt you to create an environment:
 
-TODO: What do you need and where do you get it
+```bash
+dave@po:~ $ amprsa env add
+✔ env name: foo
+✔ app deployment url: https://foo.baz.com
+✔ cms client id: amplience-client-id
+✔ cms client secret: ***********************
+✔ cms hub id: hub-id-from-hub-settings-properties
+✔ dam username: foo@baz.com
+✔ dam password: *****************
+info: [ foo ] configure dc-cli...
+info: [ foo ] configure dam-cli...
+info: [ foo ] environment active
+```
+
+You will set these to the values you received from Amplience Support when you created your account.
 
 By default the configuration is saved to a file in the directory `<HOME_DIR>/.amplience/`, this can be overridden using the `--config` option.
 

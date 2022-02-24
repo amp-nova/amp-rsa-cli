@@ -6,6 +6,7 @@ import _ from "lodash";
 
 import { nanoid } from 'nanoid'
 import { cacheContentMap, getConfigObject, initAutomation } from "./amplience-helper";
+import { useEnvironment } from "./environment-manager";
 
 export default (yargs: Argv): Argv =>
     yargs
@@ -32,6 +33,8 @@ export default (yargs: Argv): Argv =>
             async (c: LoggableContext) => await loginDC(c),
             async (context: LoggableContext) => {
                 if (!_.includes(context._, 'show')) {
+                    await useEnvironment(context.environment)
+
                     // caching a map of current content items. this appears to obviate the issue of archived items
                     // hanging out on published delivery keys
                     await cacheContentMap(context)

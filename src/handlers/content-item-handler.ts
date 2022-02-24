@@ -48,8 +48,7 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
     }
 
     shouldCleanUpItem(item: ContentItem, context: CleanupContext): boolean {
-        return (!_.isEmpty(context.matchingSchema) && !item.body._meta.schema.startsWith('https://amprsa.net/site')) ||
-            _.includes(context.matchingSchema, item.body._meta.schema) || _.isEmpty(context.matchingSchema)
+        return _.includes(context.matchingSchema, item.body._meta.schema) || _.isEmpty(context.matchingSchema)
     }
 
     async cleanup(context: CleanupContext): Promise<any> {

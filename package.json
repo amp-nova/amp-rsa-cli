@@ -41,7 +41,7 @@
     "@rauschma/stringio": "^1.4.0",
     "async": "^3.2.2",
     "axios": "^0.26.0",
-    "chalk": "^5.0.0",
+    "chalk": "^4.1.0",
     "cli-table": "^0.3.11",
     "dc-management-sdk-js": "^1.14.0",
     "enquirer": "^2.3.6",

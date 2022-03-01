@@ -7,11 +7,13 @@ import childProcess from 'child_process'
 const { Select } = require('enquirer');
 import logger from '../common/logger'
 import { select } from 'async';
+import fs from 'fs-extra'
 
 export const getConfigPath = (platform: string = process.platform): string => join(process.env[platform == 'win32' ? 'USERPROFILE' : 'HOME'] || __dirname, '.amplience');
 export const CONFIG_PATH = getConfigPath()
 const ENV_FILE_PATH = `${CONFIG_PATH}/environments.json`
 
+fs.mkdirpSync(CONFIG_PATH)
 const saveConfig = () => writeJsonSync(ENV_FILE_PATH, envConfig, { encoding: 'utf-8' })
 
 export const updateEnvironments = () => {

@@ -148,11 +148,14 @@ export const contextHandler = (handler: any) => async (context: LoggableContext)
     try {
         await handler(context)
     } catch (error) {
-        console.log(error)
-        logger.error(chalk.bold.red(error.message || error));
-        _.each(error.response?.data?.errors, error => logger.error(`\t* ${chalk.bold.red(error.code)}: ${error.message}`))
-        if (error.stack) {
-            logger.error(error.stack)
+        // novadev-142
+        if (!_.isEmpty(error)) {
+            console.log(error)
+            logger.error(chalk.bold.red(error.message || error));
+            _.each(error.response?.data?.errors, error => logger.error(`\t* ${chalk.bold.red(error.code)}: ${error.message}`))
+            if (error.stack) {
+                logger.error(error.stack)
+            }
         }
     } finally {
         logRunEnd(context)

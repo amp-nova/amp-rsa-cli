@@ -58,7 +58,6 @@ export const builder = (yargs: Argv): Argv => {
                 await simpleGit().clone('https://github.com/amp-nova/amp-rsa-automation', automationDirPath)
             }
 
-            await copyTemplateFilesToTempDir(context)
             if (!_.isEmpty(context.matchingSchema)) {
                 context.matchingSchema.push('https://amprsa.net/site/config')                    
                 context.matchingSchema.push('https://amprsa.net/site/automation')                    
@@ -77,9 +76,11 @@ export const handler = contextHandler(async (context: ImportContext): Promise<vo
         url: context.environment.url
     }
 
+    await copyTemplateFilesToTempDir(context)
     await timed('content-type-schema import', async () => { await new ContentTypeSchemaHandler().import(context) })
     await timed('content-type import', async () => { await new ContentTypeHandler().import(context) })
     context.config = await getEnvConfig(context)
+    await copyTemplateFilesToTempDir(context)
 
     // create mapping
     let workflowStates: WorkflowState[] = await paginator(context.hub.related.workflowStates.list)

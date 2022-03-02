@@ -72,6 +72,11 @@ export const handler = contextHandler(async (context: ImportContext): Promise<vo
 
     logHeadline(`Phase 1: preparation`)
 
+    context.mapping = {
+        ...context.mapping,
+        url: context.environment.url
+    }
+
     await timed('content-type-schema import', async () => { await new ContentTypeSchemaHandler().import(context) })
     await timed('content-type import', async () => { await new ContentTypeHandler().import(context) })
     context.config = await getEnvConfig(context)
@@ -79,7 +84,7 @@ export const handler = contextHandler(async (context: ImportContext): Promise<vo
     // create mapping
     let workflowStates: WorkflowState[] = await paginator(context.hub.related.workflowStates.list)
     context.mapping = {
-        url: context.environment.url,
+        ...context.mapping,
         cms: {
             hub: context.config.cms.hub,
             hubs: context.config.cms.hubs,

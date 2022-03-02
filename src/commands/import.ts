@@ -11,7 +11,7 @@ import { ExtensionHandler } from '../handlers/extension-handler';
 import { SearchIndexHandler } from '../handlers/search-index-handler';
 import { SettingsHandler } from '../handlers/settings-handler';
 
-import amplience, { getConfigObject, initAutomation, readDAMMapping, readEnvConfig } from '../common/amplience-helper';
+import amplience, { getEnvConfig, initAutomation, readDAMMapping } from '../common/amplience-helper';
 import { ImportContext } from '../handlers/resource-handler';
 import { copyTemplateFilesToTempDir } from '../helpers/import-helper';
 import { contextHandler, loginDAM } from '../common/middleware';
@@ -58,26 +58,11 @@ export const builder = (yargs: Argv): Argv => {
                 await simpleGit().clone('https://github.com/amp-nova/amp-rsa-automation', automationDirPath)
             }
 
+            await copyTemplateFilesToTempDir(context)
             if (!_.isEmpty(context.matchingSchema)) {
                 context.matchingSchema.push('https://amprsa.net/site/config')                    
                 context.matchingSchema.push('https://amprsa.net/site/automation')                    
             }
-
-            let workflowStates: WorkflowState[] = await paginator(context.hub.related.workflowStates.list)
-
-            // create mapping
-            let mapping = {
-                url: context.environment.url,
-                cms: {
-                    hub: context.config.cms.hub,
-                    hubs: context.config.cms.hubs,
-                    repositories: _.zipObject(_.map(Object.keys(context.hub.repositories)), _.map(Object.values(context.hub.repositories), 'id')),
-                    workflowStates: _.zipObject(_.map(workflowStates, ws => _.camelCase(ws.label)), _.map(workflowStates, 'id'))
-                },
-                algolia: context.config.algolia,
-                dam: await readDAMMapping(context)
-            }
-            context.mapping = mapping
         }
     ])
 }
@@ -87,15 +72,30 @@ export const handler = contextHandler(async (context: ImportContext): Promise<vo
 
     logHeadline(`Phase 1: preparation`)
 
-    await copyTemplateFilesToTempDir(context)
-    
     await timed('content-type-schema import', async () => { await new ContentTypeSchemaHandler().import(context) })
     await timed('content-type import', async () => { await new ContentTypeHandler().import(context) })
+    context.config = await getEnvConfig(context)
+
+    // create mapping
+    let workflowStates: WorkflowState[] = await paginator(context.hub.related.workflowStates.list)
+    context.mapping = {
+        url: context.environment.url,
+        cms: {
+            hub: context.config.cms.hub,
+            hubs: context.config.cms.hubs,
+            repositories: _.zipObject(_.map(Object.keys(context.hub.repositories)), _.map(Object.values(context.hub.repositories), 'id')),
+            workflowStates: _.zipObject(_.map(workflowStates, ws => _.camelCase(ws.label)), _.map(workflowStates, 'id'))
+        },
+        algolia: context.config.algolia,
+        dam: await readDAMMapping(context)
+    }
     
     // await timed('content-type-schema import', async () => { await new CLIContentTypeSchemaHandler().import(context) })
     // await timed('content-type import', async () => { await new CLIContentTypeHandler().import(context) })
 
     logHeadline(`Phase 2: import/update`)
+
+    await copyTemplateFilesToTempDir(context)
 
     // process step 1: npm run automate:settings
     await new SettingsHandler().import(context)

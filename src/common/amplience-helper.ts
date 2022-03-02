@@ -62,7 +62,7 @@ export const getContentItemFromCDN = async (id: string): Promise<any> => {
     return await (await ax.get(`https://${environment.name}.cdn.content.amplience.net/content/id/${id}`)).data
 }
 
-export const PublishingQueue = (postProcess: (item: ContentItem) => Promise<void> = async x => {}) => {
+export const PublishingQueue = (postProcess: (item: ContentItem) => Promise<void> = async x => { }) => {
     let queue: ContentItem[] = []
 
     return {
@@ -127,68 +127,85 @@ export const getContentItemByKey = (key: string): ContentItem => contentMap[key]
 export const getContentItemById = (id: string): ContentItem => contentMap[id]
 export const getContentMap = () => _.zipObject(_.map(contentMap, (__, key) => key.replace(/\//g, '-')), _.map(contentMap, 'deliveryId'))
 
-export const getConfigObject = async (context: AmplienceContext) => {
+export const getEnvConfig = async (context: LoggableContext) => {
     let { hub, environment } = context
     let deliveryKey = `aria/env/default`
-    let schema = `https://amprsa.net/site/amprsa`
-
-    return {
-        _meta: {
-            name: `${environment.name} AMPRSA config`,
-            schema,
-            deliveryKey
-        },
-        environment: environment.name,
-        url: environment.url,
-        algolia: {
-            indexes: [{
-                key: 'blog',
-                prod: `${environment.name}.blog-production`,
-                staging: `${environment.name}.blog-staging`
-            }],
-            appId: '',
-            apiKey: ''
-        },
-        cms: {
-            hub: {
-                name: environment.name,
-                stagingApi: await hub.settings?.virtualStagingEnvironment?.hostname || ''
-            },
-            hubs: [{
-                key: 'productImages',
-                name: 'willow'
-            }]
-        }
-    }
-}
-
-const getEnvConfig = async (context: ImportContext) => {
-    let { hub, environment } = context
-    let deliveryKey = `aria/env/default`
+    let ampRsaSchema = `https://amprsa.net/site/amprsa`
+    let restSchema = `https://amprsa.net/site/integration/rest`
 
     logger.info(`environment lookup [ hub ${chalk.magentaBright(hub.name)} ] [ key ${chalk.blueBright(deliveryKey)} ]`)
 
     let config = await getContentItemByKey(deliveryKey)
-    if (!config) {
+    if (!config || !config.body) {
         logger.info(`${deliveryKey} not found, creating...`)
+
+        let restCodec = new ContentItem()
+        restCodec.label = `generic rest commerce configuration`
+        restCodec.body = {
+            _meta: {
+                name: `generic rest commerce configuration`,
+                schema: restSchema,
+                deliveryKey: `aria/integration/default`
+            },
+            productURL: `https://nova-amprsa-product-catalog.s3.us-east-2.amazonaws.com/products.json`,
+            categoryURL: `https://nova-amprsa-product-catalog.s3.us-east-2.amazonaws.com/categories.json`,
+            translationsURL: `https://nova-amprsa-product-catalog.s3.us-east-2.amazonaws.com/translations.json`,
+        }
+        restCodec = await context.hub.repositories.sitestructure.related.contentItems.create(restCodec)
+        await publishContentItem(restCodec)
 
         config = new ContentItem()
         config.label = `${environment.name} AMPRSA config`
-        config.body = await getConfigObject(context)
-
+        config.body = {
+            _meta: {
+                name: `${environment.name} AMPRSA config`,
+                schema: ampRsaSchema,
+                deliveryKey
+            },
+            environment: environment.name,
+            url: environment.url,
+            algolia: {
+                indexes: [{
+                    key: 'blog',
+                    prod: `${environment.name}.blog-production`,
+                    staging: `${environment.name}.blog-staging`
+                }],
+                appId: '',
+                apiKey: ''
+            },
+            commerce: {
+                _meta: {
+                    schema: "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+                },
+                id: restCodec.id,
+                contentType: "https://amprsa.net/site/integration/rest"
+            },
+            cms: {
+                hub: {
+                    name: environment.name,
+                    stagingApi: await hub.settings?.virtualStagingEnvironment?.hostname || ''
+                },
+                hubs: [{
+                    key: 'productImages',
+                    name: 'willow'
+                }]
+            }
+        }
+            
         config = await context.hub.repositories.sitestructure.related.contentItems.create(config)
         await publishContentItem(config)
     }
-    return config
-}
-
-export const readEnvConfig = async (context: ImportContext): Promise<AMPRSAConfig> => {
-    return await (await getEnvConfig(context)).body
+    return config.body
 }
 
 export const updateEnvConfig = async (context: ImportContext) => {
     let { config } = context
-    let envConfig = await getEnvConfig(context)
+    let envConfig = await getContentItemByKey(`aria/env/default`)
+
+    if (!envConfig) {
+        throw new Error('aria/env/default not found when trying to update environment config')
+    }
+
     envConfig.body = config
     envConfig = await envConfig.related.update(envConfig)
     await publishContentItem(envConfig)
@@ -320,8 +337,8 @@ export default {
     publishAll,
     getContentItemByKey,
     getContentItemById,
+    getEnvConfig,
     cacheContentMap,
-    readEnvConfig,
     updateEnvConfig,
     getContentMap,
     initAutomation,

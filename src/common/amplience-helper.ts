@@ -175,7 +175,7 @@ export const getEnvConfig = async (context: LoggableContext) => {
             },
             commerce: {
                 _meta: {
-                    schema: "http://bigcontent.io/cms/schema/v1/core#/definitions/content-link"
+                    schema: "http://bigcontent.io/cms/schema/v1/core#/definitions/content-reference"
                 },
                 id: restCodec.id,
                 contentType: "https://amprsa.net/site/integration/rest"

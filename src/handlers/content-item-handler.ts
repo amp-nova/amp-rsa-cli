@@ -9,6 +9,7 @@ import { logUpdate, logComplete } from "../common/logger"
 import { CLIJob } from "../helpers/exec-helper"
 import _ from "lodash"
 import { fileIterator } from "../common/utils"
+import { nanoid } from "nanoid"
 
 export class ContentItemHandler extends ResourceHandler implements Cleanable {
     sortPriority = 0.03
@@ -84,7 +85,10 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
                         contentItem = await contentItem.related.unarchive()
                     }
 
-                    contentItem.body._meta.deliveryKey = null
+                    if (!_.isEmpty(contentItem.body._meta.deliveryKey)) {
+                        contentItem.body._meta.deliveryKey = `${contentItem.body._meta.deliveryKey}-${nanoid()}`
+                    }
+
                     contentItem = await contentItem.related.update(contentItem)
                 }
 

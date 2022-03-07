@@ -9,14 +9,17 @@ Command line interface for Amplience Reference Storefront Architecture.
 Run `amprsa --help` to get a list of available commands.
 
 <!-- MarkdownTOC levels="2,3" autolink="true" -->
-
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Command categories](#command-categories)
   - [using an amprsa environment](#using-an-amprsa-environment)
   - [env management](#env)
+- [Configure your own Automated Content](#automation-bespoke)
 
 <!-- /MarkdownTOC -->
+
+
 
 ## Installation
 
@@ -25,10 +28,24 @@ Installing the amprsa CLI from the NPM package manager can be achieved using the
 ```bash
 npm install -g @amp-nova/amp-rsa-cli
 ```
+<!--TODD: Change to Amplience NPM -->
 
 ## Configuration
 
-**amprsa** requires an AMPRSA environment configuration to run.  On your first invocation of any `amprsa` command, the CLI will prompt you to create an environment:
+**amprsa** requires an AMPRSA environment configuration to run.
+
+### PreRequisites
+- Amplience account ( Think about what we say here)
+- Details and where to get then from.
+  - hub name (Env)
+  - App URL - link to RSA-CORE
+  - Client ID / Secret - Sent via support@amplience.com - One Time Secret
+  - Hub ID - Screenshot of DC / Settings page
+  - Username & Password for Content Hub - Automate VSE details.
+
+On your first invocation of any `amprsa` command, the CLI will prompt you to create an environment:
+
+
 
 ```bash
 dave@po:~ $ amprsa env add
@@ -61,11 +78,13 @@ By default the configuration is saved to a file in the directory `<HOME_DIR>/.am
 ### using an amprsa environment
 
 - [Commands](#commands)
-  - [cleanup](#cleanup)
-  - [import](#import)
-  - [publish](#publish)
   - [show](#show)
   - [env](#env)
+  - [import](#import)
+  - [cleanup](#cleanup)
+  - [publish](#publish)
+  
+  
 
 <!-- /MarkdownTOC -->
 
@@ -163,4 +182,3 @@ Show the status of an amprsa environment.
 This category includes interactions with environments.
 
 [View commands for **env**](docs/env.md)
- 

@@ -115,7 +115,7 @@ export const publishAll = async (context: ImportContext) => {
     logComplete(`${new ContentItemHandler().getDescription()}: [ ${chalk.green(publishedCount)} published ]`)
 }
 
-let contentMap: Dictionary<ContentItem> = {}
+export const contentMap: Dictionary<ContentItem> = {}
 export const cacheContentMap = async (context: AmplienceContext) => await context.hub.contentItemIterator(updateCache)
 
 const updateCache = (item: ContentItem) => {
@@ -342,5 +342,6 @@ export default {
     updateEnvConfig,
     getContentMap,
     initAutomation,
-    updateAutomation
+    updateAutomation,
+    contentMap
 }

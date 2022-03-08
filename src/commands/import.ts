@@ -130,6 +130,7 @@ export const handler = contextHandler(async (context: ImportContext): Promise<vo
 
         // recache
         await amplience.cacheContentMap(context)
+        context.mapping.contentMap = amplience.getContentMap()
 
         logHeadline(`Phase 3: update automation`)
 

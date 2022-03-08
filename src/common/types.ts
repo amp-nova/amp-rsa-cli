@@ -64,6 +64,7 @@ export interface Mapping {
     cms: CMSMapping
     algolia: AlgoliaConfig
     dam: DAMMapping
+    contentMap: Dictionary<string>
 }
 
 export class AMPRSAConfig {

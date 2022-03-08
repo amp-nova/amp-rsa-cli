@@ -57,7 +57,6 @@ dave@po:~ $ amprsa env add
 ✔ dam username: foo@baz.com
 ✔ dam password: *****************
 info: [ foo ] configure dc-cli...
-info: [ foo ] configure dam-cli...
 info: [ foo ] environment active
 ```
 

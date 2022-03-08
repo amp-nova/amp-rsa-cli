@@ -79,12 +79,6 @@ export const useEnvironment = async (env: any) => {
     logger.info(`[ ${chalk.greenBright(env.name)} ] configure dc-cli...`);
     childProcess.execSync(`npx @amplience/dc-cli configure --clientId ${env.dc.clientId} --clientSecret ${env.dc.clientSecret} --hubId ${env.dc.hubId}`);
 
-    // Configure DAM CLI if needed
-    if (env.dam.username) {
-        logger.info(`[ ${chalk.greenBright(env.name)} ] configure dam-cli...`);
-        childProcess.execSync(`npx @amp-nova/dam-cli configure --username ${env.dam.username} --password ${env.dam.password}`)
-    }
-
     logger.info(`[ ${chalk.greenBright(env.name)} ] environment active`);
     envConfig.current = env.name
     saveConfig()

@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'fs';
 import { dirname } from 'path';
 import { promisify } from 'util';
+import { logUpdate } from '../logger';
 import { ensureDirectoryExists } from './directory-utils';
 
 export interface ArchiveLogItem {
@@ -106,7 +107,7 @@ export class ArchiveLog {
       await ensureDirectoryExists(dir);
 
       await promisify(writeFile)(path, log);
-      console.log(`Log written to "${path}".`);
+      logUpdate(`Log written to "${path}".`);
       return true;
     } catch {
       console.log('Could not write log.');

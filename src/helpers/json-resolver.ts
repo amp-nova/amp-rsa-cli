@@ -9,7 +9,7 @@ export async function jsonResolver(jsonToResolve = '', relativeDir: string = __d
     if (resolvedJson && (Array.isArray(resolvedJson) || typeof resolvedJson === 'object')) {
       return jsonToResolve;
     }
-  } catch {}
+  } catch { }
 
   if (jsonToResolve.match(/^(http|https):\/\//)) {
     const result = await axios.get(jsonToResolve, { transformResponse: data => data });
@@ -21,6 +21,10 @@ export async function jsonResolver(jsonToResolve = '', relativeDir: string = __d
     resolvedFilename = new URL(jsonToResolve);
   } else if (jsonToResolve.split(path.sep)[0].match(/^\.{1,2}$/)) {
     resolvedFilename = path.resolve(relativeDir, jsonToResolve);
+  }
+
+  if (typeof resolvedFilename === 'string' && resolvedFilename.startsWith('.')) {
+    resolvedFilename = resolvedFilename.replace(/^\./, relativeDir)
   }
 
   if (!fs.existsSync(resolvedFilename)) {

@@ -361,7 +361,7 @@ const prepareContentForImport = async (
       return null;
     }
 
-    log.appendLine(`Scanning structure and content in '${repos[i].basePath}' for repository '${repo.label}'...`);
+    logUpdate(`Scanning structure and content in '${repos[i].basePath}' for repository '${repo.label}'...`);
 
     await traverseRecursive(resolve(repos[i].basePath), async path => {
       // Is this valid content? Must have extension .json to be considered, for a start.
@@ -403,7 +403,7 @@ const prepareContentForImport = async (
     });
   }
 
-  log.appendLine('Done. Validating content...');
+  logUpdate('Done. Validating content...');
 
   const alreadyExists = contentItems.filter(item => mapping.getContentItem(item.content.id) != null);
   if (alreadyExists.length > 0) {
@@ -660,10 +660,10 @@ const prepareContentForImport = async (
     log.warn(`${invalidContentItems.length} content items ${action} due to missing references.`);
   }
 
-  log.appendLine(
+  logUpdate(
     `Found ${tree.levels.length} dependancy levels in ${tree.all.length} items, ${tree.circularLinks.length} referencing a circular dependancy.`
   );
-  log.appendLine(`Importing ${tree.all.length} content items...`);
+  logUpdate(`Importing ${tree.all.length} content items...`);
 
   return tree;
 };
@@ -806,7 +806,7 @@ const importTree = async (
 
   for (let pass = 0; pass < 2; pass++) {
     const mode = pass === 0 ? 'Creating' : 'Resolving';
-    log.appendLine(`${mode} circular dependants.`);
+    logUpdate(`${mode} circular dependants.`);
 
     const circularLinksSorted = tree.circularLinks.sort(sortDependencies);
     for (let i = 0; i < circularLinksSorted.length; i++) {
@@ -862,44 +862,13 @@ const importTree = async (
     }
   }
 
-  log.appendLine('Done!');
+  logUpdate('Done!');
   return true;
 };
 
 export const handler = async (
   argv: any
 ): Promise<boolean> => {
-  // monkey patch the AxiosHttpClient that dc-management-sdk-js uses to capture requests and responses
-  // let _request = AxiosHttpClient.prototype.request
-  // AxiosHttpClient.prototype.request = async function (request: HttpRequest): Promise<HttpResponse> {
-  //   try {
-  //     let start = new Date()
-  //     let startString = start.valueOf()
-  //     let requestId = `${startString}-${request.method}-${request.url.split('/').pop()?.split('?')?.[0]}`
-  //     let response: HttpResponse = await _request.call(this, request)
-  //     let duration = new Date().valueOf() - start.valueOf()
-
-  //     if (response.status !== 200 && request.method === 'POST') {
-  //       // let's log this request and response
-  //       console.log(`[ ${startString} ] ${request.method} | ${request.url} | ${response.status} | ${StatusCodes[response.status]} | ${duration}ms`)
-
-  //       let subDir = response.status > 400 ? `error` : `success`
-
-  //       console.log(JSON.stringify(request.data, undefined, 4))
-  //       console.log(JSON.stringify(response, undefined, 4))
-
-  //       // let requestLogDir = `${context.tempDir}/requests/${subDir}/${requestId}`
-  //       // fs.mkdirpSync(requestLogDir)
-  //       // fs.writeJSONSync(`${requestLogDir}/request.json`, request)
-  //       // fs.writeJSONSync(`${requestLogDir}/response.json`, response)
-  //     }
-  //     return response
-  //   } catch (error) {
-  //     // logger.info(error)
-  //     throw error
-  //   }
-  // }
-
   // if (await argv.revertLog) {
   //   return revert(argv);
   // }
@@ -912,16 +881,12 @@ export const handler = async (
   const client = dynamicContentClientFactory(argv);
   const log = logFile.open();
 
-  const closeLog = async (): Promise<void> => {
-    await log.close();
-  };
-
   let hub: Hub;
   try {
     hub = await client.hubs.get(argv.hubId);
   } catch (e) {
     log.error(`Couldn't get hub:`, e);
-    closeLog();
+    await log.close()
     return false;
   }
 
@@ -940,9 +905,9 @@ export const handler = async (
   }
 
   if (await mapping.load(mapFile)) {
-    log.appendLine(`Existing mapping loaded from '${mapFile}', changes will be saved back to it.`);
+    logUpdate(`Existing mapping loaded from '${mapFile}', changes will be saved back to it.`);
   } else {
-    log.appendLine(`Creating new mapping file at '${mapFile}'.`);
+    logUpdate(`Creating new mapping file at '${mapFile}'.`);
   }
 
   let tree: ContentDependancyTree | null;
@@ -955,7 +920,7 @@ export const handler = async (
       folder = bFolder;
     } catch (e) {
       log.error(`Couldn't get base folder:`, e);
-      closeLog();
+      await log.close()
       return false;
     }
     tree = await prepareContentForImport(client, hub, [{ repo, basePath: dir }], folder, mapping, log, argv);
@@ -965,7 +930,7 @@ export const handler = async (
       repo = await client.contentRepositories.get(baseRepo);
     } catch (e) {
       log.error(`Couldn't get base repository:`, e);
-      closeLog();
+      await log.close()
       return false;
     }
     tree = await prepareContentForImport(client, hub, [{ repo, basePath: dir }], null, mapping, log, argv);
@@ -976,7 +941,7 @@ export const handler = async (
       repos = await paginator(hub.related.contentRepositories.list);
     } catch (e) {
       log.error(`Couldn't get repositories:`, e);
-      closeLog();
+      await log.close()
       return false;
     }
 
@@ -1013,7 +978,7 @@ export const handler = async (
             log
           ));
         if (!ignore) {
-          closeLog();
+          await log.close()
           return false;
         }
 
@@ -1023,7 +988,7 @@ export const handler = async (
 
     if (importRepos.length == 0) {
       log.error('Could not find any matching repositories to import into, aborting.');
-      closeLog();
+      await log.close()
       return false;
     }
 
@@ -1041,7 +1006,7 @@ export const handler = async (
   }
 
   trySaveMapping(mapFile, mapping, log);
-  closeLog();
+  await log.close()
   return result;
 };
 

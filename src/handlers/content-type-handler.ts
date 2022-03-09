@@ -82,17 +82,10 @@ export class ContentTypeHandler extends CleanableResourceHandler {
                     logUpdate(`${prompts.unarchive} content type [ ${chalk.gray(fileContentType.contentTypeUri)} ]`)
                 }
 
-                if (!_.isEqual(stored.settings, fileContentType.settings)) {
-                    stored.settings = fileContentType.settings
-
-                    try {
-                        stored = await stored.related.update(stored)                        
-                        updateCount++
-                        logUpdate(`${prompts.update} content type [ ${chalk.gray(fileContentType.contentTypeUri)} ]`)
-                    } catch (error) {
-                        // don't update this one for now, we'll catch it on the next content type import
-                    }
-                }
+                stored.settings = fileContentType.settings
+                stored = await stored.related.update(stored)
+                updateCount++
+                logUpdate(`${prompts.update} content type [ ${chalk.gray(fileContentType.contentTypeUri)} ]`)
             }
             else {
                 stored = await hub.related.contentTypes.register(fileContentType) as ContentTypeWithRepositoryAssignments
@@ -120,9 +113,9 @@ export class ContentTypeHandler extends CleanableResourceHandler {
             // reassign new content types
             await Promise.all(fileContentTypes.map(async fileContentType => {
                 let activeType = _.find(activeTypes, type => type.contentTypeUri === fileContentType.contentTypeUri)
-                if (activeType && 
-                        _.includes(fileContentType.repositories, repo.name) && 
-                        !_.includes(repo.contentTypes!.map(x => x.contentTypeUri), fileContentType.contentTypeUri)) {
+                if (activeType &&
+                    _.includes(fileContentType.repositories, repo.name) &&
+                    !_.includes(repo.contentTypes!.map(x => x.contentTypeUri), fileContentType.contentTypeUri)) {
                     assignedCount++
                     logUpdate(`${prompts.assign} content type [ ${chalk.grey(fileContentType.contentTypeUri)} ]`)
                     await repo.related.contentTypes.assign(activeType.id!)

@@ -10,6 +10,8 @@ import { CLIJob } from "../helpers/exec-helper"
 import _ from "lodash"
 import { fileIterator } from "../common/utils"
 import { nanoid } from "nanoid"
+import DCCLIContentItemHandler from './dc-cli-content-item-handler'
+import { createLog, openRevertLog } from '../common/dccli/log-helpers'
 
 export class ContentItemHandler extends ResourceHandler implements Cleanable {
     sortPriority = 0.03
@@ -36,8 +38,17 @@ export class ContentItemHandler extends ResourceHandler implements Cleanable {
         })
 
         let importLogFile = `${context.tempDir}/item-import.log`
-        let importJob = new CLIJob(`npx @dlillyatx/dc-cli@latest content-item import ${sourceDir} --force --mapFile ${context.tempDir}/mapping.json --logFile ${importLogFile}`)
-        await importJob.exec()
+        // let importJob = new CLIJob(`npx @dlillyatx/dc-cli@latest content-item import ${sourceDir} --force --mapFile ${context.tempDir}/mapping.json --logFile ${importLogFile}`)
+        // await importJob.exec()
+
+        await DCCLIContentItemHandler({
+            dir: sourceDir,
+            logFile: createLog(importLogFile),
+            clientId: context.environment.dc.clientId,
+            clientSecret: context.environment.dc.clientSecret,
+            hubId: context.environment.dc.hubId,
+            mapFile: `${context.tempDir}/mapping.json`
+        })
 
         // read the log file
         let logFile = fs.readFileSync(importLogFile, { encoding: "utf-8" })

@@ -29,6 +29,9 @@ export const updateEnvironments = () => {
             env.url = env.appUrl
             delete env.appUrl
         }
+
+        // fix urls with trailing slashes
+        env.url = env.url.replace(/\/$/, '')
     })
     delete envConfig.appUrl
     saveConfig()

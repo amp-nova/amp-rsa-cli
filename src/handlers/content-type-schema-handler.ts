@@ -90,21 +90,3 @@ export class ContentTypeSchemaHandler extends CleanableResourceHandler {
         logComplete(`${this.getDescription()}: [ ${chalk.green(archiveCount)} unarchived ] [ ${chalk.green(updateCount)} updated ] [ ${chalk.green(createCount)} created ]`)
     }
 }
-
-export class CLIContentTypeSchemaHandler extends ContentTypeSchemaHandler {
-    command: string = `npx @dlillyatx/dc-cli`
-    async import(context: ImportContext): Promise<any> {
-        logSubheading(`[ import ] content-type-schemas`)
-        let sourceDir = `${context.tempDir}/content/content-type-schemas`
-        await new CLIJob(`${this.command} content-type-schema import ${sourceDir}`).exec()
-    }
-
-    async cleanup(context: CleanupContext): Promise<any> {
-        logSubheading(`[ cleanup ] content-type-schemas`)
-        await new CLIJob(`${this.command} hub clean --force --step schema`).exec()
-    }
-}
-
-export class LocalCLIContentTypeSchemaHandler extends CLIContentTypeSchemaHandler {
-    command: string = `dc-cli`
-}

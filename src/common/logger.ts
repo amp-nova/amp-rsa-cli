@@ -57,9 +57,11 @@ export const logSubheading = (headline: string) => {
 }
 
 let lineLength = process.stdout.columns - 6 // -6 for the 'exec  ' piece
-export const logUpdate = (message: string) => {
-  // debug log the string
-  logger.debug(message)
+export const logUpdate = (message: string, logToFile: boolean = true) => {
+  if (logToFile) {
+    // debug log the string
+    logger.debug(message)
+  }
 
   if (logger.level !== 'debug') {
     // trim the message in case it is too long

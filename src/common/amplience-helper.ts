@@ -91,7 +91,7 @@ export const PublishingQueue = (postProcess: (item: ContentItem) => Promise<void
                         const current = new Date().valueOf()
                         const remainder = Math.ceil((60000 - (current - start)) / 1000)
                         for (let index = remainder; index > 0; index--) {
-                            logUpdate(`sleeping ${chalk.blueBright(index)} seconds before next chunk...`)
+                            logUpdate(`sleeping ${chalk.blueBright(index)} seconds before next chunk...`, false)
                             await sleep(1000)
                         }
                     }

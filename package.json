@@ -1,6 +1,6 @@
 {
   "name": "@amp-nova/amp-rsa-cli",
-  "version": "0.2.17",
+  "version": "0.2.18",
   "description": "AMP-RSA Demo Automation",
   "mainx": "node -r ts-node/register/transpile-only --preserve-symlinks -r tsconfig-paths/register src/index.ts",
   "man": "./dist/demo-cli.1",

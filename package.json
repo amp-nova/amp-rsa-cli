@@ -6,14 +6,14 @@
   "man": "./dist/demo-cli.1",
   "binx": "node -r ts-node/register/transpile-only --preserve-symlinks -r tsconfig-paths/register src/index.ts",
   "bin": {
-    "amprsa": "./dist/index.js"
+    "amprsa": "node ./dist/index.js"
   },
   "type": "commonjs",
-  "main": "./dist/index.js",
+  "main": "node ./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf dist packages",
-    "build": "npm run clean && tsc; chmod +x dist/index.js",
+    "build": "npm run clean && tsc",
     "prepare": "npm run build",
     "start": "node -r ts-node/register/transpile-only --preserve-symlinks -r tsconfig-paths/register src/index.ts"
   },
